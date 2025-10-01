@@ -79,12 +79,13 @@ app.post("/api/registrar-planta", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
 
-    await connection.execute(
-      `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO) 
-       VALUES (:id_planta, :id_usuario, 'Viva')`,
-      { id_planta, id_usuario },
-      { autoCommit: true }
-    );
+await connection.execute(
+  `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO) 
+   VALUES (:id_planta, :id_usuario, 'activa')`,
+  { id_planta, id_usuario },
+  { autoCommit: true }
+);
+
 
     await connection.close();
     res.send({ message: "🌱 Planta registrada con éxito en tu jardín" });
