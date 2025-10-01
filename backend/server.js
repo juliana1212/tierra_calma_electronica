@@ -112,7 +112,34 @@ app.get("/api/historial", (req, res) => {
 });
 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+
+// ======================= PLANTAS =======================
+
+// 🔹 Registrar planta en PLANTAS_USUARIO
+app.post("/api/registrar-planta", async (req, res) => {
+  const { id_usuario, id_planta } = req.body;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+await connection.execute(
+  `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO) 
+   VALUES (:id_planta, :id_usuario, 'activa')`,
+  { id_planta, id_usuario },
+  { autoCommit: true }
+);
+
+
+    await connection.close();
+    res.send({ message: "🌱 Planta registrada con éxito en tu jardín" });
+
+  } catch (err) {
+    console.error("💥 Error al registrar planta:", err);
+    res.status(500).send({ error: "Error al registrar planta" });
+  }
+});
+
+// ======================= INICIO SERVIDOR =======================
+app.listen(3000, () => {
+  console.log("Servidor backend corriendo en http://localhost:3000");
 });
