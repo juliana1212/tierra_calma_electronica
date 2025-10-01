@@ -1,169 +1,353 @@
-.monstera-container {
-    width: 100%;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+/* Contenedor general con fondo blanco */
+.monstera-wrapper {
+  background: white;
+  padding-top: 250px;   /* separación con navbar */
+  padding-bottom: 40px;
 }
 
-.monstera-header {
-    display: flex;
-    height: 400px; /* Altura del header */
-    width: 100%;
-    background: white;
-    position: relative;
-    overflow: hidden;
+/* Frame con color verde grisáceo */
+.monstera-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* centra todo el contenido */
+  gap: 80px;                 /* espacio entre imagen y texto */
+  background: #d7ded5;
+  padding: 1px 60px;       /* más alto y espacioso */
+  position: relative;
+  overflow: visible;
+  border-radius: 10px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Sidebar verde (30% del ancho) */
-.header-sidebar {
-    width: 30%;
-    background: #e4e8e1; /* Verde grisáceo */
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Imagen sobrepuesta */
+.frame-imagen {
+  width: 300px;
+  height: 300px;
+  background-image: url('../../../assets/images/MiMonstera.png'); 
+  background-size: cover;
+  background-position: center;
+  position: relative;        
+  top: -40px;                
+  margin-bottom: -60px;      
+  z-index: 2;
+
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
 }
 
-/* Imagen superpuesta */
-.header-imagen {
-    width: 280px;
-    height: 280px;
-    //background-image: url('../../../assets/images/plantas/monstera-header.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    
-    /* Hacer que sobresalga hacia la parte clara */
-    position: relative;
-    right: -40px; /* Sobresale hacia la derecha */
-    z-index: 2;
+/* Contenido textual */
+.frame-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       
+  text-align: center;
 }
 
-/* Contenido textual (70% del ancho) */
-.header-content {
-    width: 70%;
-    padding: 60px 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
+/* Título */
+.titulo-monstera {
+  font-family: "Mea Culpa", cursive;
+  font-size: 2.5rem;
+  font-weight: 200;
+  color: #2c3424;
+  margin-bottom: 20px;
 }
 
-.titulo-principal {
-    font-family: "Mea Culpa", cursive;
-    font-size: 4.5rem;
-    color: #2c3424;
-    margin: 0 0 30px 0;
-    font-weight: 400;
-    line-height: 1.1;
-}
-
+/* Botón */
 .btn-riego {
-    background: #859b82; /* Verde oscuro */
-    color: white;
-    border: none;
-    padding: 15px 35px;
-    border-radius: 8px; /* Rectangular */
-    font-family: "Old Standard TT", serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: fit-content;
-    box-shadow: 0 4px 15px rgba(133, 155, 130, 0.3);
-    
-    &:hover {
-        background: #758a72; /* Verde más oscuro al hover */
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(133, 155, 130, 0.4);
-    }
-    
-    &:active {
-        transform: translateY(0);
-    }
+  background: #859b82;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-family: "Old Standard TT", serif;
+  font-size: 1rem;
+  font-weight: 200;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #758a72;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(117, 138, 114, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
-/* Resto del contenido */
-.monstera-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
+
+/* ===== Sección de monitoreo ===== */
+.monit-wrapper {
+  background: #fff;
+  padding: 40px 0 80px;
 }
 
-/* Responsive */
-@media screen and (max-width: 1024px) {
-    .monstera-header {
-        height: 350px;
-    }
-    
-    .titulo-principal {
-        font-size: 4rem;
-    }
-    
-    .header-imagen {
-        width: 240px;
-        height: 240px;
-        right: -30px;
-    }
+.monit-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-@media screen and (max-width: 768px) {
-    .monstera-header {
-        flex-direction: column;
-        height: auto;
-    }
-    
-    .header-sidebar {
-        width: 100%;
-        height: 250px;
-    }
-    
-    .header-content {
-        width: 100%;
-        padding: 40px 20px;
-        text-align: center;
-        align-items: center;
-    }
-    
-    .header-imagen {
-        right: 0;
-        margin: 0 auto;
-        position: relative;
-        top: 20px; /* Sobresale hacia abajo en móvil */
-    }
-    
-    .titulo-principal {
-        font-size: 3.5rem;
-        margin-bottom: 20px;
-    }
+.monit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 28px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media screen and (max-width: 480px) {
-    .monstera-header {
-        height: auto;
+.monit-card {
+  background: #fdfdfd; /* gris muy claro, no blanco puro */
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04); /* sombra suave */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centramos contenido */
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+}
+
+.monit-card-title {
+  font-family: "Mea Culpa", cursive;
+  font-size: 2rem;
+  font-weight: 200;
+  color: #2c3424;
+  margin-bottom: 16px;
+}
+
+.monit-sensor-value {
+  font-size: 3rem;
+  font-weight: 300;
+  color: #2c3424;
+  margin: 10px 0 20px;
+}
+
+.monit-row {
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.status-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-online {
+  background: rgba(184,200,184,0.2);
+  color: #2c3424;
+}
+
+.status-offline {
+  background: rgba(200,123,95,0.15);
+  color: #c87b5f;
+}
+
+.monit-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  &.online { background: #b8c8b8; }
+  &.offline { background: #c87b5f; }
+}
+
+/* Botón secundario (ya no se usa en historial, pero lo dejamos por si) */
+.btn-riego-2 {
+  background: #859b82;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 6px;
+  font-family: "Old Standard TT", serif;
+  font-size: 1rem;
+  font-weight: 200;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: #758a72;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(117, 138, 114, 0.4);
+  }
+  &:active { transform: translateY(0); }
+}
+
+.monit-chart {
+  height: 300px;
+  margin-top: 10px;
+}
+
+
+/* ===== Historial de riego ===== */
+.monit-history-list {
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: background 0.2s;
+
+  &:hover {
+    background: #f4f6f4;
+  }
+}
+
+.history-time {
+  font-size: 0.85rem;
+  color: #859b82;
+}
+
+.history-msg {
+  font-weight: 400;
+  color: #2c3424;
+}
+
+.history-empty {
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* ===== Registrar cuidados ===== */
+.cuidados-wrapper {
+  background: #fff;
+  padding: 60px 0 100px;
+}
+
+.cuidados-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cuidados-title {
+  font-family: "Mea Culpa", cursive;
+  font-size: 2.5rem;
+  font-weight: 200;
+  color: #2c3424;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.cuidados-text {
+  font-size: 1rem;
+  color: #5c5c5c;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cuidados-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* Imagen */
+.cuidados-img {
+  width: 100%;
+  height: 700px;
+  background-image: url('../../../assets/images/Cuidados3.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Formulario */
+.cuidados-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  label {
+    font-size: 0.95rem;
+    color: #2c3424;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: "Montserrat", sans-serif;
+    transition: border 0.3s ease;
+
+    &:focus {
+      border-color: #859b82;
+      outline: none;
+      box-shadow: 0 0 6px rgba(133, 155, 130, 0.3);
     }
-    
-    .header-sidebar {
-        height: 200px;
-    }
-    
-    .header-imagen {
-        width: 180px;
-        height: 180px;
-        top: 15px;
-    }
-    
-    .titulo-principal {
-        font-size: 2.8rem;
-    }
-    
-    .btn-riego {
-        padding: 12px 25px;
-        font-size: 1rem;
-    }
-    
-    .header-content {
-        padding: 30px 15px;
-    }
+  }
+
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+}
+
+/* Botón */
+.btn-guardar {
+  background: #859b82;
+  color: #fff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 6px;
+  font-family: "Old Standard TT", serif;
+  font-size: 1rem;
+  font-weight: 200;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #758a72;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(117, 138, 114, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }

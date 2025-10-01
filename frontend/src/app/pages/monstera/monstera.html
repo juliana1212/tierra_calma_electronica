@@ -1,23 +1,100 @@
-<div class="monstera-container">
-    <!-- Header con sidebar verde -->
-    <header class="monstera-header">
-        <!-- Sidebar verde (30%) -->
-        <div class="header-sidebar">
-            <!-- Imagen superpuesta -->
-            <div class="header-imagen"></div>
-        </div>
-        
-        <!-- Contenido textual (70%) -->
-        <div class="header-content">
-            <h1 class="titulo-principal">Monstera deliciosa</h1>
-            <button class="btn-riego" (click)="activarRiego()">
-                Activar riego ahora
-            </button>
-        </div>
-    </header>
+<section class="monstera-wrapper">
+  <div class="monstera-frame">
+    <!-- Imagen sobrepuesta -->
+    <div class="frame-imagen"></div>
 
-    <!-- Resto del contenido del componente -->
-    <div class="monstera-content">
-        <!-- Aquí va el resto de tu contenido -->
+    <!-- Contenido textual -->
+    <div class="frame-content">
+      <h1 class="titulo-monstera">Monstera</h1>
+      <button class="btn-riego" (click)="activarRiego()">Activar riego ahora</button>
     </div>
-</div>
+  </div>
+</section>
+
+<!-- ====== MONITOREO EN TIEMPO REAL ====== -->
+<section class="monit-wrapper">
+  <div class="monit-container">
+
+    <div class="monit-grid">
+      <!-- Datos del sensor -->
+      <div class="monit-card">
+        <h3 class="monit-card-title">Datos del sensor</h3>
+
+        <div class="monit-sensor-value">
+          {{ isConnected ? realtimeData : '---' }}
+        </div>
+
+        <div class="status-chip" [ngClass]="isConnected ? 'status-online' : 'status-offline'">
+          <span class="monit-dot"></span>
+          {{ isConnected ? 'Conectado' : 'Desconectado' }}
+        </div>
+
+        <div class="monit-row">🔄 Actualización cada 2s</div>
+        <div class="monit-row">🕒 {{ lastUpdate }}</div>
+      </div>
+
+      <!-- Historial de riego -->
+      <div class="monit-card">
+        <h3 class="monit-card-title">Historial de riego</h3>
+        <div class="monit-history-list">
+          <div class="history-item" *ngFor="let item of historialRiego">
+            <span class="history-time">{{ item.hora }}</span>
+            <span class="history-msg">
+                {{ item.tipo === 'manual' ? '💧 ' : '⚡ ' }}{{ item.mensaje }}
+            </span>
+          </div>
+          <div *ngIf="historialRiego.length === 0" class="history-empty">
+            No hay registros de riego aún 🌱
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de humedad -->
+    <div class="monit-card">
+      <h3 class="monit-card-title">Humedad del suelo y temperatura ambiente</h3>
+      <div class="monit-chart">
+        <canvas #soilChart></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== REGISTRAR CUIDADOS ====== -->
+<section class="cuidados-wrapper">
+  <div class="cuidados-container">
+    <h2 class="cuidados-title">Registrar cuidados</h2>
+    <p class="cuidados-text">
+      Cuéntale a tu Monstera cómo la cuidaste hoy.<br>
+      Selecciona la fecha y el tipo de cuidado que realizaste: <b>fertilización o poda</b>. 
+      Así podrás llevar un historial de todo el cariño que le das a tu planta.
+    </p>
+
+    <div class="cuidados-grid">
+      <!-- Imagen -->
+      <div class="cuidados-img"></div>
+
+      <!-- Formulario -->
+      <form class="cuidados-form" (ngSubmit)="guardarCuidado()">
+        <!-- Fecha -->
+        <label for="fecha">📅 Fecha</label>
+        <input id="fecha" type="date" [(ngModel)]="nuevoCuidado.fecha" name="fecha">
+
+        <!-- Tipo de cuidado -->
+        <label for="tipo">🌱 Tipo de cuidado</label>
+        <select id="tipo" [(ngModel)]="nuevoCuidado.tipo" name="tipo">
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option value="fertilización">Fertilización</option>
+          <option value="poda">Poda</option>
+        </select>
+
+        <!-- Detalles -->
+        <label for="detalles">✍️ Detalles</label>
+        <textarea id="detalles" [(ngModel)]="nuevoCuidado.detalles" name="detalles" placeholder="Agrega notas sobre cómo cuidaste tu planta..."></textarea>
+
+        <!-- Botón -->
+        <button type="submit" class="btn-guardar">Guardar cuidado</button>
+      </form>
+    </div>
+  </div>
+</section>
