@@ -75,7 +75,7 @@ export class LoginComponent {
           this.router.navigate(['/mis-plantas']);
         }
       },
-      (err) => {
+      (err:any) => {
         console.error('Error en login', err);
         alert('Credenciales inválidas');
       }
@@ -96,12 +96,12 @@ export class LoginComponent {
     };
 
     this.authService.register(newUser).subscribe(
-      (res) => {
+      (res:any) => {
         console.log('Usuario registrado', res);
         alert('Usuario registrado con éxito');
         this.showLogin(); // 👈 opcional: volver a pantalla login
       },
-      (err) => {
+      (err:any) => {
         console.error('Error al registrar', err);
         alert('Error al registrar');
       }
