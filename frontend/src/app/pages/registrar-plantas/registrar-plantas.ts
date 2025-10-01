@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-registrar-plantas',
@@ -11,28 +12,44 @@ import { CommonModule } from '@angular/common';
 })
 export class RegistrarPlantasComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
+
+  // Mapeo de IDs de plantas
+  private plantaIds: { [key: string]: number } = {
+    'potus': 25,
+    'lengua-suegra': 26,
+    'ceriman': 27,
+    'dolar': 28,
+    'hoja-violin': 29,
+    'palma-areca': 30
+  };
 
   anadirPlanta(tipoPlanta: string): void {
-    // Aquí puedes implementar la lógica para añadir la planta específica
-    console.log(`Añadiendo planta: ${tipoPlanta}`);
-    
-    // Simular añadido exitoso
-    alert(`¡${this.getNombrePlanta(tipoPlanta)} añadida a tu jardín!`);
-    
-    // Redirigir a mis plantas o mantener en la página
-    // this.router.navigate(['/mis-plantas']);
-  }
+    const id_planta = this.plantaIds[tipoPlanta];
 
-  private getNombrePlanta(tipo: string): string {
-    const nombres: { [key: string]: string } = {
-      'potus': 'Potus',
-      'lengua-suegra': 'Lengua de Suegra',
-      'ceriman': 'Cerimán',
-      'dolar': 'Dólar',
-      'hoja-violin': 'Hoja de Violín',
-      'palma-areca': 'Palma Areca'
-    };
-    return nombres[tipo] || 'Planta';
+    // 👇 Obtenemos el usuario logueado desde localStorage
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const id_usuario = usuario.ID_USUARIO;
+
+    if (!id_usuario) {
+      alert("⚠️ Debes iniciar sesión antes de añadir plantas");
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.http.post('http://localhost:3000/api/registrar-planta', {
+      id_usuario,
+      id_planta
+    }).subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        // Redirigir a mis plantas si quieres
+        this.router.navigate(['/mis-plantas']);
+      },
+      error: (err) => {
+        console.error("Error al añadir planta:", err);
+        alert("No se pudo añadir la planta 😢");
+      }
+    });
   }
 }

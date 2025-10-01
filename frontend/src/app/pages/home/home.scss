@@ -1,11 +1,8 @@
+/* Sección imagen principal y recuadro */
 .hero {
-  position: relative;
-  height: calc(100vh - 80px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding-top: 80px;
+  height: clamp(550px, 68vh, 740px);
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .hero-background {
@@ -13,90 +10,54 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 65%;
   background-image: url('../../../assets/images/Portadaa.png');
   background-size: 100% auto;
-  background-position: 100% bottom;
+  background-position: 250% bottom;
   background-repeat: no-repeat;
   z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  color: white;
-  max-width: 800px;
-  padding: 0 2rem;
-}
-
-.hero-title {
-  font-family: 'STIX Two Text', serif;
-  font-size: 3rem;
-  font-weight: 600;
-  line-height: 1.2;
-  margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.hero-button {
-  font-family: 'STIX Two Text', serif;
-  font-style: italic;
-  font-size: 1.3rem;
-  background-color: #2E7D32;
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  &:hover {
-    background-color: #1B5E20;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 }
 
 .ventana-container {
   position: absolute;
   z-index: 4;
   left: 8%;
-  top: 65%;
+  top: 55%;
   transform: translateY(-50%);
 }
 
 .ventana {
   background: rgba(255, 255, 255, 0.98);
-  border: 1.5px solid #8ba986;
-  border-radius: 15px;
+  border: 1.5px solid #ca9a72;
+  border-radius: 150px 150px 12px 12px;
   padding: 0;
+  height: 380px;
   width: 300px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
   overflow: hidden;
   position: relative;
   margin-top: 0;
+  transition: all 0.3s ease;
 }
 
 .ventana-cuerpo {
-  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  height: 100%;
+  padding: 2.5rem 2rem;
 }
 
 .ventana-texto {
   font-family: 'STIX Two Text', serif;
   font-size: 1rem;
   font-weight: 200;
-  color: #2d4a2f;
+  color: #3a3a3a;
   line-height: 1.4;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-style: italic;
 }
 
@@ -106,48 +67,27 @@
   margin-bottom: 0.3rem;
 }
 
+.ventana-icono i {
+  font-size: 2.5rem;
+  color: #ca9a72;
+}
+
 .ventana-boton {
-  font-family: 'STIX Two Text', serif;
+  font-family: "Old Standard TT", serif;
   font-size: 1rem;
-  background: linear-gradient(135deg, #8ba986, #7a9975);
+  background-color: #93511c;
   color: white;
   border: none;
   padding: 1rem 2.5rem;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 200;
-  font-style: italic;
-  box-shadow: 0 4px 15px rgba(139, 169, 134, 0.4);
-  transition: all 0.3s ease;
-
   &:hover {
-    background: linear-gradient(135deg, #7a9975, #6a8965);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(139, 169, 134, 0.6);
   }
 }
 
-@media (max-width: 768px) {
-  .ventana-container {
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 90%;
-    max-width: 280px;
-  }
-  
-  .ventana {
-    width: 100%;
-  }
-  
-  .ventana-texto {
-    font-size: 1rem;
-  }
-  
-  .ventana-cuerpo {
-    padding: 2rem 1.5rem;
-  }
-}
-
+/* Sección nuestro propósito */
 .proposito {
   background-color: #ffffff;
   padding: 0.5rem 2rem;
@@ -167,7 +107,7 @@
   font-family: 'Mea culpa', cursive;
   font-size: 2.5rem;
   font-weight: 200;
-  color: #2d4a2f;
+  color: #93511c;
   margin-bottom: 1rem;
   font-style: italic;
 }
@@ -175,7 +115,7 @@
 .proposito-linea {
   width: 150px;
   height: 3px;
-  background: #8ba986;
+  background: #e3c5ac;
   margin: 0 auto;
 }
 
@@ -214,22 +154,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.imagen-placeholder span {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-}
-
-.imagen-placeholder p {
-  font-size: 1.3rem;
-  font-style: italic;
-  margin-bottom: 0.5rem;
-}
-
-.imagen-placeholder small {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
 .proposito-imagen img {
   width: 100%;
   height: 500px;
@@ -239,68 +163,7 @@
   border: 1px solid #e0e0e0;
 }
 
-@media (max-width: 1024px) {
-  .proposito-content {
-    gap: 3rem;
-  }
-  
-  .proposito-imagen {
-    flex: 0 0 350px;
-  }
-}
-
-@media (max-width: 768px) {
-  .proposito {
-    padding: 3rem 1.5rem;
-  }
-  
-  .proposito-titulo {
-    font-size: 2.2rem;
-  }
-  
-  .proposito-content {
-    flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .proposito-imagen {
-    flex: none;
-    width: 100%;
-    order: -1;
-  }
-  
-  .proposito-texto {
-    font-size: 1.1rem;
-    text-align: center;
-  }
-  
-  .imagen-placeholder {
-    height: 300px;
-  }
-  
-  .imagen-placeholder span {
-    font-size: 3rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .proposito {
-    padding: 2rem 1rem;
-  }
-  
-  .proposito-titulo {
-    font-size: 1.8rem;
-  }
-  
-  .proposito-texto {
-    font-size: 1rem;
-  }
-  
-  .imagen-placeholder {
-    height: 250px;
-  }
-}
-
+/* Sección tarjetas */
 .tarjetas-especiales {
   background: linear-gradient(135deg, #ffffff 0%, #f8fbf8 100%);
   padding: 5rem 2rem;
@@ -316,8 +179,8 @@
 }
 
 .tarjeta {
-  background: #ffffff;
-  border: 1.5px solid #e8f5e8;
+  background: #F2D8C2;
+  border: 1.5px solid #F2D8C2;
   border-radius: 20px;
   padding: 2.5rem;
   box-shadow: 0 10px 30px rgba(139, 169, 134, 0.1);
@@ -329,19 +192,19 @@
 .tarjeta:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 40px rgba(139, 169, 134, 0.2);
-  border-color: #8ba986;
+  border-color: #93511c;
 }
 
 .tarjeta-izquierda {
   text-align: left;
-  background-color: #e6eae5;
+  background-color: #fff5ed;
 }
 
 .tarjeta-izquierda .tarjeta-titulo-especial {
   font-family: 'Mea culpa', cursive;
   font-size: 2.2rem;
   font-weight: 200;
-  color: #2d4a2f;
+  color: #93511c;
   margin-bottom: 2rem;
   text-align: center;
   font-style: italic;
@@ -359,7 +222,7 @@
 .tarjeta-imagen {
   width: 100%;
   height: 100%;
-  background-image: url('../../../assets/images/DibujoFloor.png');
+  background-image: url('../../../assets/images/Trazooos.png');
   background-position: 50% center;
   background-size: 80% auto;
   display: flex;
@@ -377,7 +240,6 @@
 .tarjeta-imagen .imagen-placeholder {
   width: 100%;
   height: 300px;
-  background: linear-gradient(135deg, #8ba986, #a8c0a4);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -390,14 +252,14 @@
 
 .tarjeta-derecha {
   text-align: left;
-  background-color: #e6eae5;
+  background-color: #fff5ed;
 }
 
 .tarjeta-derecha .tarjeta-titulo-funciona {
   font-family: 'Mea Culpa', cursive;
   font-size: 2.2rem;
   font-weight: normal;
-  color: #2d4a2f;
+  color: #93511c;
   margin-bottom: 2rem;
   text-align: center;
   font-style: italic;
@@ -422,66 +284,6 @@
 .tarjeta-texto-especial strong {
   color: #2d4a2f;
   font-weight: 200;
-}
-
-@media (max-width: 1024px) {
-  .tarjetas-contenedor {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    max-width: 600px;
-  }
-  
-  .tarjeta {
-    padding: 2rem;
-  }
-  
-  .tarjeta-derecha .tarjeta-titulo-funciona {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .tarjetas-especiales {
-    padding: 3rem 1.5rem;
-  }
-  
-  .tarjetas-contenedor {
-    gap: 1.5rem;
-  }
-  
-  .tarjeta {
-    padding: 1.5rem;
-  }
-  
-  .tarjeta-izquierda .tarjeta-titulo-especial {
-    font-size: 1.8rem;
-  }
-  
-  .tarjeta-derecha .tarjeta-titulo-funciona {
-    font-size: 2.2rem;
-  }
-  
-  .tarjeta-texto-especial {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .tarjetas-especiales {
-    padding: 2rem 1rem;
-  }
-  
-  .tarjeta {
-    padding: 1.2rem;
-  }
-  
-  .tarjeta-izquierda .tarjeta-titulo-especial {
-    font-size: 1.6rem;
-  }
-  
-  .tarjeta-derecha .tarjeta-titulo-funciona {
-    font-size: 1.6rem;
-  }
 }
 
 .imagen-ancha {
@@ -525,44 +327,4 @@
   font-size: 3rem;
   margin-bottom: 1rem;
   display: block;
-}
-
-@media (max-width: 1024px) {
-  .imagen-banner {
-    height: 400px;
-  }
-  
-  .imagen-banner-placeholder {
-    height: 400px;
-  }
-}
-
-@media (max-width: 768px) {
-  .imagen-banner {
-    height: 300px;
-  }
-  
-  .imagen-banner-placeholder {
-    height: 300px;
-    font-size: 1.2rem;
-  }
-  
-  .imagen-banner-placeholder span {
-    font-size: 2.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .imagen-banner {
-    height: 250px;
-  }
-  
-  .imagen-banner-placeholder {
-    height: 250px;
-    font-size: 1rem;
-  }
-  
-  .imagen-banner-placeholder span {
-    font-size: 2rem;
-  }
 }
