@@ -7,12 +7,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Config Oracle
+// 🔹 Configuración de Oracle
 const dbConfig = {
-  user: "C##tierraencalma",
-  password: "1234",   // 👈 pon tu contraseña real
-  connectString: "localhost:1521/xe"
+  user: "C##TIERRAENCALMA",     // 👈 usuario Oracle real
+  password: "Tierraencalma",    // 👈 clave
+  connectString: "localhost:1521/XE"
 };
+
+// ======================= USUARIOS =======================
 
 // 🔹 Registro
 app.post("/api/register", async (req, res) => {
@@ -50,12 +52,13 @@ app.post("/api/login", async (req, res) => {
        WHERE CORREO_ELECTRONICO = :correo_electronico 
        AND CONTRASENA = :contrasena`,
       { correo_electronico, contrasena },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT } // 👈 devuelve objetos
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
 
     await connection.close();
 
     if (result.rows.length > 0) {
+      // 👇 devolvemos el usuario para que el frontend guarde su id en localStorage
       res.send({ message: "Login exitoso", user: result.rows[0] });
     } else {
       res.status(401).send({ message: "Credenciales inválidas" });
@@ -67,6 +70,32 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// ======================= PLANTAS =======================
+
+// 🔹 Registrar planta en PLANTAS_USUARIO
+app.post("/api/registrar-planta", async (req, res) => {
+  const { id_usuario, id_planta } = req.body;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    await connection.execute(
+      `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO) 
+       VALUES (:id_planta, :id_usuario, 'Viva')`,
+      { id_planta, id_usuario },
+      { autoCommit: true }
+    );
+
+    await connection.close();
+    res.send({ message: "🌱 Planta registrada con éxito en tu jardín" });
+
+  } catch (err) {
+    console.error("💥 Error al registrar planta:", err);
+    res.status(500).send({ error: "Error al registrar planta" });
+  }
+});
+
+// ======================= INICIO SERVIDOR =======================
 app.listen(3000, () => {
   console.log("Servidor backend corriendo en http://localhost:3000");
 });

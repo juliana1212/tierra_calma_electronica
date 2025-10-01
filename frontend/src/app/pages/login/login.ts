@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ export class LoginComponent {
   regCorreo = '';
   regContrasena = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   // Alternar entre login y registro
   showRegister(): void { this.isContainerActive = true; }
@@ -66,7 +67,12 @@ export class LoginComponent {
       (res: any) => {
         console.log('Login exitoso', res);
         if (res.user) {
+          // 👇 Guardamos en localStorage el usuario logueado
+          localStorage.setItem('usuario', JSON.stringify(res.user));
+
           alert('Bienvenida ' + (res.user.NOMBRE || res.user[1]));
+          // Redirige a mis-plantas
+          this.router.navigate(['/mis-plantas']);
         }
       },
       (err) => {
