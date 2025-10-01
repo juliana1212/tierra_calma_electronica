@@ -1,0 +1,177 @@
+<div class="mis-plantas-container">
+    <div class="imagen-hero" [class.imagen-error]="!imagenCargada"></div>
+
+    <div class="titulo-seccion">
+        <h1 class="titulo-principal">Mis Plantas</h1>
+    </div>
+
+    <div class="plantas-grid">
+        <!-- Tarjeta 1: Cerimán -->
+        <div class="planta-card ceriman-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Cerimán</h3>
+                <p class="planta-descripcion">
+                    Esta planta llena tus espacios de vida tropical<br>
+                    y frescura. Sus hojas gigantes te regalarán
+                    <br> calma y vitalidad cada día.
+                </p>
+                <button class="btn-monitorear" (click)="irACeriman()">Monitorear</button>
+            </div>
+        </div>
+
+        <!-- Tarjeta 2: Dólar -->
+        <div class="planta-card dolar-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Dólar</h3>
+                <p class="planta-descripcion">
+                    Considerada símbolo de prosperidad<br>
+                     y abundancia, atrae energía positiva.
+                </p>
+                <button class="btn-monitorear" (click)="irADolar()">Monitorear</button>
+            </div>
+        </div>
+
+        <!-- Tarjeta 3: Lengua de suegra -->
+        <div class="planta-card lengua-suegra-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Lengua de suegra</h3>
+                <p class="planta-descripcion">
+                    Fuerte, resistente y purificadora. Ideal para<br>
+                    quienes buscan una planta que les recuerde<br>
+                    que incluso en la adversidad se puede florecer.
+                </p>
+                <button class="btn-monitorear" (click)="irALenguaSuegra()">Monitorear</button>
+            </div>
+        </div>
+
+        <!-- Tarjeta 4: Hoja de violín -->
+        <div class="planta-card hoja-violin-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Hoja de violín</h3>
+                <p class="planta-descripcion">
+                    Su porte elegante y hojas en forma de violín<br>
+                    transforman cualquier rincón en un lugar acogedor.
+                </p>
+                <button class="btn-monitorear" (click)="irAHojaViolin()">Monitorear</button>
+            </div>
+        </div>
+
+        <!-- Tarjeta 5: Potus -->
+        <div class="planta-card potus-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Potus</h3>
+                <p class="planta-descripcion">
+                    Crece sin pedir mucho a cambio. Purifica el aire<br>
+                    y te recuerda que la belleza está en la sencillez.
+                </p>
+                <button class="btn-monitorear" (click)="irAPotus()">Monitorear</button>
+            </div>
+        </div>
+
+        <!-- Tarjeta 6: Palma Areca -->
+        <div class="planta-card palma-areca-card">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+                <h3 class="planta-nombre">Palma Areca</h3>
+                <p class="planta-descripcion">
+                    Sus hojas finas y verdes evocan brisas de<br>
+                    playa y bienestar. Perfecta para traer<br>
+                    frescura a tu hogar.
+                </p>
+                <button class="btn-monitorear" (click)="irAPalmaAreca()">Monitorear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nueva Sección: ¿Tienes nuevas plantas? -->
+<section class="nuevas-plantas-section">
+    <div class="nuevas-plantas-container">
+        <!-- Títulos -->
+        <div class="nuevas-plantas-header">
+            <h2 class="nuevas-plantas-titulo">¿Tienes nuevas plantas?</h2>
+            <p class="nuevas-plantas-subtitulo">Añade una nueva planta a tu jardín digital</p>
+        </div>
+
+        <!-- Carrusel -->
+        <div class="carrusel-container">
+            <div class="carrusel" #carrusel>
+                <!-- Tarjeta 1 - Planta de oración -->
+                <div class="carrusel-item">
+                    <div class="planta-carrusel-card PlantaOracion-card">
+                        <div class="carrusel-overlay"></div>
+                        <div class="carrusel-content">
+                            <h3 class="carrusel-nombre">Planta de oración</h3>
+                            <p class="carrusel-descripcion">Planta tropical de hojas verdes con nervaduras rojas muy vistosas; por la noche pliega sus hojas como en oración. Ideal para interiores con luz indirecta.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 - Suculenta cebra -->
+                <div class="carrusel-item">
+                    <div class="planta-carrusel-card SuculentaCebra-card">
+                        <div class="carrusel-overlay"></div>
+                        <div class="carrusel-content">
+                            <h3 class="carrusel-nombre">Suculenta cebra</h3>
+                            <p class="carrusel-descripcion">Suculenta compacta con hojas carnosas verdes y rayas blancas transversales. Muy resistente y de poco mantenimiento.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 - Planta del dinero -->
+                <div class="carrusel-item">
+                    <div class="planta-carrusel-card PlantaDinero-card">
+                        <div class="carrusel-overlay"></div>
+                        <div class="carrusel-content">
+                            <h3 class="carrusel-nombre">Planta del dinero</h3>
+                            <p class="carrusel-descripcion">Planta de interior muy apreciada por sus hojas redondas y tallos largos. Aporta un toque moderno y es fácil de cuidar en espacios pequeños.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 4 - Lavanda -->
+                <div class="carrusel-item">
+                    <div class="planta-carrusel-card CactusColumnar-card">
+                        <div class="carrusel-overlay"></div>
+                        <div class="carrusel-content">
+                            <h3 class="carrusel-nombre">Cactus columnar</h3>
+                            <p class="carrusel-descripcion">Planta suculenta de tallo alargado y costillas pronunciadas. Muy resistente y de bajo mantenimiento, ideal para interiores y exteriores.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 5 - Orquídea mariposa -->
+                <div class="carrusel-item">
+                    <div class="planta-carrusel-card Orquidea-card">
+                        <div class="carrusel-overlay"></div>
+                        <div class="carrusel-content">
+                            <h3 class="carrusel-nombre">Orquídea mariposa</h3>
+                            <p class="carrusel-descripcion">Planta elegante con flores blancas y centro rosado. Ideal para dar un toque exótico y sofisticado a espacios interiores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flechas de navegación -->
+            <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+        </div>
+
+        <!-- Botón Registrar -->
+        <div class="boton-registrar-container">
+            <button class="btn-registrar" (click)="registrarNuevaPlanta()">
+                <i class='bx bx-plus'></i>
+                Registrar nueva planta
+            </button>
+        </div>
+    </div>
+</section>

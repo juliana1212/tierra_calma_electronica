@@ -1,0 +1,169 @@
+.monstera-container {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.monstera-header {
+    display: flex;
+    height: 400px; /* Altura del header */
+    width: 100%;
+    background: white;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Sidebar verde (30% del ancho) */
+.header-sidebar {
+    width: 30%;
+    background: #e4e8e1; /* Verde grisáceo */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Imagen superpuesta */
+.header-imagen {
+    width: 280px;
+    height: 280px;
+    //background-image: url('../../../assets/images/plantas/monstera-header.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    
+    /* Hacer que sobresalga hacia la parte clara */
+    position: relative;
+    right: -40px; /* Sobresale hacia la derecha */
+    z-index: 2;
+}
+
+/* Contenido textual (70% del ancho) */
+.header-content {
+    width: 70%;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.titulo-principal {
+    font-family: "Mea Culpa", cursive;
+    font-size: 4.5rem;
+    color: #2c3424;
+    margin: 0 0 30px 0;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.btn-riego {
+    background: #859b82; /* Verde oscuro */
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 8px; /* Rectangular */
+    font-family: "Old Standard TT", serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: fit-content;
+    box-shadow: 0 4px 15px rgba(133, 155, 130, 0.3);
+    
+    &:hover {
+        background: #758a72; /* Verde más oscuro al hover */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(133, 155, 130, 0.4);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+/* Resto del contenido */
+.monstera-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+    .monstera-header {
+        height: 350px;
+    }
+    
+    .titulo-principal {
+        font-size: 4rem;
+    }
+    
+    .header-imagen {
+        width: 240px;
+        height: 240px;
+        right: -30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .monstera-header {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .header-sidebar {
+        width: 100%;
+        height: 250px;
+    }
+    
+    .header-content {
+        width: 100%;
+        padding: 40px 20px;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .header-imagen {
+        right: 0;
+        margin: 0 auto;
+        position: relative;
+        top: 20px; /* Sobresale hacia abajo en móvil */
+    }
+    
+    .titulo-principal {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .monstera-header {
+        height: auto;
+    }
+    
+    .header-sidebar {
+        height: 200px;
+    }
+    
+    .header-imagen {
+        width: 180px;
+        height: 180px;
+        top: 15px;
+    }
+    
+    .titulo-principal {
+        font-size: 2.8rem;
+    }
+    
+    .btn-riego {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    
+    .header-content {
+        padding: 30px 15px;
+    }
+}

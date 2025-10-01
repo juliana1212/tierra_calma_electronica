@@ -1,0 +1,92 @@
+<div class="container" [class.activate]="isContainerActive">
+  <!-- 🔹 Formulario LOGIN -->
+  <div class="form-box login">
+    <form (submit)="onLoginSubmit($event)">
+      <h1>Inicio de sesión</h1>
+
+      <div class="input-box">
+        <input type="text" placeholder="Correo" [(ngModel)]="loginCorreo" name="loginCorreo" required>
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="password" placeholder="Contraseña" [(ngModel)]="loginContrasena" name="loginContrasena" required>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+
+      <div class="forgot-link">
+        <a href="#" (click)="openForgotPasswordModal($event)">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn">Ingresar</button>
+
+      <p>Inicia sesión con google</p>
+      <div class="social-icons">
+        <a href="#" (click)="loginWithGoogle($event)"><i class='bx bxl-google'></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🔹 Formulario REGISTRO -->
+  <div class="form-box register">
+    <form (submit)="onRegisterSubmit($event)">
+      <h1>Registro</h1>
+
+      <div class="input-box">
+        <input type="text" placeholder="Identificación" [(ngModel)]="regIdUsuario" name="regIdUsuario" required>
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="text" placeholder="Nombre" [(ngModel)]="regNombre" name="regNombre" required>
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="text" placeholder="Apellido" [(ngModel)]="regApellido" name="regApellido" required>
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="text" placeholder="Teléfono" [(ngModel)]="regTelefono" name="regTelefono" required>
+        <i class='bx bxs-phone'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="email" placeholder="Correo" [(ngModel)]="regCorreo" name="regCorreo" required>
+        <i class='bx bxs-envelope'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="password" placeholder="Contraseña" [(ngModel)]="regContrasena" name="regContrasena" required>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+
+      <div class="forgot-link">
+        <a href="#" (click)="openForgotPasswordModal($event)">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn">Registrar</button>
+
+      <p>Regístrate con google</p>
+      <div class="social-icons">
+        <a href="#" (click)="registerWithGoogle($event)"><i class='bx bxl-google'></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- 🔹 Paneles laterales -->
+  <div class="toggle-box"></div>
+
+  <div class="toggle-panel toggle-left">
+    <h1>Hola, ¡bienvenido!</h1>
+    <p>¿Primera vez en Tierra en calma?</p>
+    <button class="btn register-btn" (click)="showRegister()">Regístrate</button>
+  </div>
+
+  <div class="toggle-panel toggle-right">
+    <h1>¡Bienvenido de nuevo!</h1>
+    <p>¿Ya tienes una cuenta?</p>
+    <button class="btn login-btn" (click)="showLogin()">Iniciar sesión</button>
+  </div>
+</div>
