@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
@@ -10,10 +11,11 @@ app.use(bodyParser.json());
 
 // Config Oracle
 const dbConfig = {
-  user: "C##tierraencalma",
-  password: "1234",   // 👈 pon tu contraseña real
-  connectString: "localhost:1521/xe"
+  user: process.env.ORACLE_USER,
+  password: process.env.ORACLE_PASS,
+  connectString: process.env.ORACLE_CONN
 };
+
 
 // 🔹 Registro
 app.post("/api/register", async (req, res) => {
@@ -51,7 +53,7 @@ app.post("/api/login", async (req, res) => {
        WHERE CORREO_ELECTRONICO = :correo_electronico 
        AND CONTRASENA = :contrasena`,
       { correo_electronico, contrasena },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT } // 👈 devuelve objetos
+      { outFormat: oracledb.OUT_FORMAT_OBJECT } 
     );
 
     await connection.close();
@@ -70,15 +72,16 @@ app.post("/api/login", async (req, res) => {
 
 
 
-// Config MQTT (igual que en tu ESP32)
-const brokerUrl = "mqtt://tierra.cloud.shiftr.io";
+// Config MQTT
+const brokerUrl = process.env.MQTT_BROKER;
 const options = {
-  username: "tierra",                // namespace
-  password: "oaaLZr38fzynau0g"       // secret del token
+  username: process.env.MQTT_USER,
+  password: process.env.MQTT_PASS
 };
 
 // Cliente MQTT
 const client = mqtt.connect(brokerUrl, options);
+const mqttTopic = process.env.MQTT_TOPIC;  
 
 // Variables para guardar datos
 let ultimoDato = "Esperando datos...";
@@ -87,9 +90,11 @@ let historial = [];
 // Conexión al broker
 client.on("connect", () => {
   console.log("Conectado al broker MQTT");
-  client.subscribe("plantas/datos", (err) => {
+  client.subscribe(mqttTopic, (err) => {
     if (!err) {
-      console.log("Suscrito al topic plantas/datos");
+      console.log(` Suscrito al topic ${mqttTopic}`);
+    } else {
+      console.error("Error al suscribirse al topic:", err);
     }
   });
 });
