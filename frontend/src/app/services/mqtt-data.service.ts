@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
-})
+  providedIn: 'root'})
 export class MqttDataService {
   private apiUrl = 'http://localhost:3000/api';
 

@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
+import { MqttDataService } from '../../services/mqtt-data.service';  
 Chart.register(...registerables);
 
 interface RiegoHistorial {
@@ -17,10 +18,7 @@ interface RiegoHistorial {
   templateUrl: './monstera.html',
   styleUrls: ['./monstera.scss']
 })
-export class MonsteraComponent implements OnInit, OnDestroy {
-  // === Config ===
-  ESP_IP = '172.20.10.4';
-
+export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   // === Estado UI ===
   isConnected = false;
   realtimeData = 'Cargando...';
@@ -28,28 +26,33 @@ export class MonsteraComponent implements OnInit, OnDestroy {
 
   // === Historial de riego ===
   historialRiego: RiegoHistorial[] = [];
+  historial: string[] = [];   // datos crudos desde backend
 
   // === Registrar cuidados ===
-  nuevoCuidado = {
-    fecha: '',
-    tipo: '',
-    detalles: ''
-  };
+  nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
 
   // === Chart ===
   @ViewChild('soilChart', { static: false }) soilChartRef!: ElementRef<HTMLCanvasElement>;
   private chart?: Chart;
-  private chartData: number[] = [];
   private maxDataPoints = 20;
+
+  private humidityData: number[] = [];
+  private tempData: number[] = [];
 
   // === Polling ===
   private pollHandle?: any;
 
+  constructor(private mqttService: MqttDataService) {}
+
   // ====== LIFECYCLE ======
   ngOnInit(): void {
-    // iniciar polling (2s)
-    this.pollHandle = setInterval(() => this.checkConnection(), 2000);
-    this.checkConnection();
+    // polling al BACKEND (cada 2s)
+    this.pollHandle = setInterval(() => this.cargarDatos(), 2000);
+    this.cargarDatos();
+  }
+
+  ngAfterViewInit(): void {
+    this.ensureChart();
   }
 
   ngOnDestroy(): void {
@@ -59,22 +62,11 @@ export class MonsteraComponent implements OnInit, OnDestroy {
 
   // ====== RIEGO MANUAL ======
   activarRiego(): void {
-    fetch(`http://${this.ESP_IP}/regar`)
-      .then(resp => {
-        if (!resp.ok) throw new Error('Error en la respuesta del servidor');
-        return resp.text();
-      })
-      .then(msg => {
-        alert(msg || '💧 Riego activado');
-        this.agregarHistorial('manual', msg || 'Riego manual activado');
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Error al activar el riego. Intenta nuevamente.');
-      });
+    this.agregarHistorial('manual', 'Riego manual activado');
+    alert('💧 Riego manual enviado al backend (simulado)');
   }
 
-  // ====== RIEGO AUTOMÁTICO (ejemplo simulado) ======
+  // ====== RIEGO AUTOMÁTICO ======
   private activarRiegoAutomatico(): void {
     this.agregarHistorial('automático', 'Riego automático ejecutado');
   }
@@ -85,51 +77,47 @@ export class MonsteraComponent implements OnInit, OnDestroy {
       mensaje,
       hora: new Date().toLocaleTimeString()
     };
-    this.historialRiego.unshift(registro); // lo agrega arriba
+    this.historialRiego.unshift(registro);
     if (this.historialRiego.length > 10) {
-      this.historialRiego.pop(); // máximo 10 registros
+      this.historialRiego.pop();
     }
   }
 
-  // ====== CONEXIÓN/DATOS ======
-  private checkConnection(): void {
-    fetch(`http://${this.ESP_IP}/datos`)
-      .then(resp => {
-        if (!resp.ok) throw new Error('Error de conexión');
+  // ====== DATOS DESDE BACKEND ======
+  private cargarDatos(): void {
+    this.mqttService.getUltimoDato().subscribe(res => {
+      if (res && res.dato) {
+        this.realtimeData = res.dato;
+        this.lastUpdate = `Última actualización: ${new Date().toLocaleTimeString()}`;
         this.isConnected = true;
-        return resp.text();
-      })
-      .then(data => {
-        this.updateDataDisplay(data);
-      })
-      .catch(err => {
-        console.error('Conexión fallida:', err);
-        this.isConnected = false;
-        this.realtimeData = 'Error de conexión';
-      });
-  }
 
-  private updateDataDisplay(data: string): void {
-    this.realtimeData = data;
-    this.lastUpdate = `Última actualización: ${new Date().toLocaleTimeString()}`;
+        // Extraer temperatura y humedad de la cadena recibida
+        const tempMatch = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
+        const humMatch = res.dato.match(/Humedad:\s*(\d+)\s*%/i);
 
-    // Extraer humedad: busca "Humedad: 63%"
-    const match = data.match(/Humedad:\s*(\d+)\s*%/i);
-    if (match) {
-      const humidity = parseInt(match[1], 10);
-      this.pushPoint(humidity);
+        if (tempMatch) {
+          const temp = parseFloat(tempMatch[1]);
+          this.pushPoint('temp', temp);
+        }
 
-      // Ejemplo: si la humedad es baja, activar riego automático
-      if (humidity < 30) {
-        this.activarRiegoAutomatico();
+        if (humMatch) {
+          const humidity = parseInt(humMatch[1], 10);
+          this.pushPoint('humidity', humidity);
+          if (humidity < 30) this.activarRiegoAutomatico();
+        }
       }
-    }
+    });
+
+    this.mqttService.getHistorial().subscribe(res => {
+      if (res && res.historial) {
+        this.historial = res.historial;
+      }
+    });
   }
 
   // ====== CHART ======
   private ensureChart(): void {
     if (this.chart || !this.soilChartRef) return;
-
     const ctx = this.soilChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
@@ -140,11 +128,20 @@ export class MonsteraComponent implements OnInit, OnDestroy {
         datasets: [
           {
             label: 'Humedad (%)',
-            data: [],
-            borderColor: '#5A7A5A',
-            backgroundColor: 'rgba(184, 200, 184, 0.2)',
+            data: this.humidityData,
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0, 0, 255, 0.2)',
             borderWidth: 2,
-            fill: true,
+            fill: false,
+            tension: 0.4
+          },
+          {
+            label: 'Temperatura (°C)',
+            data: this.tempData,
+            borderColor: 'orange',
+            backgroundColor: 'rgba(255,165,0,0.2)',
+            borderWidth: 2,
+            fill: false,
             tension: 0.4
           }
         ]
@@ -153,21 +150,27 @@ export class MonsteraComponent implements OnInit, OnDestroy {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { beginAtZero: true, max: 100, grid: { color: 'rgba(0,0,0,0.05)' } },
-          x: { grid: { display: false } }
-        },
-        plugins: { legend: { labels: { font: { family: 'Montserrat, sans-serif' } } } }
+          y: { beginAtZero: true, max: 100 },
+          x: { display: false }
+        }
       }
     });
   }
 
-  private pushPoint(value: number): void {
-    this.chartData.push(value);
-    if (this.chartData.length > this.maxDataPoints) this.chartData.shift();
+  private pushPoint(type: 'humidity' | 'temp', value: number): void {
+    if (type === 'humidity') {
+      this.humidityData.push(value);
+      if (this.humidityData.length > this.maxDataPoints) this.humidityData.shift();
+    }
+    if (type === 'temp') {
+      this.tempData.push(value);
+      if (this.tempData.length > this.maxDataPoints) this.tempData.shift();
+    }
 
     this.ensureChart();
     if (this.chart) {
-      this.chart.data.datasets[0].data = [...this.chartData];
+      this.chart.data.datasets[0].data = [...this.humidityData];
+      this.chart.data.datasets[1].data = [...this.tempData];
       this.chart.update('none');
     }
   }
@@ -179,11 +182,7 @@ export class MonsteraComponent implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('Cuidado registrado:', this.nuevoCuidado);
-
     alert(`🌿 Cuidado guardado:\n${this.nuevoCuidado.tipo} el ${this.nuevoCuidado.fecha}`);
-
-    // Resetear formulario
     this.nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
   }
 }
