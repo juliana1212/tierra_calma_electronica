@@ -4,6 +4,9 @@ const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
 const cors = require("cors");
 const mqtt= require("mqtt");
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app = express();
 app.use(cors());
@@ -48,12 +51,12 @@ app.post("/api/login", async (req, res) => {
     const connection = await oracledb.getConnection(dbConfig);
 
     const result = await connection.execute(
-      `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO 
-       FROM usuarios 
-       WHERE CORREO_ELECTRONICO = :correo_electronico 
+      `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
+       FROM usuarios
+       WHERE CORREO_ELECTRONICO = :correo_electronico
        AND CONTRASENA = :contrasena`,
       { correo_electronico, contrasena },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT } 
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
 
     await connection.close();
@@ -81,7 +84,7 @@ const options = {
 
 // Cliente MQTT
 const client = mqtt.connect(brokerUrl, options);
-const mqttTopic = process.env.MQTT_TOPIC;  
+const mqttTopic = process.env.MQTT_TOPIC;
 
 // Variables para guardar datos
 let ultimoDato = "Esperando datos...";
@@ -128,7 +131,7 @@ app.post("/api/registrar-planta", async (req, res) => {
     const connection = await oracledb.getConnection(dbConfig);
 
 await connection.execute(
-  `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO) 
+  `INSERT INTO PLANTAS_USUARIO (ID_PLANTA, ID_USUARIO, ESTADO)
    VALUES (:id_planta, :id_usuario, 'activa')`,
   { id_planta, id_usuario },
   { autoCommit: true }
@@ -143,6 +146,7 @@ await connection.execute(
     res.status(500).send({ error: "Error al registrar planta" });
   }
 });
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ======================= INICIO SERVIDOR =======================
 app.listen(3000, () => {
