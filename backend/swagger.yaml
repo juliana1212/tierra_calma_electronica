@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: API Tierra en Calma
+  version: 1.0.0
+  description: Endpoints de usuarios y plantas
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /register:
+    post:
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: integer
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                telefono:
+                  type: string
+                correo_electronico:
+                  type: string
+                contrasena:
+                  type: string
+              required:
+                - id_usuario
+                - nombre
+                - correo_electronico
+                - contrasena
+      responses:
+        "200":
+          description: Usuario registrado con éxito
+
+  /login:
+    post:
+      summary: Login usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                correo_electronico:
+                  type: string
+                contrasena:
+                  type: string
+              required:
+                - correo_electronico
+                - contrasena
+      responses:
+        "200":
+          description: Login exitoso
+        "401":
+          description: Credenciales inválidas
+
+  /registrar-planta:
+    post:
+      summary: Registrar planta en jardín de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_usuario:
+                  type: integer
+                id_planta:
+                  type: integer
+              required:
+                - id_usuario
+                - id_planta
+      responses:
+        "200":
+          description: Planta añadida con éxito
