@@ -1,6 +1,6 @@
 # Tierra en Calma — Monitoreo y riego de plantas (IoT)
 Este repositorio contiene un sistema IoT diseñado para el *monitoreo en tiempo real de la humedad del suelo* y el *control de riego de plantas*.
-El sistema integra *Frontend, **Backend, **Base de Datos Oracle XE* y soporte de mensajería mediante *MQTT*.
+El sistema integra *Frontend, Backend, Base de Datos Oracle XE* y soporte de mensajería mediante *MQTT*.
 
 ## 1. Tecnologías y versiones utilizadas
 
@@ -163,4 +163,5 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
