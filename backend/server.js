@@ -149,6 +149,7 @@ await connection.execute(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ======================= INICIO SERVIDOR =======================
-app.listen(3001, () => {
-  console.log("Servidor backend corriendo en http://localhost:3001");
+app.listen(3000, () => {
+  console.log("Servidor backend corriendo en http://localhost:3000");
 });
+

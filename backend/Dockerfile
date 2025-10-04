@@ -1,5 +1,5 @@
 # Imagen base de Node.js
-FROM node:20
+FROM node:18
 
 # Crear directorio de la app
 WORKDIR /usr/src/app
@@ -12,6 +12,7 @@ RUN npm install
 
 # Copiar todo el código del backend
 COPY . .
+COPY swagger.yaml ./swagger.yaml
 
 # Exponer el puerto
 EXPOSE 3000
