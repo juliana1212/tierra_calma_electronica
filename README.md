@@ -19,19 +19,40 @@ El sistema integra *Frontend, Backend, Base de Datos Oracle XE* y soporte de men
 
 ## 2. Estructura del repositorio
 
-
 tierra_calma_electronica/
-├─ backend/             # API Node.js + Express + MQTT + Oracle
-│  ├─ server.js
-│  ├─ package.json
-│  └─ .env              # Variables de entorno (no versionar)
-├─ frontend/            # Aplicación Angular
-│  ├─ src/...
-│  └─ package.json
-├─ database/            # Scripts de inicialización Oracle
-│  └─ init/01_init.sql
-├─ docker-compose.yml   # Orquestación de servicios
-└─ README.md
+├─ backend/    
+│  ├─ node_modules/           # Dependencias instaladas con npm
+│  ├─ .dockerignore         
+│  ├─ Dockerfile              # Configuración para el contenedor Docker del backend
+│  ├─ package-lock.json   
+│  ├─ package.json         
+│  ├─ server.js               # Punto de entrada del servidor Node.js (Express/MQTT/Oracle)
+│  └─ swagger.yaml            # Documentación de la API en formato Swagger/OpenAPI
+│
+├─ frontend/ 
+│  ├─ .vscode/              
+│  ├─ public/                 
+│  ├─ src/                    # Código fuente de la aplicación Angular
+│  ├─ .dockerignore          
+│  ├─ .editorconfig         
+│  ├─ .gitignore            
+│  ├─ Dockerfile              # Configuración del contenedor Docker del frontend
+│  ├─ README.md             
+│  ├─ angular.json        
+│  ├─ nginx.conf           
+│  ├─ package-lock.json       
+│  ├─ package.json           
+│  ├─ tsconfig.app.json       
+│  ├─ tsconfig.json          
+│  └─ tsconfig.spec.json    
+│
+├─ database/
+│  └─ init/
+│     └─ 01_init.sql          # Script de inicialización de la BD
+│
+├─ docker-compose.yml         # Orquestación de servicios (backend, frontend, DB.)
+└─ README.md              
+
 
 ## 3. Descarga del proyecto
 
@@ -172,6 +193,7 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
 
