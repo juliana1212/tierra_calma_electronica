@@ -19,40 +19,42 @@ El sistema integra *Frontend, Backend, Base de Datos Oracle XE* y soporte de men
 
 ## 2. Estructura del repositorio
 
-tierra_calma_electronica/
-├─ backend/
-│ ├─ node_modules/ # Dependencias instaladas con npm
-│ ├─ .dockerignore # Archivos/carpetas ignorados en la imagen Docker
-│ ├─ Dockerfile # Configuración del contenedor Docker del backend
-│ ├─ package-lock.json # Dependencias bloqueadas del backend
-│ ├─ package.json # Dependencias y scripts del backend
-│ ├─ server.js # Punto de entrada del servidor Node.js (Express/MQTT/Oracle)
-│ └─ swagger.yaml # Documentación de la API en formato Swagger/OpenAPI
-│
-├─ frontend/
-│ ├─ .vscode/ # Configuración de VSCode
-│ ├─ public/ # Archivos estáticos del frontend
-│ ├─ src/ # Código fuente de la aplicación Angular
-│ ├─ .dockerignore # Archivos/carpetas ignorados en la imagen Docker
-│ ├─ .editorconfig # Reglas de formato de código
-│ ├─ .gitignore # Archivos ignorados por git
-│ ├─ Dockerfile # Configuración del contenedor Docker del frontend
-│ ├─ README.md # Documentación del frontend
-│ ├─ angular.json # Configuración de Angular CLI
-│ ├─ nginx.conf # Configuración de Nginx para servir Angular
-│ ├─ package-lock.json # Dependencias bloqueadas del frontend
-│ ├─ package.json # Dependencias y scripts del frontend
-│ ├─ tsconfig.app.json # Configuración de TypeScript para la app
-│ ├─ tsconfig.json # Configuración global de TypeScript
-│ └─ tsconfig.spec.json # Configuración de pruebas en TypeScript
-│
-├─ database/
-│ └─ init/
-│ └─ 01_init.sql # Script de inicialización de la BD
-│
-├─ docker-compose.yml # Orquestación de servicios (backend, frontend, DB, etc.)
-└─ README.md # Documentación general del proyecto            
+## 2. Estructura del repositorio
 
+```plaintext
+tierra_calma_electronica/  
+├─ backend/    
+│  ├─ node_modules/           # Dependencias instaladas con npm  
+│  ├─ .dockerignore           # Archivos/carpetas ignorados en la imagen Docker  
+│  ├─ Dockerfile              # Configuración del contenedor Docker del backend  
+│  ├─ package-lock.json       # Dependencias bloqueadas del backend  
+│  ├─ package.json            # Dependencias y scripts del backend  
+│  ├─ server.js               # Punto de entrada del servidor Node.js (Express/MQTT/Oracle)  
+│  └─ swagger.yaml            # Documentación de la API en formato Swagger/OpenAPI  
+│
+├─ frontend/ 
+│  ├─ .vscode/                # Configuración de VSCode  
+│  ├─ public/                 # Archivos estáticos del frontend  
+│  ├─ src/                    # Código fuente de la aplicación Angular  
+│  ├─ .dockerignore           # Archivos/carpetas ignorados en la imagen Docker  
+│  ├─ .editorconfig           # Reglas de formato de código  
+│  ├─ .gitignore              # Archivos ignorados por git  
+│  ├─ Dockerfile              # Configuración del contenedor Docker del frontend  
+│  ├─ README.md               # Documentación del frontend  
+│  ├─ angular.json            # Configuración de Angular CLI  
+│  ├─ nginx.conf              # Configuración de Nginx para servir Angular  
+│  ├─ package-lock.json       # Dependencias bloqueadas del frontend  
+│  ├─ package.json            # Dependencias y scripts del frontend  
+│  ├─ tsconfig.app.json       # Configuración de TypeScript para la app  
+│  ├─ tsconfig.json           # Configuración global de TypeScript  
+│  └─ tsconfig.spec.json      # Configuración de pruebas en TypeScript  
+│
+├─ database/  
+│  └─ init/  
+│     └─ 01_init.sql          # Script de inicialización de la BD  
+│
+├─ docker-compose.yml         # Orquestación de servicios (backend, frontend, DB, etc.)  
+└─ README.md                  # Documentación general del proyecto        
 
 ## 3. Descarga del proyecto
 
@@ -193,6 +195,7 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
 
