@@ -47,11 +47,8 @@ tierra_calma_electronica/
 │  ├─ tsconfig.json           # Configuración global de TypeScript  
 │  └─ tsconfig.spec.json      # Configuración de pruebas en TypeScript  
 │
-├─ database/  
-│  └─ init/  
-│     └─ 01_init.sql          # Script de inicialización de la BD  
 │
-├─ docker-compose.yml         # Orquestación de servicios (backend, frontend, DB, etc.)  
+├─ docker-compose.yml         # Orquestación de servicios (backend, frontend, etc.)  
 └─ README.md                  # Documentación general del proyecto        
 ```
 
@@ -66,7 +63,7 @@ cd tierra_calma_electronica
 También es posible usar imágenes publicadas en Docker Hub:
 
 bash
-docker pull <usuario>/tierra-backend:v1
+docker pull <usuario>/tierra-backend:v5
 docker pull <usuario>/tierra-frontend:v7
 
 ## 4. Requisitos de instalación y ejecución
@@ -95,8 +92,6 @@ docker pull <usuario>/tierra-frontend:v7
 
 El archivo backend/.env debe contener:
 
-env
-PORT=3000
 
 * Configuración MQTT
 
@@ -110,15 +105,12 @@ MQTT_TOPIC=plantas/datos
 
 * Configuración Oracle
 
-ORACLE_USER=C##tierraencalma
+ORACLE_USER=tierra_en_calma
 
-ORACLE_PASS=1234
+ORACLE_PASS=*****
 
-ORACLE_CONN=localhost:1521/xe
+ORACLE_CONN=host.docker.internal:1521/XEPDB1
 
-* Si se utiliza Docker Compose:
-
-ORACLE_CONN=oracle-db:1521/XEPDB1
 
 ## 6. Instalación y ejecución local
 
@@ -134,7 +126,9 @@ La API queda disponible en http://localhost:3001.
 Prueba rápida:
 
 bash
-curl http://localhost:3001/api-datos
+curl http://localhost:3001/api-docs/ -> despliega la interfaz interactiva de Swagger donde se pueden probar todos los endpoints de forma gráfica
+curl http://localhost:3001/api/datos -> retorna el último dato recibido por el backend desde el broker MQTT
+curl http://localhost:3001/api/historial -> retorna un arreglo con todos los datos recibidos durante la ejecución del backend, útil para análisis o visualización de tendencias.
 
 ### 6.2 Frontend
 
@@ -160,15 +154,13 @@ La aplicación se abre en http://localhost:4200.
 3. Consultar logs para verificar estado:
 
    bash
-   docker compose logs -f oracle-db
    docker compose logs -f backend
    docker compose logs -f frontend
 
 ## 8. Inicialización de la base de datos
 
-El directorio database/init/ incluye scripts SQL que crean usuario y tablas iniciales.
-Si Oracle se levanta mediante Docker Compose, los scripts se ejecutan automáticamente.
-En caso de Oracle local, deben ejecutarse manualmente con SQL*Plus o SQL Developer.
+El backend se conecta directamente a una base de datos Oracle ya existente, no se levanta un contenedor adicional para la BD.
+El backend insertará y consultará registros en estas tablas a través de los endpoints /register, /login, /registrar-planta, etc.
 
 Tablas principales:
 
@@ -194,6 +186,7 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
 
