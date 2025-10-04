@@ -76,18 +76,19 @@ El archivo backend/.env debe contener:
 env
 PORT=3000
 
-# Configuración MQTT
+* Configuración MQTT
 MQTT_BROKER=mqtt://tierra.cloud.shiftr.io
 MQTT_USER=tierra
 MQTT_PASS=**************
 MQTT_TOPIC=plantas/datos
 
-# Configuración Oracle
+* Configuración Oracle
 ORACLE_USER=C##tierraencalma
 ORACLE_PASS=1234
 ORACLE_CONN=localhost:1521/xe
-# Si se utiliza Docker Compose:
-# ORACLE_CONN=oracle-db:1521/XEPDB1
+
+* Si se utiliza Docker Compose:
+ORACLE_CONN=oracle-db:1521/XEPDB1
 
 ## 6. Instalación y ejecución local
 
@@ -163,5 +164,6 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
