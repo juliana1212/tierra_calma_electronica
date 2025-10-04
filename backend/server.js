@@ -142,13 +142,13 @@ await connection.execute(
     res.send({ message: "🌱 Planta registrada con éxito en tu jardín" });
 
   } catch (err) {
-    console.error("💥 Error al registrar planta:", err);
+    console.error("Error al registrar planta:", err);
     res.status(500).send({ error: "Error al registrar planta" });
   }
 });
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ======================= INICIO SERVIDOR =======================
-app.listen(3000, () => {
-  console.log("Servidor backend corriendo en http://localhost:3000");
+app.listen(3001, () => {
+  console.log("Servidor backend corriendo en http://localhost:3001");
 });
