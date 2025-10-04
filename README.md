@@ -19,8 +19,6 @@ El sistema integra *Frontend, Backend, Base de Datos Oracle XE* y soporte de men
 
 ## 2. Estructura del repositorio
 
-## 2. Estructura del repositorio
-
 ```plaintext
 tierra_calma_electronica/  
 ├─ backend/    
@@ -55,6 +53,7 @@ tierra_calma_electronica/
 │
 ├─ docker-compose.yml         # Orquestación de servicios (backend, frontend, DB, etc.)  
 └─ README.md                  # Documentación general del proyecto        
+```
 
 ## 3. Descarga del proyecto
 
@@ -195,6 +194,7 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
 
