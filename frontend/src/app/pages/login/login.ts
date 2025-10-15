@@ -53,34 +53,37 @@ export class LoginComponent {
     alert(`Se han enviado las instrucciones a la identificación: ${this.forgotIdentification}`);
     this.closeForgotPasswordModal();
   }
+// 🔹 LOGIN → consulta Oracle
+onLoginSubmit(event: Event): void {
+  event.preventDefault();
 
-  // 🔹 LOGIN → consulta Oracle
-  onLoginSubmit(event: Event): void {
-    event.preventDefault();
+  const credentials = {
+    correo_electronico: this.loginCorreo,
+    contrasena: this.loginContrasena
+  };
 
-    const credentials = {
-      correo_electronico: this.loginCorreo,
-      contrasena: this.loginContrasena
-    };
+  this.authService.login(credentials).subscribe(
+    (res: any) => {
+      console.log('Respuesta login:', res);
 
-    this.authService.login(credentials).subscribe(
-      (res: any) => {
-        console.log('Login exitoso', res);
-        if (res.user) {
-          // 👇 Guardamos en localStorage el usuario logueado
-          localStorage.setItem('usuario', JSON.stringify(res.user));
+      // 👇 Detecta si el backend devolvió un objeto o un arreglo
+      const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
 
-          alert('Bienvenida ' + (res.user.NOMBRE || res.user[1]));
-          // Redirige a mis-plantas
-          this.router.navigate(['/mis-plantas']);
-        }
-      },
-      (err:any) => {
-        console.error('Error en login', err);
+      if (usuario) {
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+        alert('Bienvenida ' + (usuario.NOMBRE || usuario.nombre));
+        this.router.navigate(['/mis-plantas']);
+      } else {
         alert('Credenciales inválidas');
       }
-    );
-  }
+    },
+    (err: any) => {
+      console.error('Error en login:', err);
+      alert('Credenciales inválidas');
+    }
+  );
+}
+
 
   // 🔹 REGISTRO → guarda en Oracle
   onRegisterSubmit(event: Event): void {
