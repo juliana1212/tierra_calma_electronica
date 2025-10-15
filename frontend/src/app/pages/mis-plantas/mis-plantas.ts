@@ -13,7 +13,7 @@ export class MisPlantasComponent {
   imagenCargada = true;
 
   irACeriman() {
-    window.location.href = '/monstera'; // cambia por router.navigate si lo prefieres
+    window.location.href = '/mis-plantas'; // cambia por router.navigate si lo prefieres
   }
 
   irADolar() { /* ... */ }

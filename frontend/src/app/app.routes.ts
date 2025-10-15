@@ -1,27 +1,27 @@
 import { Routes } from '@angular/router';
+import { PublicLayoutComponent } from './layouts/public-layout';
+import { PrivateLayoutComponent } from './layouts/private-layout';
 import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
-import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
 import { MisPlantasComponent } from './pages/mis-plantas/mis-plantas';
+import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
 import { AuthGuard } from './guards/auth-guard';
-import { MonsteraComponent } from './pages/monstera/monstera';
-import { HeaderPrivadoComponent } from './pages/header-privado/header-privado';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, title: 'Tierra en Calma - Inicio' },
-  { path: 'login', component: LoginComponent, title: 'Tierra en Calma - Login' },
-
-  // 🔹 Rutas privadas (con HeaderPrivadoComponent visible)
   {
     path: '',
-    component: HeaderPrivadoComponent,
-    canActivate: [AuthGuard],
+    component: PublicLayoutComponent,
     children: [
-      { path: 'mis-plantas', component: MisPlantasComponent, title: 'Mis Plantas' },
-      { path: 'registrar-planta', component: RegistrarPlantasComponent, title: 'Registrar Planta' },
-      { path: 'monstera', component: MonsteraComponent, title: 'Monstera' }
+      { path: '', component: HomeComponent },
+      { path: 'login', component: LoginComponent }
     ]
   },
-
-  { path: '**', redirectTo: '' }
+  {
+    path: '',
+    component: PrivateLayoutComponent,
+    children: [
+      { path: 'mis-plantas', component: MisPlantasComponent, canActivate: [AuthGuard] },
+      { path: 'registrar-planta', component: RegistrarPlantasComponent, canActivate: [AuthGuard] }
+    ]
+  }
 ];
