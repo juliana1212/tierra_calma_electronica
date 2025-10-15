@@ -27,7 +27,7 @@ app.post("/api/register", async (req, res) => {
     const connection = await oracledb.getConnection(dbConfig);
 
     await connection.execute(
-      `INSERT INTO USUARIOS 
+      `INSERT INTO TIERRA_EN_CALMA.USUARIOS 
        (ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO, CONTRASENA)
        VALUES (:id_usuario, :nombre, :apellido, :telefono, :correo_electronico, :contrasena)`,
       { id_usuario, nombre, apellido, telefono, correo_electronico, contrasena },
@@ -38,7 +38,7 @@ app.post("/api/register", async (req, res) => {
     res.send({ message: "👤 Usuario registrado con éxito" });
 
   } catch (err) {
-    console.error(" Error en registro:", err);
+    console.error("❌ Error en registro:", err);
     res.status(500).send({ error: "Error al registrar usuario" });
   }
 });
@@ -50,19 +50,20 @@ app.post("/api/login", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
 
-    const result = await connection.execute(
-      `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
-       FROM USUARIOS
-       WHERE CORREO_ELECTRONICO = :correo_electronico
-       AND CONTRASENA = :contrasena`,
-      { correo_electronico, contrasena },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
-    );
+const result = await connection.execute(
+  `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
+   FROM TIERRA_EN_CALMA.USUARIOS
+   WHERE CORREO_ELECTRONICO = :correo_electronico
+   AND CONTRASENA = :contrasena`,
+  { correo_electronico, contrasena },
+  { outFormat: oracledb.OUT_FORMAT_OBJECT }
+);
+
 
     await connection.close();
 
     if (result.rows.length > 0) {
-      res.send({ message: " Login exitoso", user: result.rows[0] });
+      res.send({ message: "✅ Login exitoso", user: result.rows[0] });
     } else {
       res.status(401).send({ message: "Credenciales inválidas" });
     }
@@ -117,20 +118,19 @@ app.post("/api/registrar-planta", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
 
-  await connection.execute(
-  `INSERT INTO PLANTAS_USUARIO 
-   (ID_PLANTA, ID_USUARIO, ESTADO, NOMBRE_PERSONALIZADO)
-   VALUES (:id_planta, :id_usuario, 'activa', NULL)`,
-  { id_planta, id_usuario },
-  { autoCommit: true }
-);
-
+    await connection.execute(
+      `INSERT INTO TIERRA_EN_CALMA.PLANTAS_USUARIO 
+       (ID_PLANTA, ID_USUARIO, ESTADO, NOMBRE_PERSONALIZADO)
+       VALUES (:id_planta, :id_usuario, 'activa', NULL)`,
+      { id_planta, id_usuario },
+      { autoCommit: true }
+    );
 
     await connection.close();
     res.send({ message: "🌿 Planta registrada con éxito en tu jardín" });
 
   } catch (err) {
-    console.error(" Error al registrar planta:", err);
+    console.error("❌ Error al registrar planta:", err);
     res.status(500).send({ error: "Error al registrar planta" });
   }
 });
@@ -141,5 +141,5 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // ======================= INICIO SERVIDOR =======================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(` Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
 });

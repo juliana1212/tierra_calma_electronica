@@ -1,13 +1,18 @@
 import { Routes } from '@angular/router';
+
+// Layouts
 import { PublicLayoutComponent } from './layouts/public-layout';
 import { PrivateLayoutComponent } from './layouts/private-layout';
+
+// Páginas públicas
 import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
+
+// Páginas privadas
 import { MisPlantasComponent } from './pages/mis-plantas/mis-plantas';
-import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
-import { AuthGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
+  // 🌿 Layout público (antes de iniciar sesión)
   {
     path: '',
     component: PublicLayoutComponent,
@@ -16,12 +21,16 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent }
     ]
   },
+
+  // 🌱 Layout privado (después del login)
   {
     path: '',
     component: PrivateLayoutComponent,
     children: [
-      { path: 'mis-plantas', component: MisPlantasComponent, canActivate: [AuthGuard] },
-      { path: 'registrar-planta', component: RegistrarPlantasComponent, canActivate: [AuthGuard] }
+      { path: 'mis-plantas', component: MisPlantasComponent }
     ]
-  }
+  },
+
+  // Redirección por defecto
+  { path: '**', redirectTo: '' }
 ];

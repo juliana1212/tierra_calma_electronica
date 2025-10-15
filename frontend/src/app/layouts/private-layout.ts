@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderPrivadoComponent } from '../pages/header-privado/header-privado';
-import { PublicLayoutComponent } from './public-layout'; // para reutilizar el footer
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ✅ Necesario para ngForm
 
 @Component({
   selector: 'app-private-layout',
   standalone: true,
-  imports: [RouterOutlet, HeaderPrivadoComponent],
+  imports: [RouterOutlet, HeaderPrivadoComponent, CommonModule, FormsModule],
   templateUrl: './private-layout.html',
-  styleUrls: ['./private-layout.scss']
+styleUrls: ['../app.scss']
+
 })
-export class PrivateLayoutComponent {}
+export class PrivateLayoutComponent {
+  onSubmit() {
+    alert('📩 Tu mensaje fue enviado correctamente.');
+  }
+}
