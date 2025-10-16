@@ -1,7 +1,7 @@
 
 services:
   backend:
-    image: nataliaflorezg/tierra-backend:v5
+    image: nataliaflorezg/tierra-backend:v7
     container_name: tierra-backend
     ports:
       - "3001:3000"
@@ -9,10 +9,9 @@ services:
       - ./backend/.env
 
   frontend:
-    image: nataliaflorezg/tierra-frontend:v8
+    image: nataliaflorezg/tierra-frontend:v9
     container_name: tierra-frontend
     ports:
       - "4200:80"
     depends_on:
       - backend
-

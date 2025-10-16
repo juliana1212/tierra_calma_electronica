@@ -20,7 +20,7 @@ const dbConfig = {
 };
 
 
-// 🔹 Registro
+// Registro
 app.post("/api/register", async (req, res) => {
   const { id_usuario, nombre, apellido, telefono, correo_electronico, contrasena } = req.body;
 
@@ -43,7 +43,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// 🔹 Login
+// Login
 app.post("/api/login", async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
 
@@ -122,8 +122,19 @@ app.get("/api/historial", (req, res) => {
 
 
 // ======================= PLANTAS =======================
+// Activar riego (publica en MQTT)
+app.post("/api/regar", (req, res) => {
+  try {
+    client.publish("plantas/regar", "REGAR");
+    console.log("Comando de riego publicado en MQTT (topic plantas/regar)");
+    res.json({ message: "Comando de riego enviado a la planta 🌱" });
+  } catch (err) {
+    console.error("Error publicando en MQTT:", err);
+    res.status(500).json({ error: "Error al activar el riego" });
+  }
+});
 
-// 🔹 Registrar planta en PLANTAS_USUARIO
+// Registrar planta en PLANTAS_USUARIO
 app.post("/api/registrar-planta", async (req, res) => {
   const { id_usuario, id_planta } = req.body;
 
