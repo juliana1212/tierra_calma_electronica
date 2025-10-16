@@ -64,7 +64,7 @@ También es posible usar imágenes publicadas en Docker Hub:
 
 bash
 docker pull <usuario>/tierra-backend:v5
-docker pull <usuario>/tierra-frontend:v7
+docker pull <usuario>/tierra-frontend:v8
 
 ## 4. Requisitos de instalación y ejecución
 
@@ -186,6 +186,7 @@ Tablas principales:
 3. Iniciar sesión mediante POST /api/login.
 4. Registrar una planta mediante POST /api/registrar-planta.
 5. Visualizar datos de humedad y control de riego en el frontend (http://localhost:4200).
+
 
 
 
