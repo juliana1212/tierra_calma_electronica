@@ -21,7 +21,14 @@
         <h3 class="monit-card-title">Datos del sensor</h3>
 
         <div class="monit-sensor-value">
-          {{ isConnected ? realtimeData : '---' }}
+          <div *ngIf="isConnected; else sinConexion">
+            <b>Temperatura:</b> {{ sensorData.temperatura }}<br>
+            <b>Humedad del suelo:</b> {{ sensorData.humedadSuelo }}
+          </div>
+
+          <ng-template #sinConexion>
+            ---
+          </ng-template>
         </div>
 
         <div class="status-chip" [ngClass]="isConnected ? 'status-online' : 'status-offline'">
@@ -29,9 +36,11 @@
           {{ isConnected ? 'Conectado' : 'Desconectado' }}
         </div>
 
-        <div class="monit-row">🔄 Actualización cada 2s</div>
-        <div class="monit-row">🕒 {{ lastUpdate }}</div>
+        <div class="monit-row">Actualización cada 2s</div>
+        <div class="monit-row">{{ lastUpdate }}</div>
       </div>
+
+
 
       <!-- Historial de riego -->
       <div class="monit-card">
@@ -44,7 +53,7 @@
             </span>
           </div>
           <div *ngIf="historialRiego.length === 0" class="history-empty">
-            No hay registros de riego aún 🌱
+            No hay registros de riego aún
           </div>
         </div>
       </div>
@@ -77,11 +86,11 @@
       <!-- Formulario -->
       <form class="cuidados-form" (ngSubmit)="guardarCuidado()">
         <!-- Fecha -->
-        <label for="fecha">📅 Fecha</label>
+        <label for="fecha">Fecha</label>
         <input id="fecha" type="date" [(ngModel)]="nuevoCuidado.fecha" name="fecha">
 
         <!-- Tipo de cuidado -->
-        <label for="tipo">🌱 Tipo de cuidado</label>
+        <label for="tipo">Tipo de cuidado</label>
         <select id="tipo" [(ngModel)]="nuevoCuidado.tipo" name="tipo">
           <option value="" disabled selected>Selecciona una opción</option>
           <option value="fertilización">Fertilización</option>
@@ -89,7 +98,7 @@
         </select>
 
         <!-- Detalles -->
-        <label for="detalles">✍️ Detalles</label>
+        <label for="detalles">Detalles</label>
         <textarea id="detalles" [(ngModel)]="nuevoCuidado.detalles" name="detalles" placeholder="Agrega notas sobre cómo cuidaste tu planta..."></textarea>
 
         <!-- Botón -->

@@ -31,6 +31,12 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   // === Registrar cuidados ===
   nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
 
+  // === Datos procesados del sensor ===
+  sensorData = {
+    temperatura: '---',
+    humedadSuelo: '---'
+  };
+
   // === Chart ===
   @ViewChild('soilChart', { static: false }) soilChartRef!: ElementRef<HTMLCanvasElement>;
   private chart?: Chart;
@@ -62,8 +68,16 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // ====== RIEGO MANUAL ======
   activarRiego(): void {
-    this.agregarHistorial('manual', 'Riego manual activado');
-    alert('💧 Riego manual enviado al backend (simulado)');
+    this.mqttService.activarRiego().subscribe({
+      next: () => {
+        this.agregarHistorial('manual', 'Riego manual activado');
+        alert('💧 Riego activado correctamente');
+      },
+      error: (err) => {
+        console.error('Error al activar el riego:', err);
+        alert('⚠️ Error al activar el riego');
+      }
+    });
   }
 
   // ====== RIEGO AUTOMÁTICO ======
@@ -88,23 +102,33 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mqttService.getUltimoDato().subscribe(res => {
       if (res && res.dato) {
         this.realtimeData = res.dato;
+        // interpretar los datos del string recibido
+          const matchTemp = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
+          const matchHumedadSuelo = res.dato.match(/Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?%?)/i);
+
+          this.sensorData = {
+            temperatura: matchTemp ? matchTemp[1] + ' °C' : '---',
+            humedadSuelo: matchHumedadSuelo ? matchHumedadSuelo[1] : '---'
+          };
+
         this.lastUpdate = `Última actualización: ${new Date().toLocaleTimeString()}`;
         this.isConnected = true;
 
         // Extraer temperatura y humedad de la cadena recibida
         const tempMatch = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
-        const humMatch = res.dato.match(/Humedad:\s*(\d+)\s*%/i);
+        const sueloMatch = res.dato.match(/Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?)(?:%?)/i);
 
         if (tempMatch) {
           const temp = parseFloat(tempMatch[1]);
           this.pushPoint('temp', temp);
         }
 
-        if (humMatch) {
-          const humidity = parseInt(humMatch[1], 10);
-          this.pushPoint('humidity', humidity);
-          if (humidity < 30) this.activarRiegoAutomatico();
+        if (sueloMatch) {
+          const humedadSuelo = parseFloat(sueloMatch[1]);
+          this.pushPoint('humidity', humedadSuelo);
+          if (humedadSuelo < 30) this.activarRiegoAutomatico();
         }
+
       }
     });
 
@@ -129,8 +153,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
           {
             label: 'Humedad (%)',
             data: this.humidityData,
-            borderColor: 'blue',
-            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            borderColor: 'rgba(121, 157, 204, 0.3)',
+            backgroundColor: 'rgba(28, 28, 158, 0.2)',
             borderWidth: 2,
             fill: false,
             tension: 0.4
@@ -138,8 +162,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
           {
             label: 'Temperatura (°C)',
             data: this.tempData,
-            borderColor: 'orange',
-            backgroundColor: 'rgba(255,165,0,0.2)',
+            borderColor: 'rgba(110, 93, 63, 0.4)',
+            backgroundColor: 'rgba(116, 111, 102, 0.2)',
             borderWidth: 2,
             fill: false,
             tension: 0.4
@@ -150,7 +174,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          y: { beginAtZero: true, max: 100 },
+          y: { beginAtZero: true, max: 80 },
           x: { display: false }
         }
       }
@@ -182,7 +206,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    alert(`🌿 Cuidado guardado:\n${this.nuevoCuidado.tipo} el ${this.nuevoCuidado.fecha}`);
+    alert(`Cuidado guardado:\n${this.nuevoCuidado.tipo} el ${this.nuevoCuidado.fecha}`);
     this.nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
   }
 }

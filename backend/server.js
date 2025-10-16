@@ -35,10 +35,10 @@ app.post("/api/register", async (req, res) => {
     );
 
     await connection.close();
-    res.send({ message: "👤 Usuario registrado con éxito" });
+    res.send({ message: "Usuario registrado con éxito" });
 
   } catch (err) {
-    console.error("❌ Error en registro:", err);
+    console.error("Error en registro:", err);
     res.status(500).send({ error: "Error al registrar usuario" });
   }
 });
@@ -50,26 +50,25 @@ app.post("/api/login", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
 
-const result = await connection.execute(
-  `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
-   FROM TIERRA_EN_CALMA.USUARIOS
-   WHERE CORREO_ELECTRONICO = :correo_electronico
-   AND CONTRASENA = :contrasena`,
-  { correo_electronico, contrasena },
-  { outFormat: oracledb.OUT_FORMAT_OBJECT }
-);
-
+    const result = await connection.execute(
+      `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
+       FROM TIERRA_EN_CALMA.USUARIOS
+       WHERE CORREO_ELECTRONICO = :correo_electronico
+       AND CONTRASENA = :contrasena`,
+      { correo_electronico, contrasena },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
 
     await connection.close();
 
     if (result.rows.length > 0) {
-      res.send({ message: "✅ Login exitoso", user: result.rows[0] });
+      res.send({ message: "Login exitoso", user: result.rows[0] });
     } else {
       res.status(401).send({ message: "Credenciales inválidas" });
     }
 
   } catch (err) {
-    console.error("❌ Error en login:", err);
+    console.error("Error en login:", err);
     res.status(500).send({ error: "Error al iniciar sesión" });
   }
 });
@@ -88,10 +87,10 @@ let ultimoDato = "Esperando datos...";
 let historial = [];
 
 client.on("connect", () => {
-  console.log("🌐 Conectado al broker MQTT");
+  console.log("Conectado al broker MQTT");
   client.subscribe(mqttTopic, (err) => {
-    if (!err) console.log(`📡 Suscrito al topic ${mqttTopic}`);
-    else console.error("❌ Error al suscribirse al topic:", err);
+    if (!err) console.log(`Suscrito al topic ${mqttTopic}`);
+    else console.error("Error al suscribirse al topic:", err);
   });
 });
 
@@ -112,6 +111,20 @@ app.get("/api/historial", (req, res) => {
 });
 
 // ======================= PLANTAS =======================
+
+// Activar riego (publica en MQTT)
+app.post("/api/regar", (req, res) => {
+  try {
+    client.publish("plantas/regar", "REGAR");
+    console.log("Comando de riego publicado en MQTT (topic plantas/regar)");
+    res.json({ message: "Comando de riego enviado a la planta" });
+  } catch (err) {
+    console.error("Error publicando en MQTT:", err);
+    res.status(500).json({ error: "Error al activar el riego" });
+  }
+});
+
+// Registrar planta en PLANTAS_USUARIO
 app.post("/api/registrar-planta", async (req, res) => {
   const { id_usuario, id_planta } = req.body;
 
@@ -127,10 +140,10 @@ app.post("/api/registrar-planta", async (req, res) => {
     );
 
     await connection.close();
-    res.send({ message: "🌿 Planta registrada con éxito en tu jardín" });
+    res.send({ message: "Planta registrada con éxito en tu jardín" });
 
   } catch (err) {
-    console.error("❌ Error al registrar planta:", err);
+    console.error("Error al registrar planta:", err);
     res.status(500).send({ error: "Error al registrar planta" });
   }
 });
@@ -141,5 +154,5 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // ======================= INICIO SERVIDOR =======================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
