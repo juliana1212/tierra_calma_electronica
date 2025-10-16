@@ -26,7 +26,7 @@ app.post("/api/register", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
 
-    await connection.execute(
+    const result = await connection.execute(
       `INSERT INTO TIERRA_EN_CALMA.USUARIOS 
        (ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO, CONTRASENA)
        VALUES (:id_usuario, :nombre, :apellido, :telefono, :correo_electronico, :contrasena)`,
@@ -34,12 +34,17 @@ app.post("/api/register", async (req, res) => {
       { autoCommit: true }
     );
 
+    console.log("✅ Usuario registrado:", result);
     await connection.close();
+
     res.send({ message: "Usuario registrado con éxito" });
 
   } catch (err) {
-    console.error("Error en registro:", err);
-    res.status(500).send({ error: "Error al registrar usuario" });
+    console.error("❌ Error Oracle al registrar usuario:", err.message);
+    res.status(500).send({
+      error: "Error al registrar usuario",
+      detalles: err.message // 👈 Aquí veremos el código exacto (ORA-XXXX)
+    });
   }
 });
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,12 +12,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.scss']
 })
 export class LoginComponent {
+  // 🌿 Estados del formulario
   isContainerActive = false;
+  isTransitioning = false;
   isForgotPasswordModalOpen = false;
-  forgotIdentification = '';
+
+  // 🪴 Campos Login
   loginCorreo = '';
   loginContrasena = '';
 
+  // 🌸 Campos Registro
   regIdUsuario = '';
   regNombre = '';
   regApellido = '';
@@ -25,24 +29,25 @@ export class LoginComponent {
   regCorreo = '';
   regContrasena = '';
 
-  isTransitioning = false;
+  // 🔐 Olvidé mi contraseña
+  forgotIdentification = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // 🔹 Animación de cambio entre login y registro
+  // 🔹 Animaciones entre login ↔ registro
   showRegister(): void {
     this.isTransitioning = true;
     setTimeout(() => (this.isContainerActive = true), 200);
-    setTimeout(() => (this.isTransitioning = false), 1000);
+    setTimeout(() => (this.isTransitioning = false), 800);
   }
 
   showLogin(): void {
     this.isTransitioning = true;
     setTimeout(() => (this.isContainerActive = false), 200);
-    setTimeout(() => (this.isTransitioning = false), 1000);
+    setTimeout(() => (this.isTransitioning = false), 800);
   }
 
-  // 🔹 Modal de "Olvidé mi contraseña"
+  // 🔹 Modal de “Olvidé mi contraseña”
   openForgotPasswordModal(event: Event): void {
     event.preventDefault();
     this.isForgotPasswordModalOpen = true;
@@ -54,11 +59,11 @@ export class LoginComponent {
   }
 
   sendPasswordReset(): void {
-    if (!this.forgotIdentification) {
-      alert('Por favor ingresa tu identificación');
+    if (!this.forgotIdentification.trim()) {
+      alert('⚠️ Por favor ingresa tu identificación.');
       return;
     }
-    alert(`Se han enviado las instrucciones a la identificación: ${this.forgotIdentification}`);
+    alert(`📧 Se han enviado las instrucciones a la identificación: ${this.forgotIdentification}`);
     this.closeForgotPasswordModal();
   }
 
@@ -67,66 +72,83 @@ export class LoginComponent {
     event.preventDefault();
 
     const credentials = {
-      correo_electronico: this.loginCorreo,
-      contrasena: this.loginContrasena
+      correo_electronico: this.loginCorreo.trim(),
+      contrasena: this.loginContrasena.trim()
     };
 
-    this.authService.login(credentials).subscribe(
-      (res: any) => {
-        console.log('Respuesta login:', res);
+    if (!credentials.correo_electronico || !credentials.contrasena) {
+      alert('⚠️ Ingresa tu correo y contraseña.');
+      return;
+    }
 
-        // ✅ Detecta si el backend devolvió un objeto o un arreglo
+    this.authService.login(credentials).subscribe({
+      next: (res: any) => {
+        console.log('✅ Respuesta login:', res);
+
+        // 🔍 Asegura que venga el usuario correctamente
         const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
 
-        if (usuario) {
+        if (usuario && (usuario.NOMBRE || usuario.nombre)) {
           localStorage.setItem('usuario', JSON.stringify(usuario));
-          alert('Bienvenida ' + (usuario.NOMBRE || usuario.nombre));
+          alert(`🌱 Bienvenida ${usuario.NOMBRE || usuario.nombre}`);
           this.router.navigate(['/mis-plantas']);
         } else {
-          alert('Credenciales inválidas');
+          alert('❌ Credenciales inválidas. Verifica tu correo o contraseña.');
         }
       },
-      (err: any) => {
-        console.error('Error en login:', err);
-        alert('Credenciales inválidas');
+      error: (err) => {
+        console.error('❌ Error en login:', err);
+        if (err.status === 0) {
+          alert('⚠️ No se pudo conectar con el servidor. Verifica el backend.');
+        } else if (err.error?.message) {
+          alert(`⚠️ ${err.error.message}`);
+        } else {
+          alert('❌ Credenciales inválidas.');
+        }
       }
-    );
+    });
   }
 
-  // 🔹 REGISTRO → guarda usuario nuevo en Oracle
+  // 🔹 REGISTRO → guarda nuevo usuario en Oracle
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 
     const newUser = {
-      id_usuario: this.regIdUsuario,
-      nombre: this.regNombre,
-      apellido: this.regApellido,
-      telefono: this.regTelefono,
-      correo_electronico: this.regCorreo,
-      contrasena: this.regContrasena
+      id_usuario: this.regIdUsuario.trim(),
+      nombre: this.regNombre.trim(),
+      apellido: this.regApellido.trim(),
+      telefono: this.regTelefono.trim(),
+      correo_electronico: this.regCorreo.trim(),
+      contrasena: this.regContrasena.trim()
     };
 
-    this.authService.register(newUser).subscribe(
-      (res: any) => {
-        console.log('Usuario registrado', res);
-        alert('Usuario registrado con éxito');
+    // Validación básica
+    if (!newUser.id_usuario || !newUser.nombre || !newUser.correo_electronico || !newUser.contrasena) {
+      alert('⚠️ Todos los campos son obligatorios.');
+      return;
+    }
+
+    this.authService.register(newUser).subscribe({
+      next: (res: any) => {
+        console.log('✅ Usuario registrado:', res);
+        alert('🎉 Usuario registrado con éxito.');
         this.showLogin();
       },
-      (err: any) => {
-        console.error('Error al registrar', err);
-        alert('Error al registrar');
+      error: (err) => {
+        console.error('❌ Error al registrar:', err);
+        alert('⚠️ No se pudo registrar el usuario. Revisa los datos o intenta más tarde.');
       }
-    );
+    });
   }
 
-  // 🔹 Botones Google (placeholder)
+  // 🔹 Placeholder botones de Google
   loginWithGoogle(event: Event): void {
     event.preventDefault();
-    console.log('Login with Google');
+    console.log('🪩 Login con Google');
   }
 
   registerWithGoogle(event: Event): void {
     event.preventDefault();
-    console.log('Register with Google');
+    console.log('🌼 Registro con Google');
   }
 }

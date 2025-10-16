@@ -71,11 +71,11 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mqttService.activarRiego().subscribe({
       next: () => {
         this.agregarHistorial('manual', 'Riego manual activado');
-        alert('💧 Riego activado correctamente');
+        alert(' Riego activado correctamente');
       },
       error: (err) => {
         console.error('Error al activar el riego:', err);
-        alert('⚠️ Error al activar el riego');
+        alert(' Error al activar el riego');
       }
     });
   }

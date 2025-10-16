@@ -1,6 +1,22 @@
 
 <div class="mis-plantas-container">
-    <div class="imagen-hero" [class.imagen-error]="!imagenCargada"></div>
+<div class="imagen-hero" [class.imagen-error]="!imagenCargada">
+  <div class="consejo-overlay">
+    <div class="consejo-circulo"></div>
+
+    <div class="consejo-texto">
+      <h2 class="consejo-titulo">Consejo del mes</h2>
+      <p class="consejo-descripcion">
+        Hablar o poner música suave a tus plantas parece un mito,
+        pero estudios demuestran que el sonido y la vibración
+        favorecen su crecimiento.
+      </p>
+      <p class="consejo-bienvenida">Bienvenida, <span>Juliana</span></p>
+    </div>
+
+  </div>
+</div>
+
 
     <div class="titulo-seccion">
         <h1 class="titulo-principal">Mis Plantas</h1>
@@ -166,13 +182,10 @@
                 <i class='bx bx-chevron-right'></i>
             </button>
         </div>
+<button class="btn-registrar" (click)="registrarNuevaPlanta()">
+  <i class='bx bx-plus'></i>
+  Registrar nueva planta
+</button>
 
-        <!-- Botón Registrar -->
-        <div class="boton-registrar-container">
-            <button class="btn-registrar" (click)="registrarNuevaPlanta()">
-                <i class='bx bx-plus'></i>
-                Registrar nueva planta
-            </button>
-        </div>
     </div>
 </section>
