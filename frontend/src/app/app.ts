@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
-import Swal from 'sweetalert2';  // ✅ Importación de SweetAlert2
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, FormsModule],
+  imports: [RouterOutlet, FormsModule, RouterLink],
   templateUrl: './app.html',
-  styleUrls: ['./app.scss']
 })
 export class App {
   protected readonly title = 'Tierra en calma';
@@ -22,7 +21,6 @@ export class App {
   };
 
   enviarFormulario() {
-    // ✅ Reemplazo del alert clásico por un modal interactivo
     Swal.fire({
       title: `¡Gracias, ${this.contacto.nombre}! 🌸`,
       text: 'Tu mensaje fue enviado correctamente. Pronto nos pondremos en contacto contigo.',

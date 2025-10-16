@@ -25,36 +25,29 @@ export class LoginComponent {
   regCorreo = '';
   regContrasena = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
-
   isTransitioning = false;
 
+  constructor(private authService: AuthService, private router: Router) {}
+
+  // 🔹 Animación de cambio entre login y registro
   showRegister(): void {
     this.isTransitioning = true;
-    setTimeout(() => {
-      this.isContainerActive = true;
-    }, 200);
-
-    setTimeout(() => {
-      this.isTransitioning = false;
-    }, 1000);
+    setTimeout(() => (this.isContainerActive = true), 200);
+    setTimeout(() => (this.isTransitioning = false), 1000);
   }
 
   showLogin(): void {
     this.isTransitioning = true;
-    setTimeout(() => {
-      this.isContainerActive = false;
-    }, 200);
-
-    setTimeout(() => {
-      this.isTransitioning = false;
-    }, 1000);
+    setTimeout(() => (this.isContainerActive = false), 200);
+    setTimeout(() => (this.isTransitioning = false), 1000);
   }
 
+  // 🔹 Modal de "Olvidé mi contraseña"
   openForgotPasswordModal(event: Event): void {
     event.preventDefault();
     this.isForgotPasswordModalOpen = true;
   }
+
   closeForgotPasswordModal(): void {
     this.isForgotPasswordModalOpen = false;
     this.forgotIdentification = '';
@@ -69,6 +62,7 @@ export class LoginComponent {
     this.closeForgotPasswordModal();
   }
 
+  // 🔹 LOGIN → consulta al backend Oracle
   onLoginSubmit(event: Event): void {
     event.preventDefault();
 
@@ -79,21 +73,27 @@ export class LoginComponent {
 
     this.authService.login(credentials).subscribe(
       (res: any) => {
-        console.log('Login exitoso', res);
-        if (res.user) {
-          localStorage.setItem('usuario', JSON.stringify(res.user));
+        console.log('Respuesta login:', res);
 
-          alert('Bienvenida ' + (res.user.NOMBRE || res.user[1]));
+        // ✅ Detecta si el backend devolvió un objeto o un arreglo
+        const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
+
+        if (usuario) {
+          localStorage.setItem('usuario', JSON.stringify(usuario));
+          alert('Bienvenida ' + (usuario.NOMBRE || usuario.nombre));
           this.router.navigate(['/mis-plantas']);
+        } else {
+          alert('Credenciales inválidas');
         }
       },
-      (err:any) => {
-        console.error('Error en login', err);
+      (err: any) => {
+        console.error('Error en login:', err);
         alert('Credenciales inválidas');
       }
     );
   }
 
+  // 🔹 REGISTRO → guarda usuario nuevo en Oracle
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 
@@ -107,22 +107,24 @@ export class LoginComponent {
     };
 
     this.authService.register(newUser).subscribe(
-      (res:any) => {
+      (res: any) => {
         console.log('Usuario registrado', res);
         alert('Usuario registrado con éxito');
         this.showLogin();
       },
-      (err:any) => {
+      (err: any) => {
         console.error('Error al registrar', err);
         alert('Error al registrar');
       }
     );
   }
 
+  // 🔹 Botones Google (placeholder)
   loginWithGoogle(event: Event): void {
     event.preventDefault();
     console.log('Login with Google');
   }
+
   registerWithGoogle(event: Event): void {
     event.preventDefault();
     console.log('Register with Google');

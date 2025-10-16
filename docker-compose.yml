@@ -1,4 +1,3 @@
-
 services:
   backend:
     image: nataliaflorezg/tierra-backend:v8
