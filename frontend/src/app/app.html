@@ -10,9 +10,10 @@
     </div>
 
     <div class="nav-right">
-      <a routerLink="/login" class="nav-link">Registrarse</a>
-      <a routerLink="/login" class="nav-link">Iniciar sesión</a>
+      <a class="nav-link" (click)="irALogin($event, 'register')">Registrarse</a>
+      <a class="nav-link" (click)="irALogin($event, 'login')">Iniciar sesión</a>
     </div>
+
   </nav>
 </header>
 
