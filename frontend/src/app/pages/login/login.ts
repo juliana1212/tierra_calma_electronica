@@ -15,12 +15,9 @@ export class LoginComponent {
   isContainerActive = false;
   isForgotPasswordModalOpen = false;
   forgotIdentification = '';
-
-  // 🔹 Variables LOGIN
   loginCorreo = '';
   loginContrasena = '';
 
-  // 🔹 Variables REGISTRO
   regIdUsuario = '';
   regNombre = '';
   regApellido = '';
@@ -30,11 +27,30 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Alternar entre login y registro
-  showRegister(): void { this.isContainerActive = true; }
-  showLogin(): void { this.isContainerActive = false; }
+  isTransitioning = false;
 
-  // Modal recuperación
+  showRegister(): void {
+    this.isTransitioning = true;
+    setTimeout(() => {
+      this.isContainerActive = true;
+    }, 200);
+
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 1000);
+  }
+
+  showLogin(): void {
+    this.isTransitioning = true;
+    setTimeout(() => {
+      this.isContainerActive = false;
+    }, 200);
+
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 1000);
+  }
+
   openForgotPasswordModal(event: Event): void {
     event.preventDefault();
     this.isForgotPasswordModalOpen = true;
@@ -44,7 +60,6 @@ export class LoginComponent {
     this.forgotIdentification = '';
   }
 
-  // Enviar recuperación
   sendPasswordReset(): void {
     if (!this.forgotIdentification) {
       alert('Por favor ingresa tu identificación');
@@ -54,7 +69,6 @@ export class LoginComponent {
     this.closeForgotPasswordModal();
   }
 
-  // 🔹 LOGIN → consulta Oracle
   onLoginSubmit(event: Event): void {
     event.preventDefault();
 
@@ -67,11 +81,9 @@ export class LoginComponent {
       (res: any) => {
         console.log('Login exitoso', res);
         if (res.user) {
-          // 👇 Guardamos en localStorage el usuario logueado
           localStorage.setItem('usuario', JSON.stringify(res.user));
 
           alert('Bienvenida ' + (res.user.NOMBRE || res.user[1]));
-          // Redirige a mis-plantas
           this.router.navigate(['/mis-plantas']);
         }
       },
@@ -82,7 +94,6 @@ export class LoginComponent {
     );
   }
 
-  // 🔹 REGISTRO → guarda en Oracle
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 
@@ -99,7 +110,7 @@ export class LoginComponent {
       (res:any) => {
         console.log('Usuario registrado', res);
         alert('Usuario registrado con éxito');
-        this.showLogin(); // 👈 opcional: volver a pantalla login
+        this.showLogin();
       },
       (err:any) => {
         console.error('Error al registrar', err);
@@ -108,7 +119,6 @@ export class LoginComponent {
     );
   }
 
-  // Google (dummy)
   loginWithGoogle(event: Event): void {
     event.preventDefault();
     console.log('Login with Google');
