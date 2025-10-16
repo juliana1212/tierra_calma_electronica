@@ -1,0 +1,46 @@
+<app-header-privado></app-header-privado>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer" id="footer">
+  <div class="footer-container">
+
+    <div class="footer-info">
+      <h2 class="footer-title">Estamos aquí para ayudarte</h2>
+      <div class="footer-img"></div>
+
+      <div class="footer-contactos">
+        <div class="footer-contacto">
+          <i class="fas fa-phone"></i>
+          <span>(12) 456-7890</span>
+        </div>
+        <div class="footer-contacto">
+          <i class="fab fa-instagram"></i>
+          <span>@TierraEnCalma</span>
+        </div>
+        <div class="footer-contacto">
+          <i class="fas fa-envelope"></i>
+          <span>TierraEnCalma@gmail.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-form">
+      <h3 class="footer-form-title">Nosotros te contactamos</h3>
+      <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Tu nombre" required />
+
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" placeholder="tu.email@ejemplo.com" required />
+
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" placeholder="¿Cómo podemos ayudarte?" rows="4" required></textarea>
+
+        <button type="submit">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</footer>
