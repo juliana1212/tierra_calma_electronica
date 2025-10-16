@@ -1,6 +1,7 @@
-<div class="container" [class.activate]="isContainerActive">
-  <!-- 🔹 Formulario LOGIN -->
-  <div class="form-box login">
+<div class="container" [class.activate]="isContainerActive" [class.transitioning]="isTransitioning">
+  <div class="transition-cover" *ngIf="isTransitioning"></div>
+
+  <div class="form-box login" [class.hidden]="isContainerActive">
     <form (submit)="onLoginSubmit($event)">
       <h1>Inicio de sesión</h1>
 
@@ -19,16 +20,10 @@
       </div>
 
       <button type="submit" class="btn">Ingresar</button>
-
-      <p>Inicia sesión con google</p>
-      <div class="social-icons">
-        <a href="#" (click)="loginWithGoogle($event)"><i class='bx bxl-google'></i></a>
-      </div>
     </form>
   </div>
 
-  <!-- 🔹 Formulario REGISTRO -->
-  <div class="form-box register">
+  <div class="form-box register" [class.hidden]="!isContainerActive">
     <form (submit)="onRegisterSubmit($event)">
       <h1>Registro</h1>
 
@@ -62,20 +57,10 @@
         <i class='bx bxs-lock-alt'></i>
       </div>
 
-      <div class="forgot-link">
-        <a href="#" (click)="openForgotPasswordModal($event)">¿Olvidaste tu contraseña?</a>
-      </div>
-
       <button type="submit" class="btn">Registrar</button>
-
-      <p>Regístrate con google</p>
-      <div class="social-icons">
-        <a href="#" (click)="registerWithGoogle($event)"><i class='bx bxl-google'></i></a>
-      </div>
     </form>
   </div>
 
-  <!-- 🔹 Paneles laterales -->
   <div class="toggle-box"></div>
 
   <div class="toggle-panel toggle-left">
