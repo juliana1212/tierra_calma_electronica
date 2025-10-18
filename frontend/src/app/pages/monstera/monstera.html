@@ -49,7 +49,7 @@
           <div class="history-item" *ngFor="let item of historialRiego">
             <span class="history-time">{{ item.hora }}</span>
             <span class="history-msg">
-                {{ item.tipo === 'manual' ? '💧 ' : '⚡ ' }}{{ item.mensaje }}
+                {{ item.tipo === 'manual' ? '' : '' }}{{ item.mensaje }}
             </span>
           </div>
           <div *ngIf="historialRiego.length === 0" class="history-empty">

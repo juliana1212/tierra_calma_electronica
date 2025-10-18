@@ -5,7 +5,7 @@ info:
   description: Endpoints de usuarios y plantas
 
 servers:
-  - url: http://localhost:3001/api
+  - url: http://localhost:3004/api
 
 paths:
   /register:
@@ -82,3 +82,68 @@ paths:
       responses:
         "200":
           description: Planta añadida con éxito
+
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Healthcheck del servicio
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                properties:
+                  ok:
+                    type: boolean
+              examples:
+                ok:
+                  value:
+                    ok: true
+
+  /health/db:
+    get:
+      tags:
+        - Health
+      summary: Ping a la base de datos
+      responses:
+        "200":
+          description: Conexión a DB OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                properties:
+                  ok:
+                    type: boolean
+              examples:
+                ok:
+                  value:
+                    ok: true
+        "500":
+          description: Error conectando a DB
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - error
+                properties:
+                  ok:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "timeout"
+              examples:
+                fail:
+                  value:
+                    ok: false
+                    error: "timeout"

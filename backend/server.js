@@ -19,6 +19,21 @@ const dbConfig = {
   connectString: process.env.ORACLE_CONN
 };
 
+// ======================= TEST DE CONEXIÓN AL INICIAR =======================
+(async () => {
+  console.log("Probando conexión a Oracle...");
+  try {
+    const conn = await oracledb.getConnection(dbConfig);
+    const result = await conn.execute("SELECT 'Conexión OK' AS estado FROM DUAL");
+    console.log(`Conexión exitosa a Oracle: ${result.rows[0][0]}`);
+    await conn.close();
+  } catch (err) {
+    console.error("Error al conectar con Oracle al iniciar el servidor:");
+    console.error(`Código: ${err.errorNum || err.code}`);
+    console.error(`Mensaje: ${err.message}`);
+  }
+})();
+
 // ======================= REGISTRO DE USUARIOS =======================
 app.post("/api/register", async (req, res) => {
   const { id_usuario, nombre, apellido, telefono, correo_electronico, contrasena } = req.body;
@@ -34,16 +49,18 @@ app.post("/api/register", async (req, res) => {
       { autoCommit: true }
     );
 
-    console.log("✅ Usuario registrado:", result);
+    console.log("Usuario registrado:", result);
     await connection.close();
 
     res.send({ message: "Usuario registrado con éxito" });
 
   } catch (err) {
-    console.error("❌ Error Oracle al registrar usuario:", err.message);
+    console.error("Error Oracle al registrar usuario:");
+    console.error(`Código: ${err.errorNum || err.code}`);
+    console.error(`Mensaje: ${err.message}`);
     res.status(500).send({
       error: "Error al registrar usuario",
-      detalles: err.message // 👈 Aquí veremos el código exacto (ORA-XXXX)
+      detalles: err.message
     });
   }
 });
@@ -67,13 +84,17 @@ app.post("/api/login", async (req, res) => {
     await connection.close();
 
     if (result.rows.length > 0) {
+      console.log(`Login exitoso para: ${correo_electronico}`);
       res.send({ message: "Login exitoso", user: result.rows[0] });
     } else {
+      console.warn(`Intento fallido de login: ${correo_electronico}`);
       res.status(401).send({ message: "Credenciales inválidas" });
     }
 
   } catch (err) {
-    console.error("Error en login:", err);
+    console.error("Error en login:");
+    console.error(`Código: ${err.errorNum || err.code}`);
+    console.error(`Mensaje: ${err.message}`);
     res.status(500).send({ error: "Error al iniciar sesión" });
   }
 });
@@ -94,7 +115,7 @@ let historial = [];
 client.on("connect", () => {
   console.log("Conectado al broker MQTT");
   client.subscribe(mqttTopic, (err) => {
-    if (!err) console.log(`Suscrito al topic ${mqttTopic}`);
+    if (!err) console.log(`Suscrito al topic: ${mqttTopic}`);
     else console.error("Error al suscribirse al topic:", err);
   });
 });
@@ -116,12 +137,10 @@ app.get("/api/historial", (req, res) => {
 });
 
 // ======================= PLANTAS =======================
-
-// Activar riego (publica en MQTT)
 app.post("/api/regar", (req, res) => {
   try {
     client.publish("plantas/regar", "REGAR");
-    console.log("Comando de riego publicado en MQTT (topic plantas/regar)");
+    console.log("Comando de riego enviado (topic plantas/regar)");
     res.json({ message: "Comando de riego enviado a la planta" });
   } catch (err) {
     console.error("Error publicando en MQTT:", err);
@@ -129,7 +148,6 @@ app.post("/api/regar", (req, res) => {
   }
 });
 
-// Registrar planta en PLANTAS_USUARIO
 app.post("/api/registrar-planta", async (req, res) => {
   const { id_usuario, id_planta } = req.body;
 
@@ -145,11 +163,60 @@ app.post("/api/registrar-planta", async (req, res) => {
     );
 
     await connection.close();
+    console.log(`Planta registrada (usuario: ${id_usuario}, planta: ${id_planta})`);
     res.send({ message: "Planta registrada con éxito en tu jardín" });
 
   } catch (err) {
-    console.error("Error al registrar planta:", err);
+    console.error("Error al registrar planta:");
+    console.error(`Código: ${err.errorNum || err.code}`);
+    console.error(`Mensaje: ${err.message}`);
     res.status(500).send({ error: "Error al registrar planta" });
+  }
+});
+
+// ======================= OBTENER LISTA DE PLANTAS =======================
+app.get("/api/plantas", async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT ID_PLANTA, NOMBRE_COMUN 
+       FROM TIERRA_EN_CALMA.BANCO_PLANTAS
+       ORDER BY NOMBRE_COMUN`,
+      {},
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+    res.json(result.rows); 
+  } catch (err) {
+    console.error("Error al obtener plantas:");
+    console.error(`Código: ${err.errorNum || err.code}`);
+    console.error(`Mensaje: ${err.message}`);
+    res.status(500).json({ error: "Error al obtener la lista de plantas" });
+  }
+});
+
+// ======================= OBTENER PLANTAS DE UN USUARIO =======================
+app.get("/api/mis-plantas/:id_usuario", async (req, res) => {
+  const { id_usuario } = req.params;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT bp.ID_PLANTA, bp.NOMBRE_COMUN, bp.NOMBRE_CIENTIFICO
+       FROM TIERRA_EN_CALMA.PLANTAS_USUARIO pu
+       JOIN TIERRA_EN_CALMA.BANCO_PLANTAS bp
+       ON pu.ID_PLANTA = bp.ID_PLANTA
+       WHERE pu.ID_USUARIO = :id_usuario`,
+      [id_usuario],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error al obtener plantas del usuario:", err);
+    res.status(500).json({ error: "Error al obtener las plantas del usuario" });
   }
 });
 
@@ -160,4 +227,14 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`Intentando conectar con Oracle: ${dbConfig.connectString}`);
+});
+
+// ======================= MANEJO GLOBAL DE ERRORES =======================
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Rechazo de promesa no manejado:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("Error no capturado:", err);
 });
