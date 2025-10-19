@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -11,14 +11,17 @@ import { AuthService } from './auth.service';
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
-export class LoginComponent {
-  isContainerActive = false;
+export class LoginComponent implements OnInit {
+  // Estado de paneles
+  isContainerActive = false;   // true => muestra registro
   isTransitioning = false;
   isForgotPasswordModalOpen = false;
 
+  // Login
   loginCorreo = '';
   loginContrasena = '';
 
+  // Registro
   regIdUsuario = '';
   regNombre = '';
   regApellido = '';
@@ -26,32 +29,79 @@ export class LoginComponent {
   regCorreo = '';
   regContrasena = '';
 
+  // Recuperación
   forgotIdentification = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
+  ngOnInit() {
+    // 1) Abrir registro si esta ruta lo indica (login/registro)
+    const openByData = this.route.snapshot.data?.['openRegister'] === true;
+
+    // 2) Abrir registro si viene con query param (por compatibilidad)
+    const sub = this.route.queryParams.subscribe((p) => {
+      const openByQuery = p['modo'] === 'registro';
+      this.inicializarVista(openByData || openByQuery);
+      sub.unsubscribe();
+    });
+
+    // 3) Abrir registro si llegó con state (por compatibilidad)
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras?.state as { abrirRegistro?: boolean } | undefined;
+    if (state?.abrirRegistro) {
+      this.inicializarVista(true);
+    }
+  }
+
+  private inicializarVista(abrirRegistro: boolean) {
+    if (abrirRegistro) {
+      // Mostrar registro inmediatamente
+      this.isContainerActive = true;
+      // Asegurar que el usuario vea el formulario arriba
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+    } else {
+      // Vista login por defecto
+      this.isContainerActive = false;
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+    }
+  }
+
+  // Acciones UI
   showRegister(): void {
     this.isTransitioning = true;
-    setTimeout(() => (this.isContainerActive = true), 200);
-    setTimeout(() => (this.isTransitioning = false), 800);
+    setTimeout(() => {
+      this.isContainerActive = true;
+      this.isTransitioning = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 150);
   }
 
   showLogin(): void {
     this.isTransitioning = true;
-    setTimeout(() => (this.isContainerActive = false), 200);
-    setTimeout(() => (this.isTransitioning = false), 800);
+    setTimeout(() => {
+      this.isContainerActive = false;
+      this.isTransitioning = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 150);
   }
 
+  // Modal recuperar contraseña
   openForgotPasswordModal(event: Event): void {
     event.preventDefault();
     this.isForgotPasswordModalOpen = true;
   }
-
   closeForgotPasswordModal(): void {
     this.isForgotPasswordModalOpen = false;
     this.forgotIdentification = '';
   }
-
   sendPasswordReset(): void {
     if (!this.forgotIdentification.trim()) {
       alert('Por favor ingresa tu identificación.');
@@ -61,6 +111,7 @@ export class LoginComponent {
     this.closeForgotPasswordModal();
   }
 
+  // Submit login
   onLoginSubmit(event: Event): void {
     event.preventDefault();
 
@@ -76,10 +127,7 @@ export class LoginComponent {
 
     this.authService.login(credentials).subscribe({
       next: (res: any) => {
-        console.log('Respuesta login:', res);
-
         const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
-
         if (usuario && (usuario.NOMBRE || usuario.nombre)) {
           localStorage.setItem('usuario', JSON.stringify(usuario));
           alert(`Bienvenida ${usuario.NOMBRE || usuario.nombre}`);
@@ -89,7 +137,6 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        console.error('Error en login:', err);
         if (err.status === 0) {
           alert('No se pudo conectar con el servidor. Verifica el backend.');
         } else if (err.error?.message) {
@@ -101,6 +148,7 @@ export class LoginComponent {
     });
   }
 
+  // Submit registro
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 
@@ -119,16 +167,13 @@ export class LoginComponent {
     }
 
     this.authService.register(newUser).subscribe({
-      next: (res: any) => {
-        console.log('Usuario registrado:', res);
+      next: () => {
         alert(' Usuario registrado con éxito.');
         this.showLogin();
       },
-      error: (err) => {
-        console.error(' Error al registrar:', err);
+      error: () => {
         alert(' No se pudo registrar el usuario. Revisa los datos o intenta más tarde.');
       }
     });
   }
-
 }
