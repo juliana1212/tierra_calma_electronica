@@ -1,80 +1,102 @@
-/* Contenedor general con fondo blanco */
 .monstera-wrapper {
-  background: white;
-  padding-top: 250px;   /* separación con navbar */
-  padding-bottom: 40px;
+  background: #f4dfd3; /* color salmón */
+  position: relative;
+  padding: 100px 0;
+  overflow: hidden;
 }
 
-/* Frame con color verde grisáceo */
+/* ===== CONTENEDOR GENERAL ===== */
 .monstera-frame {
   display: flex;
   align-items: center;
-  justify-content: center;   /* centra todo el contenido */
-  gap: 80px;                 /* espacio entre imagen y texto */
-  background: #d7ded5;
-  padding: 1px 60px;       /* más alto y espacioso */
+  justify-content: space-between;
+  padding: 80px 70px;
   position: relative;
-  overflow: visible;
-  border-radius: 10px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Imagen sobrepuesta */
-.frame-imagen {
-  width: 300px;
-  height: 300px;
-  background-image: url('../../../assets/images/MiMonstera.png'); 
+/* ===== IZQUIERDA: INFORMACIÓN ===== */
+.info-monstera {
+  flex: 1;
+  padding-right: 60px;
+  max-width: 480px;
+  text-align: left;
+  z-index: 3;
+}
+
+.info-titulo {
+  font-family: 'STIX Two Text', serif;
+  font-style: italic;
+  font-size: 1.8rem;
+  color:#93511c;
+  margin-bottom: 20px;
+  font-weight: 200;
+  line-height: 1.3;
+}
+
+.info-texto {
+  font-family: 'STIX Two Text', serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #333;
+}
+
+/* ===== ARCO ===== */
+.arco-imagen {
+  width: 420px;
+  height: 520px;
+  background-image: url('../../../assets/images/Monsteraaaa.png');
   background-size: cover;
   background-position: center;
-  position: relative;        
-  top: -40px;                
-  margin-bottom: -60px;      
-  z-index: 2;
-
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
-  border-radius: 12px;
+  border-radius: 300px 300px 0 0;
+  background-color: #fffef9;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenido textual */
+/* ===== DERECHA ===== */
 .frame-content {
   display: flex;
   flex-direction: column;
-  align-items: center;       
-  text-align: center;
+  align-items: flex-start;
+  justify-content: center;
+  margin-left: 50px;
 }
 
-/* Título */
 .titulo-monstera {
   font-family: "Mea Culpa", cursive;
-  font-size: 2.5rem;
-  font-weight: 200;
-  color: #2c3424;
-  margin-bottom: 20px;
+  font-size: 3rem;
+  font-weight: 300;
+  color: #93511c;
+  margin-bottom: 30px;
+  margin-left: 15px; /* ✅ lo empuja un poco hacia la derecha para alinearse con el botón */
 }
 
-/* Botón */
+/* ===== BOTÓN ===== */
 .btn-riego {
-  background: #859b82;
+  background: #93511c;
   color: white;
   border: none;
-  padding: 12px 30px;
-  border-radius: 6px;
+  padding: 14px 34px;
+  border-radius: 35px;
   font-family: "Old Standard TT", serif;
-  font-size: 1rem;
-  font-weight: 200;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background: #758a72;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(117, 138, 114, 0.4);
+    background: #7c3e10;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(117, 138, 114, 0.3);
   }
 
   &:active {
     transform: translateY(0);
   }
 }
+
+
+
+
+
 
 
 /* ===== Sección de monitoreo ===== */
@@ -171,11 +193,11 @@
 
 /* Botón secundario (ya no se usa en historial, pero lo dejamos por si) */
 .btn-riego-2 {
-  background: #859b82;
+  background: #93511c;
   color: #fff;
   border: none;
   padding: 12px 22px;
-  border-radius: 6px;
+  border-radius: 25px;
   font-family: "Old Standard TT", serif;
   font-size: 1rem;
   font-weight: 200;
@@ -285,7 +307,7 @@
 /* Imagen */
 .cuidados-img {
   width: 100%;
-  height: 700px;
+  height: 400px;
   background-image: url('../../../assets/images/Cuidados3.jpg');
   background-size: cover;
   background-position: center;
@@ -330,11 +352,11 @@
 
 /* Botón */
 .btn-guardar {
-  background: #859b82;
+  background: #93511c;
   color: #fff;
   border: none;
   padding: 14px 24px;
-  border-radius: 6px;
+  border-radius: 25px;
   font-family: "Old Standard TT", serif;
   font-size: 1rem;
   font-weight: 200;

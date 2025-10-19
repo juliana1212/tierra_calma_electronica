@@ -1,19 +1,16 @@
 import { Routes } from '@angular/router';
 
-// Layouts
 import { PublicLayoutComponent } from './layouts/public-layout';
 import { PrivateLayoutComponent } from './layouts/private-layout';
 import { MonsteraComponent } from './pages/monstera/monstera';
-// Páginas públicas
 import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
+import { ChatbotComponent } from './pages/chatbot/chatbot';
 
-// Páginas privadas
 import { MisPlantasComponent } from './pages/mis-plantas/mis-plantas';
-import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas'; // ✅ agrega esto
+import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
 
 export const routes: Routes = [
-  // 🌿 Layout público (antes de iniciar sesión)
   {
     path: '',
     component: PublicLayoutComponent,
@@ -23,18 +20,20 @@ export const routes: Routes = [
     ]
   },
 
-  // 🌱 Layout privado (después del login)
   {
     path: '',
     component: PrivateLayoutComponent,
     children: [
       { path: 'mis-plantas', component: MisPlantasComponent },
       { path: 'registrar-plantas', component: RegistrarPlantasComponent },
-      { path: 'monstera', component: MonsteraComponent } // 👈 NUEVA RUTA
+      { path: 'monstera', component: MonsteraComponent }
     ]
   },
 
-  // Redirección por defecto
+  {path: 'chatbot', 
+  component: ChatbotComponent 
+  },
+
   { path: '**', redirectTo: '' }
 ];
 
