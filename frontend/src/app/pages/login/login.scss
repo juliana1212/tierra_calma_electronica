@@ -92,17 +92,17 @@ form {
 .input-box input {
   width: 100%;
   padding: 12px 16px;
-  background: #fefdfb; /* color suave del footer */
-  border: 1.5px solid #e3c5ac; /* borde beige */
+  background: #fefdfb; 
+  border: 1.5px solid #e3c5ac; 
   border-radius: 8px;
   outline: none;
-  font-family: 'STIX Two Text', serif; /* tipografía coherente */
+  font-family: 'STIX Two Text', serif;
   font-size: 15px;
-  color: #2d4a2f; /* verde oscuro del footer */
+  color: #2d4a2f;
   transition: border 0.3s ease;
 
   &:focus {
-    border-color: #93511c; /* resalta en marrón al hacer foco */
+    border-color: #93511c;
   }
 }
 
