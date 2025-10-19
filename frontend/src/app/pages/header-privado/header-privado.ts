@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,8 +13,13 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 export class HeaderPrivadoComponent {
   contacto = { nombre: '', correo: '', mensaje: '' };
+  
+  private router = inject(Router);
+  private http = inject(HttpClient);
 
-  constructor(private router: Router, private http: HttpClient) {}
+  irAHome() {
+    this.router.navigate(['/']);
+  }
 
   cerrarSesion() {
     localStorage.removeItem('usuario');
