@@ -72,6 +72,64 @@ app.post("/api/login", async (req, res) => {
     res.status(500).send({ error: err.message });
   }
 });
+// ======================= RECUPERAR CONTRASEÑA =======================
+app.post("/api/recuperar-contrasena", async (req, res) => {
+  const { correo } = req.body;
+
+  if (!correo) {
+    return res.status(400).json({ error: "Correo electrónico requerido" });
+  }
+
+  try {
+    const conn = await oracledb.getConnection(dbConfig);
+    const result = await conn.execute(
+      `SELECT ID_USUARIO, NOMBRE, CONTRASENA 
+       FROM TIERRA_EN_CALMA.USUARIOS 
+       WHERE CORREO_ELECTRONICO = :correo`,
+      [correo],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    await conn.close();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No existe una cuenta con este correo." });
+    }
+
+    const usuario = result.rows[0];
+
+    // 🔹 Configurar el envío de correo
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"Tierra en Calma" <${process.env.GMAIL_USER}>`,
+      to: correo,
+      subject: "🔐 Recuperación de contraseña - Tierra en Calma",
+      html: `
+        <h2>Hola ${usuario.NOMBRE},</h2>
+        <p>Recibimos una solicitud para recuperar tu contraseña.</p>
+        <p>Tu contraseña actual es:</p>
+        <h3 style="color:#93511c;">${usuario.CONTRASENA}</h3>
+        <p>Te recomendamos cambiarla después de iniciar sesión.</p>
+        <br>
+        <p>Atentamente,<br><b>Equipo Tierra en Calma 🌱</b></p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Correo de recuperación enviado a ${correo}`);
+    res.json({ message: "Correo de recuperación enviado correctamente." });
+
+  } catch (err) {
+    console.error("Error al recuperar contraseña:", err);
+    res.status(500).json({ error: "Error al enviar el correo de recuperación." });
+  }
+});
 
 // ======================= NUEVA RUTA: CONTACTO (CORREO) =======================
 app.post("/api/contacto", async (req, res) => {
