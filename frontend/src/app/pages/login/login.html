@@ -1,6 +1,7 @@
 <div class="container" [class.activate]="isContainerActive" [class.transitioning]="isTransitioning">
   <div class="transition-cover" *ngIf="isTransitioning"></div>
 
+  <!-- ========== LOGIN ========== -->
   <div class="form-box login" [class.hidden]="isContainerActive">
     <form (submit)="onLoginSubmit($event)">
       <h1>Inicio de sesión</h1>
@@ -23,6 +24,7 @@
     </form>
   </div>
 
+  <!-- ========== REGISTRO ========== -->
   <div class="form-box register" [class.hidden]="!isContainerActive">
     <form (submit)="onRegisterSubmit($event)">
       <h1>Registro</h1>
@@ -61,11 +63,12 @@
     </form>
   </div>
 
+  <!-- ========== PANEL DESLIZANTE ========== -->
   <div class="toggle-box"></div>
 
   <div class="toggle-panel toggle-left">
     <h1>Hola, ¡bienvenido!</h1>
-    <p>¿Primera vez en Tierra en calma?</p>
+    <p>¿Primera vez en Tierra en Calma?</p>
     <button class="btn register-btn" (click)="showRegister()">Regístrate</button>
   </div>
 
@@ -73,5 +76,26 @@
     <h1>¡Bienvenido de nuevo!</h1>
     <p>¿Ya tienes una cuenta?</p>
     <button class="btn login-btn" (click)="showLogin()">Iniciar sesión</button>
+  </div>
+</div>
+
+<!-- ========== MODAL RECUPERAR CONTRASEÑA ========== -->
+<div class="modal-overlay" *ngIf="isForgotPasswordModalOpen">
+  <div class="modal">
+    <h2>Recuperar contraseña</h2>
+    <p>Ingresa tu correo electrónico y te enviaremos tu contraseña.</p>
+
+    <input
+      type="email"
+      placeholder="tu.email@ejemplo.com"
+      [(ngModel)]="forgotIdentification"
+      name="forgotIdentification"
+      required
+    />
+
+    <div class="modal-buttons">
+      <button (click)="sendPasswordReset()">Enviar</button>
+      <button class="cancel" (click)="closeForgotPasswordModal()">Cancelar</button>
+    </div>
   </div>
 </div>

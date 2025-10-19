@@ -103,13 +103,24 @@ export class LoginComponent implements OnInit {
     this.forgotIdentification = '';
   }
   sendPasswordReset(): void {
-    if (!this.forgotIdentification.trim()) {
-      alert('Por favor ingresa tu identificación.');
-      return;
-    }
-    alert(`Se han enviado las instrucciones a la identificación: ${this.forgotIdentification}`);
-    this.closeForgotPasswordModal();
+  if (!this.forgotIdentification.trim()) {
+    alert('Por favor ingresa tu correo electrónico.');
+    return;
   }
+
+  const correo = this.forgotIdentification.trim();
+
+  this.authService.recuperarContrasena(correo).subscribe({
+    next: () => {
+      alert('Hemos enviado un correo con instrucciones para restablecer tu contraseña.');
+      this.closeForgotPasswordModal();
+    },
+    error: (err: any) => {
+      console.error('Error al recuperar contraseña:', err);
+      alert('No se pudo enviar el correo. Intenta más tarde.');
+    }
+  });
+}
 
   // Submit login
   onLoginSubmit(event: Event): void {
