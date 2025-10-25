@@ -1,5 +1,4 @@
 /* ===== Imagen de portada ===== */
-/* ===== Imagen de portada ===== */
 .portada {
   width: 100%;
   height: 500px;
@@ -15,7 +14,7 @@
   align-items: center;
 }
 
-/* ===== Overlay de texto (estilo vintage y femenino) ===== */
+/* ===== Overlay de texto ===== */
 .portada-overlay {
   position: absolute;
   top: 52%;
@@ -87,7 +86,6 @@
 }
 
 
-
 /* ===== Contenido general ===== */
 .contenido-chatbot {
   text-align: center;
@@ -96,12 +94,23 @@
 }
 
 .proposito-titulo {
+  font-family: 'STIX Two Text', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #c6a78f;
+  line-height: 1.1;
+  display: inline-block;
+  margin: 10px;
+}
+
+.proposito-titulo .Subtitle {
   font-family: 'Mea Culpa', cursive;
-  font-size: 2.5rem;
-  font-weight: 200;
-  color: #93511c;
-  margin-bottom: 2rem;
-  font-style: italic;
+  font-size: 3.3rem;
+  font-weight: 400;
+  color: #9b5a2a;
+  display: block;
+  margin-top: 5px;
+  text-align: center;
 }
 
 /* ===== Carrusel ===== */
@@ -194,7 +203,7 @@
 /* ===== Título del mes ===== */
 .tarjeta-frente h3 {
   position: absolute;
-  top: 20px;            /* 🔼 en lugar de bottom */
+  top: 20px; 
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -310,12 +319,23 @@
 
 /* ===== Título ===== */
 .titulo-fases {
-  font-family: 'Mea culpa', cursive;
-  font-size: 2.3rem;
-  font-weight: 100;
-  color: #93511c;
-  letter-spacing: 0.5px;
-  margin-bottom: 2.5rem;
+  font-family: 'STIX Two Text', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #c6a78f;
+  line-height: 1.1;
+  display: inline-block;
+  margin: 30px;
+}
+
+.titulo-fases .Subtitle {
+  font-family: 'Mea Culpa', cursive;
+  font-size: 3.3rem;
+  font-weight: 400;
+  color: #9b5a2a;
+  display: block;
+  margin-top: 5px;
+  text-align: center;
 }
 
 /* ===== Grid flexible ===== */
@@ -411,15 +431,13 @@
 
 /* ===== Título ===== */
 .titulo-caracteristicas {
-  font-family: 'Mea culpa', cursive;
-  font-size: 2.3rem;
-  font-weight: 200;
-  margin-bottom: 3rem;
-  color: #93511c;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  font-family: 'STIX Two Text', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #c6a78f;
+  line-height: 1.1;
+  display: inline-block;
+  margin: 40px;
 }
 
 /* ===== Cuadrícula ===== */
@@ -501,8 +519,6 @@
   }
 }
 
-
-
 /* ===== Chat flotante ===== */
 .chat-ventana {
   position: fixed;
@@ -519,6 +535,9 @@
   overflow: hidden;
   font-family: 'STIX Two Text', serif;
   animation: aparecer 0.4s ease;
+
+  z-index: 9999;
+  pointer-events: all; 
 }
 
 @keyframes aparecer {

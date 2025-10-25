@@ -1,6 +1,6 @@
 .registrar-plantas-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background-color: white;
     padding: 120px 0 0;
 }
 
@@ -11,13 +11,23 @@
     margin-bottom: 0;
     
     .titulo-principal {
-        font-family: "Old Standard TT", serif;
-        font-style: italic;
-        font-size: 2rem;
-        color: #2c3424;
+        font-family: 'STIX Two Text', serif;
+        font-size: 2.8rem;
+        font-weight: 400;
+        color: #c6a78f; /* tono beige claro */
         margin: 0;
-        font-weight: 200;
-    }
+        line-height: 1.1;
+
+        .Subtitle {
+            display: block;
+            font-family: 'Mea Culpa', cursive;
+            font-size: 3.3rem;
+            font-weight: 400;
+            color: #9b5a2a;
+            margin-top: -10px;
+        }
+        }
+
 }
 
 .planta-section {
@@ -114,7 +124,7 @@
     .planta-nombre {
         font-family: "Mea Culpa", cursive;
         font-size: 2.5rem;
-        color: #2c3424;
+        color: #9b5a2a;
         margin: 0 0 10px 0;
         font-weight: 200;
     }
@@ -122,7 +132,7 @@
     .planta-cientifico {
         font-family: "Old Standard TT", serif;
         font-size: 1.1rem;
-        color: #8b937e;
+        color: #9b592a86;
         font-style: italic;
         margin: 0 0 30px 0;
     }
@@ -145,7 +155,7 @@
 }
 
 .btn-anadir {
-    background-color: #8ba986;
+    background-color: #9b5a2a;
     color: white;
     border: none;
     padding: 15px 40px;
@@ -260,4 +270,121 @@
     .derecha .planta-imagen .decoracion {
         left: -10px;
     }
+}
+
+/* === ESTILOS POP UP NOMBRE PERSONALIZADO === */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &.activo {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* === Contenedor del popup con efecto vidrio === */
+.popup-contenido {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  padding: 40px;
+  width: 400px;
+  text-align: center;
+  animation: aparecer 0.3s ease;
+  font-family: 'Old Standard TT', serif;
+
+  h2 {
+    font-size: 1.8rem;
+    color: #4a3b2b;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #3f3f3f;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .input-nombre {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    color: #3c3728;
+    outline: none;
+    margin-bottom: 25px;
+    font-family: 'STIX Two Text', serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    &::placeholder {
+      color: rgba(60, 55, 40, 0.5);
+    }
+  }
+
+  .popup-botones {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+
+    .btn-confirmar,
+    .btn-cancelar {
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: 'Old Standard TT', serif;
+    }
+
+    .btn-confirmar {
+      background-color: #9b5a2a;
+      color: white;
+
+      &:hover {
+        background-color: #814821;
+        transform: translateY(-2px);
+      }
+    }
+
+    .btn-cancelar {
+      background-color: rgba(255, 255, 255, 0.6);
+      color: #4a3b2b;
+      border: 1px solid rgba(155, 90, 42, 0.3);
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* Animación suave */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

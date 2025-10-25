@@ -104,12 +104,23 @@
 }
 
 .proposito-titulo {
-  font-family: 'Mea culpa', cursive;
-  font-size: 2.5rem;
-  font-weight: 200;
-  color: #93511c;
-  margin-bottom: 1rem;
-  font-style: italic;
+  font-family: 'STIX Two Text', serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #c6a78f;
+  line-height: 1.1;
+  display: inline-block;
+  margin: 10px;
+}
+
+.proposito-titulo .Subtitle {
+  font-family: 'Mea Culpa', cursive;
+  font-size: 3.3rem;
+  font-weight: 400;
+  color: #9b5a2a;
+  display: block;
+  margin-top: 5px;
+  text-align: center;
 }
 
 .proposito-linea {
