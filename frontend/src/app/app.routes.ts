@@ -16,7 +16,8 @@ export const routes: Routes = [
     component: PublicLayoutComponent,
     children: [
       { path: '', component: HomeComponent },
-      { path: 'login', component: LoginComponent }
+      { path: 'login', component: LoginComponent },                       // login normal
+      { path: 'login/registro', component: LoginComponent, data: { openRegister: true } } // ruta directa a registro
     ]
   },
 
@@ -36,4 +37,3 @@ export const routes: Routes = [
 
   { path: '**', redirectTo: '' }
 ];
-

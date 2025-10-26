@@ -8,11 +8,18 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  /** 🔹 Registro de usuario */
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
+  /** 🔹 Inicio de sesión */
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
+  }
+
+  /** 🔹 Recuperar contraseña */
+  recuperarContrasena(correo: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/recuperar-contrasena`, { correo });
   }
 }
