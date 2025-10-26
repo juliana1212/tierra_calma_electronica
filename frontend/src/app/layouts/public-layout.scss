@@ -75,36 +75,35 @@
   cursor: pointer;
   transition: color 0.3s ease;
 
-  /* Línea animada inferior */
-  &::after {
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    left: 50%;
-    bottom: 0;
-    background-color: #ca9a72;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-  }
-
-  /* Hover efecto */
-  &:hover {
-    color: #93511c;
-  }
-
-  &:hover::after {
-    width: 100%;
-  }
-
-  &::selection {
-    background: transparent;
-  }
+  cursor: pointer;
+  user-select: none;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* ========================= */
-/* ========= MAIN ========== */
-/* ========================= */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 50%;
+  bottom: 0;
+  background-color: #ca9a72;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.nav-link:hover {
+  color: #93511c;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
 
 main {
   min-height: calc(100vh - 160px);

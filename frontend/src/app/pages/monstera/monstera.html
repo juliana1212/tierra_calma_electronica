@@ -1,67 +1,122 @@
-<section class="monstera-wrapper">
-  <div class="monstera-frame">
-    <!-- Imagen sobrepuesta -->
-    <div class="frame-imagen"></div>
+<section class="portada">
+  <div class="columna columna-izquierda">
+    
+    <!-- Bloque descriptivo -->
+    <div class="sobre-tu-monstera">
+      <h2 class="title-flower">
+        Sobre tu<br><span class="title-script">Monstera</span>
+      </h2>
+      <p class="subtitle-flower">
+        Esta planta tropical ama la luz suave y el riego moderado.  
+        Aquí podrás conocer sus condiciones, cuidar su bienestar y  
+        ver cómo evoluciona día a día.
+      </p>
+    </div>
 
-    <!-- Contenido textual -->
-    <div class="frame-content">
-      <h1 class="titulo-monstera">Monstera</h1>
-      <button class="btn-riego" (click)="activarRiego()">Activar riego ahora</button>
+    <div class="monit-card">
+      <div class="monit-sensor-value">
+        <div *ngIf="isConnected; else sinConexion">
+          <b>Temperatura:</b> {{ sensorData.temperatura }}<br>
+          <b>Humedad del suelo:</b> {{ sensorData.humedadSuelo }}
+        </div>
+        <ng-template #sinConexion> --- </ng-template>
+      </div>
+      <div class="status-chip" [ngClass]="isConnected ? 'status-online' : 'status-offline'">
+        <span class="monit-dot"></span>
+        {{ isConnected ? 'Conectado' : 'Desconectado' }}
+      </div>
+      <div class="monit-row">Actualización cada 2s</div>
+      <div class="monit-row">{{ lastUpdate }}</div>
+    </div>
+  </div>
+
+
+<div class="columna columna-centro">
+  <div class="tips-cuidado">
+    <h2 class="title-flower">
+      Tips de<br><span class="title-script">Cuidado</span>
+    </h2>
+
+    <div class="tips-text">
+      <h3>Luz</h3>
+      <p>Prefiere la luz indirecta brillante. La luz directa puede <br>quemar sus hojas. 
+        Gira la planta cada semana para<br> que crezca pareja hacia la luz.</p>
+
+      <h3>Hojas y limpieza</h3>
+      <p>Limpia sus hojas una vez por semana con<br> un paño húmedo para quitar el polvo. </p>
+
+      <h3>Ambiente</h3>
+      <p>Ideal entre 18 y 28 °C. Evita corrientes de<br> aire frío o cambios bruscos de temperatura.</p>
+    </div>
+  </div>
+</div>
+
+<div class="columna columna-derecha">
+  <div class="historial-titulo">
+    <h2 class="title-flower">
+      Historial de<br><span class="title-script">Riego</span>
+    </h2>
+  </div>
+
+  <div class="monit-card monit-historial">
+    <div class="monit-history-list">
+      <div class="history-item" *ngFor="let item of historialRiego">
+        <span class="history-time">{{ item.hora }}</span>
+        <span class="history-msg">
+          {{ item.tipo === 'manual' ? '' : '' }}{{ item.mensaje }}
+        </span>
+      </div>
+
+      <div *ngIf="historialRiego.length === 0" class="history-empty">
+        No hay registros de riego aún
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="planta-derecha"></div>
+</section>
+
+<!-- ===== SECCIÓN TARJETAS ESTILO SAVE THE DATE ===== --> 
+<section class="tarjetas-save-date">
+  <div class="tarjetas-wrapper">
+
+    <!-- Tarjeta amarilla -->
+    <div class="tarjeta-save tarjeta-amarilla">
+      <div class="hoja-izquierda"></div>
+      <div class="hoja-derecha"></div>
+      <div class="titulo-riega">
+        <h2 class="title-flower">
+          Riega<br><span class="title-script">con Calma</span>
+        </h2>
+      </div>
+    </div>
+
+    <!-- Tarjeta blanca -->
+    <div class="tarjeta-save tarjeta-blanca">
+      <div class="tarjeta-circulo"></div>
+
+      <div class="contenido-tarjeta">
+        <p class="frase-superior">
+          El agua despierta la vida,<br>
+          el cuidado mantiene su calma.
+        </p>
+
+        <h2 class="title-flower">Hidrata tu<br><span class="title-script">Monstera</span></h2>
+
+        <button class="btn-riego" (click)="activarRiego()">Regar ahora</button>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ====== MONITOREO EN TIEMPO REAL ====== -->
-<section class="monit-wrapper">
-  <div class="monit-container">
+<section class="seccion-blanca">
+  <div class="contenido-blanco">
+    <h2 class="title-flower">
+      Gráfico de relación<br><span class="title-script">Humedad vs Temperatura</span>
+    </h2>
 
-    <div class="monit-grid">
-      <!-- Datos del sensor -->
-      <div class="monit-card">
-        <h3 class="monit-card-title">Datos del sensor</h3>
-
-        <div class="monit-sensor-value">
-          <div *ngIf="isConnected; else sinConexion">
-            <b>Temperatura:</b> {{ sensorData.temperatura }}<br>
-            <b>Humedad del suelo:</b> {{ sensorData.humedadSuelo }}
-          </div>
-
-          <ng-template #sinConexion>
-            ---
-          </ng-template>
-        </div>
-
-        <div class="status-chip" [ngClass]="isConnected ? 'status-online' : 'status-offline'">
-          <span class="monit-dot"></span>
-          {{ isConnected ? 'Conectado' : 'Desconectado' }}
-        </div>
-
-        <div class="monit-row">Actualización cada 2s</div>
-        <div class="monit-row">{{ lastUpdate }}</div>
-      </div>
-
-
-
-      <!-- Historial de riego -->
-      <div class="monit-card">
-        <h3 class="monit-card-title">Historial de riego</h3>
-        <div class="monit-history-list">
-          <div class="history-item" *ngFor="let item of historialRiego">
-            <span class="history-time">{{ item.hora }}</span>
-            <span class="history-msg">
-                {{ item.tipo === 'manual' ? '' : '' }}{{ item.mensaje }}
-            </span>
-          </div>
-          <div *ngIf="historialRiego.length === 0" class="history-empty">
-            No hay registros de riego aún
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico de humedad -->
     <div class="monit-card">
-      <h3 class="monit-card-title">Humedad del suelo y temperatura ambiente</h3>
       <div class="monit-chart">
         <canvas #soilChart></canvas>
       </div>
@@ -69,27 +124,32 @@
   </div>
 </section>
 
+<!-- ===== SECCIÓN FRASE INSPIRADORA ===== -->
+<section class="frase-calma">
+  <div class="texto-frase">
+    <p class="intro-frase">Entre la luz, el agua y la calma</p>
+    <h2>
+      Tu<span class="script">Monstera</span> florece<br>
+      cuando tú también te detienes a <br>
+      <span class="script">Cuidar.</span>
+    </h2>
+  </div>
+</section>
+
 <!-- ====== REGISTRAR CUIDADOS ====== -->
 <section class="cuidados-wrapper">
   <div class="cuidados-container">
-    <h2 class="cuidados-title">Registrar cuidados</h2>
-    <p class="cuidados-text">
-      Cuéntale a tu Monstera cómo la cuidaste hoy.<br>
-      Selecciona la fecha y el tipo de cuidado que realizaste: <b>fertilización o poda</b>. 
-      Así podrás llevar un historial de todo el cariño que le das a tu planta.
-    </p>
+    <h2 class="cuidados-title">Registrar<span>Cuidado</span></h2>
 
     <div class="cuidados-grid">
-      <!-- Imagen -->
+      <!-- Imagen lateral -->
       <div class="cuidados-img"></div>
 
-      <!-- Formulario -->
+      <!-- Formulario con efecto vidrio -->
       <form class="cuidados-form" (ngSubmit)="guardarCuidado()">
-        <!-- Fecha -->
         <label for="fecha">Fecha</label>
         <input id="fecha" type="date" [(ngModel)]="nuevoCuidado.fecha" name="fecha">
 
-        <!-- Tipo de cuidado -->
         <label for="tipo">Tipo de cuidado</label>
         <select id="tipo" [(ngModel)]="nuevoCuidado.tipo" name="tipo">
           <option value="" disabled selected>Selecciona una opción</option>
@@ -97,11 +157,14 @@
           <option value="poda">Poda</option>
         </select>
 
-        <!-- Detalles -->
         <label for="detalles">Detalles</label>
-        <textarea id="detalles" [(ngModel)]="nuevoCuidado.detalles" name="detalles" placeholder="Agrega notas sobre cómo cuidaste tu planta..."></textarea>
+        <textarea 
+          id="detalles" 
+          [(ngModel)]="nuevoCuidado.detalles" 
+          name="detalles" 
+          placeholder="Agrega notas sobre cómo cuidaste tu planta...">
+        </textarea>
 
-        <!-- Botón -->
         <button type="submit" class="btn-guardar">Guardar cuidado</button>
       </form>
     </div>

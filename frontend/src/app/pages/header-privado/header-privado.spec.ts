@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-header-privado',
   standalone: true,
   imports: [RouterLink, RouterOutlet, CommonModule],
-  templateUrl: './header-privado.component.html',
-  styleUrls: ['./header-privado.component.scss']
+  templateUrl: './header-privado.html',
+  styleUrls: ['./header-privado.scss']
 })
 export class HeaderPrivadoComponent {
   nombreUsuario: string = '';

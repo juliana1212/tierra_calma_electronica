@@ -1,20 +1,16 @@
 import { Routes } from '@angular/router';
 
-// Layouts
 import { PublicLayoutComponent } from './layouts/public-layout';
 import { PrivateLayoutComponent } from './layouts/private-layout';
-
-// Páginas públicas
+import { MonsteraComponent } from './pages/monstera/monstera';
 import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
+import { ChatbotComponent } from './pages/chatbot/chatbot';
 
-// Páginas privadas
 import { MisPlantasComponent } from './pages/mis-plantas/mis-plantas';
 import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
-import { MonsteraComponent } from './pages/monstera/monstera';
 
 export const routes: Routes = [
-  // Público
   {
     path: '',
     component: PublicLayoutComponent,
@@ -25,7 +21,6 @@ export const routes: Routes = [
     ]
   },
 
-  // Privado
   {
     path: '',
     component: PrivateLayoutComponent,
@@ -36,6 +31,9 @@ export const routes: Routes = [
     ]
   },
 
-  // Fallback
+  {path: 'chatbot', 
+  component: ChatbotComponent 
+  },
+
   { path: '**', redirectTo: '' }
 ];
