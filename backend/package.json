@@ -12,7 +12,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mqtt": "^5.14.1",
-    "nodemailer": "^7.0.9",
+    "nodemailer": "^7.0.10",
     "oracledb": "^6.10.0",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
