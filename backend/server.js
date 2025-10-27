@@ -3,10 +3,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const oracledb = require("oracledb");
 const cors = require("cors");
-const mqtt = require("mqtt");
+const mqtt = require("mqtt"); 
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const nodemailer = require("nodemailer");
+const mqttService = require("./mqttService");
 
 const swaggerDocument = YAML.load("./swagger.yaml");
 const app = express();
@@ -97,7 +98,7 @@ app.post("/api/recuperar-contrasena", async (req, res) => {
 
     const usuario = result.rows[0];
 
-    // 🔹 Configurar el envío de correo
+    // Configurar el envío de correo
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -109,7 +110,7 @@ app.post("/api/recuperar-contrasena", async (req, res) => {
     const mailOptions = {
       from: `"Tierra en Calma" <${process.env.GMAIL_USER}>`,
       to: correo,
-      subject: "🔐 Recuperación de contraseña - Tierra en Calma",
+      subject: "Recuperación de contraseña - Tierra en Calma",
       html: `
         <h2>Hola ${usuario.NOMBRE},</h2>
         <p>Recibimos una solicitud para recuperar tu contraseña.</p>
@@ -117,7 +118,7 @@ app.post("/api/recuperar-contrasena", async (req, res) => {
         <h3 style="color:#93511c;">${usuario.CONTRASENA}</h3>
         <p>Te recomendamos cambiarla después de iniciar sesión.</p>
         <br>
-        <p>Atentamente,<br><b>Equipo Tierra en Calma 🌱</b></p>
+        <p>Atentamente,<br><b>Equipo Tierra en Calma</b></p>
       `,
     };
 
@@ -151,7 +152,7 @@ app.post("/api/contacto", async (req, res) => {
   const mailOptions = {
     from: `"Tierra en Calma" <${process.env.GMAIL_USER}>`,
     to: "tierraencalma.a@gmail.com",
-    subject: `📩 Nuevo mensaje de contacto de ${nombre}`,
+    subject: ` Nuevo mensaje de contacto de ${nombre}`,
     html: `
       <h3>Nuevo mensaje desde el formulario de contacto</h3>
       <p><b>Nombre:</b> ${nombre}</p>
@@ -171,31 +172,23 @@ app.post("/api/contacto", async (req, res) => {
 });
 
 // ======================= MQTT & PLANTAS =======================
-const brokerUrl = process.env.MQTT_BROKER;
-const mqttOptions = { username: process.env.MQTT_USER, password: process.env.MQTT_PASS };
-const client = mqtt.connect(brokerUrl, mqttOptions);
-const mqttTopic = process.env.MQTT_TOPIC;
+mqttService.initMQTT(process.env.MQTT_BROKER, {
+  username: process.env.MQTT_USER,
+  password: process.env.MQTT_PASS,
+}, process.env.MQTT_TOPIC);
 
-let ultimoDato = "Esperando datos...";
-let historial = [];
-
-client.on("connect", () => {
-  console.log("Conectado al broker MQTT");
-  client.subscribe(mqttTopic);
+app.get("/api/datos", (req, res) => {
+  res.json({ dato: mqttService.getUltimoDato() });
 });
 
-client.on("message", (topic, message) => {
-  const dato = message.toString();
-  ultimoDato = dato;
-  historial.push(dato);
+app.get("/api/historial", (req, res) => {
+  res.json({ historial: mqttService.getHistorial() });
 });
-
-app.get("/api/datos", (req, res) => res.json({ dato: ultimoDato }));
-app.get("/api/historial", (req, res) => res.json({ historial }));
 
 app.post("/api/regar", (req, res) => {
-  client.publish("plantas/regar", "REGAR");
-  res.json({ message: "Comando de riego enviado" });
+  const enviado = mqttService.enviarComandoRiego();
+  if (enviado) res.json({ message: "Comando de riego enviado" });
+  else res.status(500).json({ error: "No se pudo enviar el comando" });
 });
 
 // ======================= SWAGGER =======================
