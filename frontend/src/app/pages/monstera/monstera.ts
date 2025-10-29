@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } fr
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Chart, registerables } from 'chart.js';
-import { MqttDataService } from '../../services/mqtt-data.service';  
+import { MqttDataService } from '../../services/mqtt-data.service';
 Chart.register(...registerables);
 
 interface RiegoHistorial {
@@ -48,7 +48,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   // === Polling ===
   private pollHandle?: any;
 
-  constructor(private mqttService: MqttDataService) {}
+  constructor(private mqttService: MqttDataService) { }
 
   // ====== LIFECYCLE ======
   ngOnInit(): void {
@@ -103,13 +103,13 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
       if (res && res.dato) {
         this.realtimeData = res.dato;
         // interpretar los datos del string recibido
-          const matchTemp = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
-          const matchHumedadSuelo = res.dato.match(/Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?%?)/i);
+        const matchTemp = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
+        const matchHumedadSuelo = res.dato.match(/Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?%?)/i);
 
-          this.sensorData = {
-            temperatura: matchTemp ? matchTemp[1] + ' °C' : '---',
-            humedadSuelo: matchHumedadSuelo ? matchHumedadSuelo[1] : '---'
-          };
+        this.sensorData = {
+          temperatura: matchTemp ? matchTemp[1] + ' °C' : '---',
+          humedadSuelo: matchHumedadSuelo ? matchHumedadSuelo[1] : '---'
+        };
 
         this.lastUpdate = `Última actualización: ${new Date().toLocaleTimeString()}`;
         this.isConnected = true;
@@ -200,13 +200,50 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // ====== CUIDADOS ======
-  guardarCuidado(): void {
-    if (!this.nuevoCuidado.fecha || !this.nuevoCuidado.tipo) {
-      alert('Por favor completa todos los campos obligatorios.');
-      return;
-    }
 
-    alert(`Cuidado guardado:\n${this.nuevoCuidado.tipo} el ${this.nuevoCuidado.fecha}`);
-    this.nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
+  guardarCuidado(): void {
+  const { fecha, tipo, detalles } = this.nuevoCuidado;
+  if (!fecha || !tipo) {
+    alert('Por favor completa todos los campos obligatorios.');
+    return;
   }
-}
+
+  
+  //------------------------------------------------------------------
+  //SE DEBE SETEAR AUTOMATICAMENTE LA PLANTA DEL USUARIO EN EL LOCAL
+  //STORAGE, Y DEBEN MOSTRARSE DINAMICAMENTE EN EL PANEL DE PLANTAS
+  //------------------------------------------------------------------
+  const id_planta_usuario = 1;
+
+  if (!id_planta_usuario) {
+    alert('Falta id_planta_usuario');
+    return;
+  }
+
+  const body = {
+    id_planta_usuario,
+    fecha,              // 'YYYY-MM-DD'
+    tipo,               // 'fertilización' | 'poda'
+    detalles: detalles || null,
+  };
+  console.log('[CUIDADO] POST body', body);
+
+  fetch('http://localhost:3000/api/cuidados', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+    .then(async (r) => {
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    })
+    .then((resp) => {
+      console.log('[CUIDADO] creado', resp);
+      alert(`Cuidado guardado:\n${tipo} el ${fecha}`);
+      this.nuevoCuidado = { fecha: '', tipo: '', detalles: '' };
+    })
+    .catch((e) => {
+      console.error('[CUIDADO] error', e);
+      alert('Error guardando el cuidado');
+    });
+}}
