@@ -8,6 +8,8 @@ const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
 const nodemailer = require("nodemailer");
+const mqttService = require("./mqttService");
+const cuidadosService = require("./cuidadosService");
 console.log("Nodemailer cargado correctamente");
 const app = express();
 app.use(cors());
@@ -142,40 +144,23 @@ app.post("/api/contacto", async (req, res) => {
 
 
 // ======================= CONFIGURACIÓN MQTT =======================
-const brokerUrl = process.env.MQTT_BROKER;
-const mqttOptions = {
+mqttService.initMQTT(process.env.MQTT_BROKER, {
   username: process.env.MQTT_USER,
-  password: process.env.MQTT_PASS
-};
+  password: process.env.MQTT_PASS,
+}, process.env.MQTT_TOPIC);
 
-const client = mqtt.connect(brokerUrl, mqttOptions);
-const mqttTopic = process.env.MQTT_TOPIC;
-
-let ultimoDato = "Esperando datos...";
-let historial = [];
-
-client.on("connect", () => {
-  console.log("Conectado al broker MQTT");
-  client.subscribe(mqttTopic, (err) => {
-    if (!err) console.log(`Suscrito al topic: ${mqttTopic}`);
-    else console.error("Error al suscribirse al topic:", err);
-  });
-});
-
-client.on("message", (topic, message) => {
-  const dato = message.toString();
-  console.log(`[MQTT] ${topic}: ${dato}`);
-  ultimoDato = dato;
-  historial.push(dato);
-});
-
-// ======================= RUTAS MQTT =======================
 app.get("/api/datos", (req, res) => {
-  res.json({ dato: ultimoDato });
+  res.json({ dato: mqttService.getUltimoDato() });
 });
 
 app.get("/api/historial", (req, res) => {
-  res.json({ historial });
+  res.json({ historial: mqttService.getHistorial() });
+});
+
+app.post("/api/regar", (req, res) => {
+  const enviado = mqttService.enviarComandoRiego();
+  if (enviado) res.json({ message: "Comando de riego enviado" });
+  else res.status(500).json({ error: "No se pudo enviar el comando" });
 });
 
 // ======================= PLANTAS =======================
@@ -261,7 +246,26 @@ app.get("/api/mis-plantas/:id_usuario", async (req, res) => {
     res.status(500).json({ error: "Error al obtener las plantas del usuario" });
   }
 });
+// ======================= CUIDADOS =======================
+app.post("/api/cuidados", async (req, res) => {
+  const { id_planta_usuario, fecha, tipo, detalles } = req.body;
+  if (!id_planta_usuario || !fecha || !tipo) {
+    return res.status(400).json({ error: "id_planta_usuario, fecha y tipo son obligatorios" });
+  }
 
+  try {
+    const r = await cuidadosService.crearCuidado({
+      id_planta_usuario: Number(id_planta_usuario),
+      fecha,                         // 'YYYY-MM-DD' o ISO
+      tipo_cuidado: tipo,
+      detalle: detalles,
+    });
+    res.status(201).json({ id_cuidado: r.id_cuidado, id_riego: r.id_riego });
+  } catch (e) {
+    console.error("[API][CUIDADOS] error:", e.message);
+    res.status(500).json({ error: "No se pudo registrar el cuidado" });
+  }
+});
 // ======================= SWAGGER =======================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

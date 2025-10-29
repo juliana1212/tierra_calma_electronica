@@ -118,13 +118,65 @@ function getHistorial() {
  * @param {string} [topic="plantas/regar"] - Tópico al que se publicará el comando de riego
  * @returns {boolean} 
  */
-function enviarComandoRiego(topic = "plantas/regar") {
-    if (!client || !client.connected) {
-        console.error("No hay conexión MQTT activa.");
-        return false;
+async function enviarComandoRiego(topic = "plantas/regar") {
+  if (!client || !client.connected) {
+    console.error("[RIEGO] MQTT no conectado");
+    return { ok: false };
+  }
+
+  // 1) Publica el comando
+  client.publish(topic, "REGAR");
+
+  // 2) Toma timestamp “ahora”
+  const fechaRiego = new Date();
+
+  // 3) Busca el último ID_LECTURA del sensor
+  let conn;
+  try {
+    conn = await oracledb.getConnection(dbConfig);
+
+    const sel = await conn.execute(
+      `
+      SELECT ID_LECTURA, FECHA_HORA
+      FROM TIERRA_EN_CALMA.LECTURA_SENSORES
+      WHERE ID_SENSOR = :id_sensor
+      ORDER BY FECHA_HORA DESC
+      FETCH FIRST 1 ROWS ONLY
+      `,
+      { id_sensor: ID_SENSOR },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (!sel.rows || sel.rows.length === 0) {
+      console.warn("[RIEGO] No hay lecturas previas para el sensor", ID_SENSOR);
     }
-    client.publish(topic, "REGAR");
-    return true;
+
+    const idLectura = sel.rows?.[0]?.ID_LECTURA ?? null;
+
+    const ins = await conn.execute(
+      `
+      INSERT INTO TIERRA_EN_CALMA.RIEGO
+        (ID_LECTURA, FECHA_HORA, TIPO_RIEGO, DURACION_SEG, MOTIVO)
+      VALUES
+        (:id_lectura, :fecha, :tipo, :dur, :motivo)
+      `,
+      {
+        id_lectura: idLectura,                   
+        fecha: fechaRiego,
+        tipo: "manual",
+        dur: 5,
+        motivo: "Riego manual activado",
+      },
+      { autoCommit: true }
+    );
+
+    return { ok: true, id_lectura: idLectura };
+  } catch (err) {
+    console.error("[RIEGO][DB] error:", err.message);
+    return { ok: false, error: err.message };
+  } finally {
+    if (conn) await conn.close().catch(() => {});
+  }
 }
 
 module.exports = {
