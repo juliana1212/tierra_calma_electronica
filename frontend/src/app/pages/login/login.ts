@@ -141,7 +141,7 @@ export class LoginComponent implements OnInit {
         const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
         if (usuario && (usuario.NOMBRE || usuario.nombre)) {
           localStorage.setItem('usuario', JSON.stringify(usuario));
-          alert(`Bienvenida ${usuario.NOMBRE || usuario.nombre}`);
+          alert(`Bienvenid@ ${usuario.NOMBRE || usuario.nombre}`);
           this.router.navigate(['/mis-plantas']);
         } else {
           alert('Credenciales inválidas. Verifica tu correo o contraseña.');

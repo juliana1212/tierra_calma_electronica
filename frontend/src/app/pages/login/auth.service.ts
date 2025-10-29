@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+
+export type Planta = {
+  ID_PLANTA: number;
+  NOMBRE_COMUN: string;
+  NOMBRE_CIENTIFICO: string;
+};
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** 🔹 Registro de usuario */
   register(user: any): Observable<any> {
@@ -21,5 +27,15 @@ export class AuthService {
   /** 🔹 Recuperar contraseña */
   recuperarContrasena(correo: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/recuperar-contrasena`, { correo });
+  }
+
+  getMisPlantas(idUsuario: number): Observable<Planta[]> {
+    // Backend responde: res.json(result.rows)  ← un array
+    return this.http.get<Planta[] | { rows: Planta[] }>(
+      `${this.apiUrl}/mis-plantas`,
+      { headers: { 'x-user-id': String(idUsuario) } }
+    ).pipe(
+      map((r) => Array.isArray(r) ? r : r.rows) // tolera ambas formas
+    );
   }
 }
