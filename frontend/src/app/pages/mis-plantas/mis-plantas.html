@@ -1,3 +1,4 @@
+<!-- Hero -->
 <div class="hero">
   <div class="hero-container">
     <div class="hero-circle"></div>
@@ -12,7 +13,7 @@
           favorecen su crecimiento.
         </p>
         <p class="hero-bienvenida">
-          Bienvenida,<span> {{ nombreUsuario }}</span>
+          Bienvenid@,<span> {{ nombreUsuario }}</span>
         </p>
       </div>
     </div>
@@ -20,103 +21,49 @@
 </div>
 
 <div>
-    <div class="titulo-seccion">
-        <h1 class="titulo-principal">Mis<br><span class="Subtitle">Plantas</span></h1>
+  <div class="titulo-seccion">
+    <h1 class="titulo-principal">Mis<br><span class="Subtitle">Plantas</span></h1>
+  </div>
+
+  <!-- Grid dinámico -->
+  <div class="plantas-grid">
+    <div
+      *ngFor="let p of plantas | slice:(page-1)*pageSize : page*pageSize"
+      class="planta-card"
+      [ngClass]="plantClass(p)">
+      <div class="card-overlay"></div>
+      <div class="card-content">
+        <h3 class="planta-nombre">{{ p.NOMBRE_COMUN }}</h3>
+        <p class="planta-descripcion" [innerHTML]="desc(p)"></p>
+        <button class="btn-monitorear" (click)="monitorear(p)">Monitorear</button>
+      </div>
     </div>
+  </div>
 
-    <div class="plantas-grid">
-        <!-- Tarjeta 1: Cerimán -->
-        <div class="planta-card ceriman-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Cerimán</h3>
-                <p class="planta-descripcion">
-                    Esta planta llena tus espacios de vida tropical<br>
-                    y frescura. Sus hojas gigantes te regalarán
-                    <br> calma y vitalidad cada día.
-                </p>
-                <button class="btn-monitorear" (click)="irACeriman()">Monitorear</button>
-            </div>
-        </div>
-
-        <!-- Tarjeta 2: Dólar -->
-        <div class="planta-card dolar-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Dólar</h3>
-                <p class="planta-descripcion">
-                    Considerada símbolo de prosperidad<br>
-                     y abundancia, atrae energía positiva.
-                </p>
-                <button class="btn-monitorear" (click)="irADolar()">Monitorear</button>
-            </div>
-        </div>
-
-        <!-- Tarjeta 3: Lengua de suegra -->
-        <div class="planta-card lengua-suegra-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Lengua de suegra</h3>
-                <p class="planta-descripcion">
-                    Fuerte, resistente y purificadora. Ideal para<br>
-                    quienes buscan una planta que les recuerde<br>
-                    que incluso en la adversidad se puede florecer.
-                </p>
-                <button class="btn-monitorear" (click)="irALenguaSuegra()">Monitorear</button>
-            </div>
-        </div>
-
-        <!-- Tarjeta 4: Hoja de violín -->
-        <div class="planta-card hoja-violin-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Hoja de violín</h3>
-                <p class="planta-descripcion">
-                    Su porte elegante y hojas en forma de violín<br>
-                    transforman cualquier rincón en un lugar acogedor.
-                </p>
-                <button class="btn-monitorear" (click)="irAHojaViolin()">Monitorear</button>
-            </div>
-        </div>
-
-        <!-- Tarjeta 5: Potus -->
-        <div class="planta-card potus-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Potus</h3>
-                <p class="planta-descripcion">
-                    Crece sin pedir mucho a cambio. Purifica el aire<br>
-                    y te recuerda que la belleza está en la sencillez.
-                </p>
-                <button class="btn-monitorear" (click)="irAPotus()">Monitorear</button>
-            </div>
-        </div>
-
-        <!-- Tarjeta 6: Palma Areca -->
-        <div class="planta-card palma-areca-card">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-                <h3 class="planta-nombre">Palma Areca</h3>
-                <p class="planta-descripcion">
-                    Sus hojas finas y verdes evocan brisas de<br>
-                    playa y bienestar. Perfecta para traer<br>
-                    frescura a tu hogar.
-                </p>
-                <button class="btn-monitorear" (click)="irAPalmaAreca()">Monitorear</button>
-            </div>
-        </div>
-    </div>
+  <!-- Paginación simple -->
+  <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin:16px 0 40px;">
+    <button class="btn-registrar"
+            (click)="page = Math.max(1, page-1)"
+            [disabled]="page === 1">
+      Anterior
+    </button>
+    <span>Página {{ page }} de {{ Math.ceil((plantas?.length || 0) / pageSize) }}</span>
+    <button class="btn-registrar"
+            (click)="page = Math.min(Math.ceil((plantas?.length || 0) / pageSize), page+1)"
+            [disabled]="page >= Math.ceil((plantas?.length || 0) / pageSize)">
+      Siguiente
+    </button>
+  </div>
 </div>
-
 
 <!-- Nueva Sección: ¿Tienes nuevas plantas? -->
 <section class="nuevas-plantas-section">
-    <div class="nuevas-plantas-container">
-        <!-- Títulos -->
-        <div class="nuevas-plantas-header">
-            <h2 class="nuevas-plantas-titulo">¿Tienes nuevas plantas?</h2>
-            <p class="nuevas-plantas-subtitulo">Añade una nueva</p>
-        </div>
+  <div class="nuevas-plantas-container">
+    <!-- Títulos -->
+    <div class="nuevas-plantas-header">
+      <h2 class="nuevas-plantas-titulo">¿Tienes nuevas plantas?</h2>
+      <p class="nuevas-plantas-subtitulo">Añade una nueva</p>
+    </div>
 
     <!-- Carrusel -->
     <div class="carrusel-container">
@@ -198,21 +145,22 @@
               </p>
             </div>
           </div>
-      </div>
-    </div>
-
-            <!-- Flechas de navegación -->
-            <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
-                <i class='bx bx-chevron-left'></i>
-            </button>
-            <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
-                <i class='bx bx-chevron-right'></i>
-            </button>
         </div>
-<button class="btn-registrar" (click)="registrarNuevaPlanta()">
-  <i class='bx bx-plus'></i>
-  Registrar nueva planta
-</button>
 
-    </div>
+      </div> <!-- /.carrusel -->
+    </div> <!-- /.carrusel-container -->
+
+    <!-- Flechas de navegación -->
+    <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
+      <i class='bx bx-chevron-left'></i>
+    </button>
+    <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
+      <i class='bx bx-chevron-right'></i>
+    </button>
+
+    <button class="btn-registrar" (click)="registrarNuevaPlanta()">
+      <i class='bx bx-plus'></i>
+      Registrar nueva planta
+    </button>
+  </div> <!-- /.nuevas-plantas-container -->
 </section>

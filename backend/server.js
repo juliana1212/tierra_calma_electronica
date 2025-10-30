@@ -163,6 +163,20 @@ app.post("/api/regar", (req, res) => {
   else res.status(500).json({ error: "No se pudo enviar el comando" });
 });
 
+app.post('/api/monitorear', async (req, res) => {
+  const idPlantaUsuario = Number(req.body?.id_planta_usuario);
+  if (!Number.isInteger(idPlantaUsuario)) {
+    return res.status(400).json({ ok: false, error: 'id_planta_usuario inválido' });
+  }
+  try {
+    const idSensor = await mqttService.setSensorForPlanta(idPlantaUsuario);
+    return res.json({ ok: true, id_sensor: idSensor });
+  } catch (e) {
+    console.error('[monitorear] error:', e);
+    return res.status(500).json({ ok: false, error: 'No se pudo preparar el monitoreo' });
+  }
+});
+
 // ======================= PLANTAS =======================
 app.post("/api/regar", (req, res) => {
   try {
@@ -214,7 +228,7 @@ app.get("/api/plantas", async (req, res) => {
     );
 
     await connection.close();
-    res.json(result.rows); 
+    res.json(result.rows);
   } catch (err) {
     console.error("Error al obtener plantas:");
     console.error(`Código: ${err.errorNum || err.code}`);
@@ -224,26 +238,36 @@ app.get("/api/plantas", async (req, res) => {
 });
 
 // ======================= OBTENER PLANTAS DE UN USUARIO =======================
-app.get("/api/mis-plantas/:id_usuario", async (req, res) => {
-  const { id_usuario } = req.params;
+app.get("/api/mis-plantas", async (req, res) => {
+  const raw = req.header("x-user-id");
+  const id_usuario = Number(raw);
+  if (!Number.isInteger(id_usuario)) {
+    return res.status(400).json({ error: "x-user-id inválido" });
+  }
 
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
+    connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
-      `SELECT bp.ID_PLANTA, bp.NOMBRE_COMUN, bp.NOMBRE_CIENTIFICO
+      `SELECT 
+         pu.ID_PLANTA_USUARIO    AS ID_PLANTA_USUARIO,
+         bp.ID_PLANTA            AS ID_PLANTA,
+         bp.NOMBRE_COMUN         AS NOMBRE_COMUN,
+         bp.NOMBRE_CIENTIFICO    AS NOMBRE_CIENTIFICO
        FROM TIERRA_EN_CALMA.PLANTAS_USUARIO pu
        JOIN TIERRA_EN_CALMA.BANCO_PLANTAS bp
-       ON pu.ID_PLANTA = bp.ID_PLANTA
-       WHERE pu.ID_USUARIO = :id_usuario`,
-      [id_usuario],
+         ON pu.ID_PLANTA = bp.ID_PLANTA
+      WHERE pu.ID_USUARIO = :id_usuario`,
+      { id_usuario },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
 
-    await connection.close();
-    res.json(result.rows);
+    res.json(result.rows ?? []);
   } catch (err) {
     console.error("Error al obtener plantas del usuario:", err);
     res.status(500).json({ error: "Error al obtener las plantas del usuario" });
+  } finally {
+    if (connection) try { await connection.close(); } catch { }
   }
 });
 // ======================= CUIDADOS =======================

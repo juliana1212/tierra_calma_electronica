@@ -46,39 +46,47 @@ async function getUltimoIdRiegoPorPlantaUsuario(conn, idPlantaUsuario) {
 }
 
 /** Inserta el cuidado */
-async function crearCuidado({
-  id_planta_usuario,
-  fecha,          // 'YYYY-MM-DD' o ISO
-  tipo_cuidado,
-  detalle,
-}) {
+async function crearCuidado({ id_planta_usuario, fecha, tipo_cuidado, detalle }) {
   let conn;
   try {
     conn = await oracledb.getConnection(dbConfig);
 
+    // último riego de esa planta, si existe
     const idRiego = await getUltimoIdRiegoPorPlantaUsuario(conn, id_planta_usuario);
 
-    // Usa JS Date si te sirve timestamp; si envías 'YYYY-MM-DD', conviértelo con TO_DATE
-    const out = await conn.execute(
-      `INSERT INTO TIERRA_EN_CALMA.HISTORIAL_CUIDADOS
-         (ID_PLANTA_USUARIO, ID_RIEGO, FECHA, TIPO_CUIDADO, DETALLE)
-       VALUES
-         (:id_pu, :id_riego, :fecha, :tipo, :detalle)
-       RETURNING ID_CUIDADO INTO :id_out`,
+    const result = await conn.execute(
+      `
+      INSERT INTO TIERRA_EN_CALMA.HISTORIAL_CUIDADOS
+        (ID_PLANTA_USUARIO, ID_RIEGO, FECHA, TIPO_CUIDADO, DETALLE)
+      VALUES
+        (:id_pu, :id_riego, TO_DATE(:fecha,'YYYY-MM-DD'), :tipo_cuidado, :detalle)
+      RETURNING ID_CUIDADO INTO :id_out
+      `,
       {
         id_pu: id_planta_usuario,
-        id_riego: idRiego,           // puede ser null
-        fecha: new Date(fecha),      // si FECHA es DATE/TIMESTAMP en Oracle
-        tipo: tipo_cuidado,
+        id_riego: idRiego,                 // puede ser null
+        fecha,                              // '2025-10-08' desde el front
+        tipo_cuidado: tipo_cuidado,                 // ej. 'poda' | 'fertilización'
         detalle: detalle || null,
         id_out: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
       { autoCommit: true }
     );
 
-    return { id_cuidado: out.outBinds.id_out[0], id_riego: idRiego };
+    const out = result.outBinds?.id_out;
+    const id_cuidado = Array.isArray(out) ? out[0] : out;
+
+    console.log('[CUIDADOS][OK]', {
+      id_cuidado,
+      id_planta_usuario,
+      id_riego: idRiego,
+      fecha, // se guardó como DATE: 08/10/25 al mostrar
+      rowsAffected: result.rowsAffected,
+    });
+
+    return { id_cuidado, id_riego: idRiego };
   } finally {
-    if (conn) await conn.close().catch(() => {});
+    if (conn) await conn.close().catch(() => { });
   }
 }
 
