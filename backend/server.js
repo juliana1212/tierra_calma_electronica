@@ -66,7 +66,6 @@ app.post("/api/register", async (req, res) => {
     });
   }
 });
-
 // ======================= LOGIN =======================
 app.post("/api/login", async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
@@ -77,7 +76,7 @@ app.post("/api/login", async (req, res) => {
     const result = await connection.execute(
       `SELECT ID_USUARIO, NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO
        FROM TIERRA_EN_CALMA.USUARIOS
-       WHERE CORREO_ELECTRONICO = :correo_electronico
+       WHERE LOWER(CORREO_ELECTRONICO) = LOWER(:correo_electronico)
        AND CONTRASENA = :contrasena`,
       { correo_electronico, contrasena },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
@@ -86,8 +85,19 @@ app.post("/api/login", async (req, res) => {
     await connection.close();
 
     if (result.rows.length > 0) {
-      console.log(`Login exitoso para: ${correo_electronico}`);
-      res.send({ message: "Login exitoso", user: result.rows[0] });
+      const usuario = result.rows[0];
+      const correo = (usuario.CORREO_ELECTRONICO || '').trim().toLowerCase();
+
+      // === DETECTAR ADMINISTRADOR ===
+      const role = correo === 'admin@tierraencalma.com' ? 'admin' : 'user';
+
+      console.log(`🟢 Login exitoso para ${correo} (rol: ${role})`);
+
+      res.send({
+        message: "Login exitoso",
+        user: usuario,
+        role: role
+      });
     } else {
       console.warn(`Intento fallido de login: ${correo_electronico}`);
       res.status(401).send({ message: "Credenciales inválidas" });
@@ -293,13 +303,6 @@ app.post("/api/cuidados", async (req, res) => {
 // ======================= SWAGGER =======================
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// ======================= INICIO SERVIDOR =======================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
-  console.log(`Intentando conectar con Oracle: ${dbConfig.connectString}`);
-});
-
 // ======================= MANEJO GLOBAL DE ERRORES =======================
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Rechazo de promesa no manejado:", reason);
@@ -307,4 +310,77 @@ process.on("unhandledRejection", (reason, promise) => {
 
 process.on("uncaughtException", (err) => {
   console.error("Error no capturado:", err);
+});
+
+
+
+// ======================= RUTA PARA VISTAS DEL ADMIN =======================
+app.get("/api/admin/vistas", async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const opts = { outFormat: oracledb.OUT_FORMAT_OBJECT };
+
+    // Mostrar solo los últimos 10 registros por vista
+    const [estado, riegos, alertas, cuidados] = await Promise.all([
+      connection.execute(
+        `SELECT * FROM (
+           SELECT * FROM TIERRA_EN_CALMA.VW_ESTADO_PLANTAS_USUARIO 
+           ORDER BY FECHA_HORA DESC
+         ) WHERE ROWNUM <= 10`,
+        [],
+        opts
+      ),
+      connection.execute(
+        `SELECT * FROM (
+           SELECT * FROM TIERRA_EN_CALMA.VW_HISTORIAL_RIEGOS 
+           ORDER BY FECHA_HORA DESC
+         ) WHERE ROWNUM <= 10`,
+        [],
+        opts
+      ),
+      connection.execute(
+        `SELECT * FROM (
+           SELECT * FROM TIERRA_EN_CALMA.VW_ALERTAS_CONDICIONES 
+           ORDER BY TEMPERATURA DESC
+         ) WHERE ROWNUM <= 10`,
+        [],
+        opts
+      ),
+      connection.execute(
+        `SELECT * FROM (
+           SELECT * FROM TIERRA_EN_CALMA.VW_CUIDADOS_PROGRAMADOS 
+           ORDER BY FECHA DESC
+         ) WHERE ROWNUM <= 10`,
+        [],
+        opts
+      )
+    ]);
+
+    await connection.close();
+
+    console.log("Vistas administrativas consultadas correctamente (limitadas a 10 registros).");
+
+    // Normalizar claves en mayúsculas
+    const normalizar = (arr) =>
+      arr.map((r) =>
+        Object.fromEntries(Object.entries(r).map(([k, v]) => [k.toUpperCase(), v]))
+      );
+
+    res.json({
+      estado_plantas: normalizar(estado.rows),
+      historial_riegos: normalizar(riegos.rows),
+      alertas_condiciones: normalizar(alertas.rows),
+      cuidados_programados: normalizar(cuidados.rows),
+    });
+  } catch (err) {
+    console.error("Error al obtener vistas del admin:", err);
+    res.status(500).json({ error: "Error al consultar las vistas administrativas" });
+  }
+});
+
+// ======================= INICIO SERVIDOR =======================
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`Intentando conectar con Oracle: ${dbConfig.connectString}`);
 });
