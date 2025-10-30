@@ -201,11 +201,30 @@ async function enviarComandoRiego(topic = "plantas/regar") {
   }
 }
 
+async function enviarComandoFisicoRiego() {
+  if (!client || !client.connected) {
+    console.error("[RIEGO-FISICO] MQTT no conectado");
+    return { ok: false };
+  }
+
+  try {
+    client.publish("plantas/regar", "REGAR");
+    console.log("[RIEGO-FISICO] Comando físico enviado al topic plantas/regar");
+    return { ok: true };
+  } catch (err) {
+    console.error("[RIEGO-FISICO] Error enviando comando:", err.message);
+    return { ok: false, error: err.message };
+  }
+}
+
+
+
 module.exports = {
   initMQTT,
   getUltimoDato,
   getHistorial,
   enviarComandoRiego,
+  enviarComandoFisicoRiego,
   ensureSensorForPlanta,
   setSensorForPlanta,
 };
