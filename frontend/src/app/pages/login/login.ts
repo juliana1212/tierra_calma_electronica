@@ -61,7 +61,6 @@ export class LoginComponent implements OnInit {
     if (abrirRegistro) {
       // Mostrar registro inmediatamente
       this.isContainerActive = true;
-      // Asegurar que el usuario vea el formulario arriba
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 50);
@@ -103,26 +102,26 @@ export class LoginComponent implements OnInit {
     this.forgotIdentification = '';
   }
   sendPasswordReset(): void {
-  if (!this.forgotIdentification.trim()) {
-    alert('Por favor ingresa tu correo electrónico.');
-    return;
+    if (!this.forgotIdentification.trim()) {
+      alert('Por favor ingresa tu correo electrónico.');
+      return;
+    }
+
+    const correo = this.forgotIdentification.trim();
+
+    this.authService.recuperarContrasena(correo).subscribe({
+      next: () => {
+        alert('Hemos enviado un correo con instrucciones para restablecer tu contraseña.');
+        this.closeForgotPasswordModal();
+      },
+      error: (err: any) => {
+        console.error('Error al recuperar contraseña:', err);
+        alert('No se pudo enviar el correo. Intenta más tarde.');
+      }
+    });
   }
 
-  const correo = this.forgotIdentification.trim();
-
-  this.authService.recuperarContrasena(correo).subscribe({
-    next: () => {
-      alert('Hemos enviado un correo con instrucciones para restablecer tu contraseña.');
-      this.closeForgotPasswordModal();
-    },
-    error: (err: any) => {
-      console.error('Error al recuperar contraseña:', err);
-      alert('No se pudo enviar el correo. Intenta más tarde.');
-    }
-  });
-}
-
-  // Submit login
+  // ========================= LOGIN =========================
   onLoginSubmit(event: Event): void {
     event.preventDefault();
 
@@ -132,17 +131,26 @@ export class LoginComponent implements OnInit {
     };
 
     if (!credentials.correo_electronico || !credentials.contrasena) {
-      alert(' Ingresa tu correo y contraseña.');
+      alert('Ingresa tu correo y contraseña.');
       return;
     }
 
     this.authService.login(credentials).subscribe({
       next: (res: any) => {
         const usuario = Array.isArray(res.user) ? res.user[0] : res.user;
+
         if (usuario && (usuario.NOMBRE || usuario.nombre)) {
           localStorage.setItem('usuario', JSON.stringify(usuario));
           alert(`Bienvenid@ ${usuario.NOMBRE || usuario.nombre}`);
-          this.router.navigate(['/mis-plantas']);
+
+          // Validar si es el usuario administrador
+          const correo = usuario.CORREO_ELECTRONICO || usuario.correo_electronico;
+          if (correo === 'admin@tierraencalma.com') {
+            this.router.navigate(['/admin']);   // Panel de vistas del administrador
+          } else {
+            this.router.navigate(['/mis-plantas']); // Usuario normal
+          }
+
         } else {
           alert('Credenciales inválidas. Verifica tu correo o contraseña.');
         }
@@ -151,15 +159,15 @@ export class LoginComponent implements OnInit {
         if (err.status === 0) {
           alert('No se pudo conectar con el servidor. Verifica el backend.');
         } else if (err.error?.message) {
-          alert(` ${err.error.message}`);
+          alert(`${err.error.message}`);
         } else {
-          alert(' Credenciales inválidas.');
+          alert('Credenciales inválidas.');
         }
       }
     });
   }
 
-  // Submit registro
+  // ========================= REGISTRO =========================
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 
@@ -173,17 +181,17 @@ export class LoginComponent implements OnInit {
     };
 
     if (!newUser.id_usuario || !newUser.nombre || !newUser.correo_electronico || !newUser.contrasena) {
-      alert(' Todos los campos son obligatorios.');
+      alert('Todos los campos son obligatorios.');
       return;
     }
 
     this.authService.register(newUser).subscribe({
       next: () => {
-        alert(' Usuario registrado con éxito.');
+        alert('Usuario registrado con éxito.');
         this.showLogin();
       },
       error: () => {
-        alert(' No se pudo registrar el usuario. Revisa los datos o intenta más tarde.');
+        alert('No se pudo registrar el usuario. Revisa los datos o intenta más tarde.');
       }
     });
   }
