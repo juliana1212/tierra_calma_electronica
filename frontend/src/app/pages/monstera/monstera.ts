@@ -101,6 +101,23 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
   }
+  verificarCondiciones(): void {
+    if (!this.idPlantaUsuario) return alert('Falta ID de planta');
+    fetch('http://localhost:3000/api/verificar-condiciones', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_planta_usuario: this.idPlantaUsuario })
+    })
+    .then(r => r.json())
+    .then(result => {
+      alert(result.mensaje || 'Verificación completada');
+    })
+    .catch(err => {
+      console.error('[VERIFICAR_CONDICIONES] error', err);
+      alert('Error al verificar las condiciones');
+    });
+  }
+
 
   private activarRiegoAutomatico(): void {
     this.agregarHistorial('automático', 'Riego automático ejecutado');

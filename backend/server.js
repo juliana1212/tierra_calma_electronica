@@ -10,6 +10,7 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 const nodemailer = require("nodemailer");
 const mqttService = require("./mqttService");
 const cuidadosService = require("./cuidadosService");
+const pkgCentralService = require("./pkgCentralService");
 console.log("Nodemailer cargado correctamente");
 const app = express();
 app.use(cors());
@@ -375,6 +376,31 @@ app.get("/api/admin/vistas", async (req, res) => {
   } catch (err) {
     console.error("Error al obtener vistas del admin:", err);
     res.status(500).json({ error: "Error al consultar las vistas administrativas" });
+  }
+});
+
+
+// ======================= VERIFICAR CONDICIONES =======================
+app.post("/api/verificar-condiciones", async (req, res) => {
+  const idPlantaUsuario = Number(req.body?.id_planta_usuario);
+  if (!Number.isInteger(idPlantaUsuario)) {
+    return res.status(400).json({ ok: false, error: "id_planta_usuario inválido" });
+  }
+
+  try {
+    const result = await pkgCentralService.verificarCondiciones(idPlantaUsuario);
+    res.json(result);
+  } catch (e) {
+    console.error("[API][VERIFICAR_CONDICIONES] error:", e.message);
+    res.status(500).json({ ok: false, error: "Error al verificar condiciones" });
+  }
+});
+
+console.log("Rutas cargadas: /api/verificar-condiciones habilitada");
+
+app._router.stack.forEach(r => {
+  if (r.route && r.route.path) {
+    console.log(" Ruta registrada:", r.route.path);
   }
 });
 
