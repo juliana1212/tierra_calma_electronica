@@ -11,7 +11,7 @@ const dbConfig = {
   connectString: process.env.ORACLE_CONN,
 };
 
-// ← ID dinámico según la planta elegida
+// ID dinámico según la planta elegida
 let CURRENT_SENSOR_ID = null;
 
 let ultimoGuardado = 0;
@@ -80,7 +80,7 @@ function initMQTT(brokerUrl, options, topic) {
     ultimoDato = dato;
     historial.push(dato);
 
-    if (!CURRENT_SENSOR_ID) return; // sin sensor activo no guardes
+    if (!CURRENT_SENSOR_ID) return; // sin sensor activo no guardamos
     const ahora = Date.now();
     if (guardando) return;
     if (ahora - ultimoGuardado >= INTERVALO_GUARDADO) {
