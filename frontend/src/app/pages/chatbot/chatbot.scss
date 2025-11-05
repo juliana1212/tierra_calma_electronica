@@ -1,4 +1,4 @@
-/* ===== Imagen de portada ===== */
+/*  Imagen de portada  */
 .portada {
   width: 100%;
   height: 500px;
@@ -14,7 +14,7 @@
   align-items: center;
 }
 
-/* ===== Overlay de texto ===== */
+/*  Overlay de texto  */
 .portada-overlay {
   position: absolute;
   top: 52%;
@@ -37,7 +37,7 @@
   box-shadow: 0 8px 18px rgba(147, 81, 28, 0.18);
 }
 
-/* ===== Título ===== */
+/*  Título  */
 .portada-titulo {
   font-family: 'STIX Two Text', serif;
   font-size: 1.8rem;
@@ -50,7 +50,7 @@
   text-shadow: 0 1px 3px rgba(45, 74, 47, 0.1);
 }
 
-/* ===== Botón ===== */
+/*  Botón  */
 .portada-boton {
   background-color: #93511c;
   color: #ffffff;
@@ -71,7 +71,7 @@
   transform: scale(1.05);
 }
 
-/* ===== Responsive ===== */
+/*  Responsive  */
 @media (max-width: 768px) {
   .portada-overlay {
     left: 8%;
@@ -86,7 +86,7 @@
 }
 
 
-/* ===== Contenido general ===== */
+/*  Contenido general  */
 .contenido-chatbot {
   text-align: center;
   margin-top: 3rem;
@@ -113,7 +113,7 @@
   text-align: center;
 }
 
-/* ===== Carrusel ===== */
+/*  Carrusel  */
 .carrusel-wrapper {
   position: relative;
   max-width: 1300px;
@@ -134,7 +134,7 @@
   transition: transform 0.5s ease;
 }
 
-/* ===== Tarjetas arqueadas ===== */
+/*  Tarjetas arqueadas  */
 .tarjeta {
   width: 280px;
   height: 400px;
@@ -164,7 +164,7 @@
   transform: rotateY(180deg);
 }
 
-/* ===== Frente ===== */
+/*  Frente  */
 .tarjeta-frente,
 .tarjeta-atras {
   position: absolute;
@@ -186,7 +186,7 @@
   background-position: center;
 }
 
-/* ===== Imagen personalizada por mes ===== */
+/*  Imagen personalizada por mes  */
 .tarjeta.enero   .tarjeta-frente { background-image: url('../../../assets/images/Enero.png'); }
 .tarjeta.febrero .tarjeta-frente { background-image: url('../../../assets/images/Febrero.png'); }
 .tarjeta.marzo   .tarjeta-frente { background-image: url('../../../assets/images/Marzo.png'); }
@@ -200,7 +200,7 @@
 .tarjeta.noviembre .tarjeta-frente { background-image: url('../../../assets/images/Noviembre.png'); }
 .tarjeta.diciembre .tarjeta-frente { background-image: url('../../../assets/images/Diciembre.png'); }
 
-/* ===== Título del mes ===== */
+/*  Título del mes  */
 .tarjeta-frente h3 {
   position: absolute;
   top: 20px; 
@@ -215,7 +215,7 @@
   border-radius: 12px;
 }
 
-/* ===== Reverso ===== */
+/*  Reverso  */
 .tarjeta-atras {
   background-color: #fefdfb;
   transform: rotateY(180deg);
@@ -248,7 +248,7 @@
   font-style: italic;
 }
 
-/* ===== Botones laterales ===== */
+/*  Botones laterales  */
 .carrusel-btn {
   position: absolute;
   top: 50%;
@@ -287,7 +287,7 @@
   visibility: hidden;
 }
 
-/* ===== Responsive ===== */
+/*  Responsive  */
 @media (max-width: 1000px) {
   .tarjeta {
     width: 240px;
@@ -393,7 +393,7 @@
   font-weight: 600;
 }
 
-/* ===== Responsivo ===== */
+/*  Responsivo  */
 @media (max-width: 768px) {
   .fases-lunares {
     padding: 2rem 1.5rem;
@@ -408,7 +408,7 @@
   }
 }
 
-/* ===== Sección de características ===== */
+/*  Sección de características  */
 .caracteristicas {
   background-color: #efe4e4; 
   margin-top: -2rem;
@@ -422,7 +422,7 @@
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* ===== Título ===== */
+/*  Título  */
 .titulo-caracteristicas {
   font-family: 'STIX Two Text', serif;
   font-size: 2rem;
@@ -433,7 +433,7 @@
   margin: 40px;
 }
 
-/* ===== Cuadrícula ===== */
+/*  Cuadrícula  */
 .iconos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -441,7 +441,7 @@
   justify-items: center;
 }
 
-/* ===== Ítems ===== */
+/*  Ítems  */
 .icono-item {
   display: flex;
   flex-direction: column;
@@ -452,7 +452,7 @@
   max-width: 240px;
 }
 
-/* ===== Icono circular ===== */
+/*  Icono circular  */
 .ventana-icono {
   width: 80px;
   height: 80px;
@@ -472,14 +472,14 @@
   transition: all 0.3s ease;
 }
 
-/* ===== Texto ===== */
+/*  Texto  */
 .icono-item p {
   font-size: 1rem;
   color: #3a3a3a;
   line-height: 1.6;
 }
 
-/* ===== Hover ===== */
+/*  Hover  */
 .icono-item:hover {
   transform: translateY(-6px);
 }
@@ -494,7 +494,7 @@
   color: #fff;
 }
 
-/* ===== Responsive ===== */
+/*  Responsive  */
 @media (max-width: 768px) {
   .caracteristicas {
     padding: 3rem 1.5rem;
@@ -512,7 +512,7 @@
   }
 }
 
-/* ===== Chat flotante ===== */
+/*  Chat flotante  */
 .chat-ventana {
   position: fixed;
   bottom: 30px;

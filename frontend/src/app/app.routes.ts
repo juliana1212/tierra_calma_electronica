@@ -1,24 +1,24 @@
 import { Routes } from '@angular/router';
 
-// ====== LAYOUTS ======
+//  LAYOUTS 
 import { PublicLayoutComponent } from './layouts/public-layout';
 import { PrivateLayoutComponent } from './layouts/private-layout';
 
-// ====== PÁGINAS PÚBLICAS ======
+//  PÁGINAS PÚBLICAS 
 import { HomeComponent } from './pages/home/home';
 import { LoginComponent } from './pages/login/login';
 import { ChatbotComponent } from './pages/chatbot/chatbot';
 
-// ====== PÁGINAS PRIVADAS ======
+//  PÁGINAS PRIVADAS 
 import { MisPlantasComponent } from './pages/mis-plantas/mis-plantas';
 import { RegistrarPlantasComponent } from './pages/registrar-plantas/registrar-plantas';
 import { MonsteraComponent } from './pages/monstera/monstera';
 
-// ====== ADMIN ======
+//  ADMIN 
 import { AdminComponent } from './admin/admin';
 
 export const routes: Routes = [
-  // === RUTAS PÚBLICAS ===
+  //  RUTAS PÚBLICAS 
   {
     path: '',
     component: PublicLayoutComponent,
@@ -29,7 +29,7 @@ export const routes: Routes = [
     ]
   },
 
-  // === RUTAS PRIVADAS (usuarios logueados) ===
+  //  RUTAS PRIVADAS (usuarios logueados) 
   {
     path: '',
     component: PrivateLayoutComponent,
