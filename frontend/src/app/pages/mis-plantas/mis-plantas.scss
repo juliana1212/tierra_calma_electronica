@@ -40,7 +40,6 @@
   max-width: 100%; 
 }
 
-/* 📏 Texto */
 .hero-texto {
   position: absolute;
   top: 180px;
@@ -141,7 +140,6 @@
     }
 }
 
-/* Imágenes de fondo únicas para cada tarjeta */
 .ceriman-card {
     background-image: url('../../../assets/images/Cerimán.png');
 }
@@ -216,8 +214,6 @@
     }
 }
 
-
-/* Sección Nuevas Plantas */
 .nuevas-plantas-section {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     padding: 80px 20px;
@@ -258,6 +254,7 @@
   max-width: 1600px;
   overflow: visible;
   padding: 0 60px;
+  align-items: center;
 }
 
 .carrusel {

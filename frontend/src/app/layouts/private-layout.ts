@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderPrivadoComponent } from '../pages/header-privado/header-privado';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ Necesario para ngForm
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-private-layout',

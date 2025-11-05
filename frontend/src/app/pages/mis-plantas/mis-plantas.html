@@ -22,7 +22,9 @@
 
 <div>
   <div class="titulo-seccion">
-    <h1 class="titulo-principal">Mis<br><span class="Subtitle">Plantas</span></h1>
+    <h1 class="titulo-principal">
+      Mis<br><span class="Subtitle">Plantas</span>
+    </h1>
   </div>
 
   <!-- Grid dinámico -->
@@ -41,16 +43,19 @@
   </div>
 
   <!-- Paginación simple -->
-  <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin:16px 0 40px;">
-    <button class="btn-registrar"
-            (click)="page = Math.max(1, page-1)"
-            [disabled]="page === 1">
+  <div
+    style="display:flex;gap:12px;justify-content:center;align-items:center;margin:16px 0 40px;">
+    <button
+      class="btn-registrar"
+      (click)="page = Math.max(1, page-1)"
+      [disabled]="page === 1">
       Anterior
     </button>
     <span>Página {{ page }} de {{ Math.ceil((plantas?.length || 0) / pageSize) }}</span>
-    <button class="btn-registrar"
-            (click)="page = Math.min(Math.ceil((plantas?.length || 0) / pageSize), page+1)"
-            [disabled]="page >= Math.ceil((plantas?.length || 0) / pageSize)">
+    <button
+      class="btn-registrar"
+      (click)="page = Math.min(Math.ceil((plantas?.length || 0) / pageSize), page+1)"
+      [disabled]="page >= Math.ceil((plantas?.length || 0) / pageSize)">
       Siguiente
     </button>
   </div>
@@ -68,7 +73,6 @@
     <!-- Carrusel -->
     <div class="carrusel-container">
       <div class="carrusel" #carrusel>
-
         <!-- Tarjeta 1 - Cerimán -->
         <div class="carrusel-item">
           <div class="planta-carrusel-card Ceriman-card">
@@ -146,18 +150,18 @@
             </div>
           </div>
         </div>
-
       </div> <!-- /.carrusel -->
+
+      <!-- Flechas de navegación dentro del contenedor -->
+      <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
+        <i class='bx bx-chevron-left'></i>
+      </button>
+      <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
+        <i class='bx bx-chevron-right'></i>
+      </button>
     </div> <!-- /.carrusel-container -->
 
-    <!-- Flechas de navegación -->
-    <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
-      <i class='bx bx-chevron-left'></i>
-    </button>
-    <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
-      <i class='bx bx-chevron-right'></i>
-    </button>
-
+    <!-- Botón registrar -->
     <button class="btn-registrar" (click)="registrarNuevaPlanta()">
       <i class='bx bx-plus'></i>
       Registrar nueva planta
