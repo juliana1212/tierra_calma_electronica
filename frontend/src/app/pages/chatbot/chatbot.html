@@ -8,7 +8,7 @@
     <button class="portada-boton" (click)="abrirChat()">Iniciar Chat</button>
   </div>
 
-  <!--  Ventana de chat -->
+  <!-- Ventana de chat -->
   <div class="chat-ventana" *ngIf="chatAbierto">
     <div class="chat-header">
       <span>Asistente de jardinería</span>
@@ -16,18 +16,37 @@
     </div>
 
     <div class="chat-mensajes">
-      <div class="mensaje-bot">¡Hola! Soy tu asistente de jardinería. ¿En qué puedo ayudarte hoy?</div>
-    </div>
+      <div *ngFor="let m of mensajes" [ngClass]="{'mensaje-bot': m.autor === 'bot', 'mensaje-usuario': m.autor === 'usuario'}">
+        {{ m.texto }}
+      </div>
 
-    <div class="chat-input">
-      <input type="text" placeholder="Escribe tu mensaje..." [(ngModel)]="mensaje" (keyup.enter)="enviarMensaje()" />
-      <button (click)="enviarMensaje()">Enviar</button>
-    </div>
-  </div>
-</section>
+      <!-- Mostrar categorías -->
+      <div *ngIf="!categoriaSeleccionada">
+        <button class="opcion" *ngFor="let c of categorias" (click)="seleccionarCategoria(c)">
+          {{ c.categoria }}
+        </button>
+      </div>
+
+      <!-- Mostrar preguntas de la categoría -->
+      <div *ngIf="categoriaSeleccionada && !preguntaSeleccionada">
+        <button class="opcion" *ngFor="let p of categoriaSeleccionada.preguntas" (click)="seleccionarPregunta(p)">
+          {{ p.texto }}
+        </button>
+      </div>
+
+          <!-- Botones de volver -->
+      <div *ngIf="preguntaSeleccionada">
+        <button class="opcion volver" (click)="volverAPreguntas()">Volver a preguntas</button>
+        <button class="opcion volver" (click)="volverACategorias()">Volver al inicio</button>
+      </div>
+
+    </div> 
+  </div> 
+</section> 
 
 <section class="contenido-chatbot">
   <h2 class="proposito-titulo">La luna guía tus tijeras:<br><span class="Subtitle">Poda en el momento perfecto</span></h2>
+
 
   <div class="carrusel-wrapper">
     <button class="carrusel-btn izquierda" (click)="moverCarrusel('izquierda')">❮</button>
