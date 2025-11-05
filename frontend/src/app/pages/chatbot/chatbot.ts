@@ -15,7 +15,7 @@ import { FAQS } from './faq';
 export class ChatbotComponent {
   @ViewChild('carrusel') carrusel!: ElementRef<HTMLDivElement>;
 
-  //Datos del carrusel de meses
+
   meses = [
     { nombre: 'Enero', clase: 'enero', fases: ['🌒 6 Ene — Creciente', '🌕 13 Ene — Llena', '🌗 21 Ene — Menguante', '🌑 29 Ene — Nueva'] },
     { nombre: 'Febrero', clase: 'febrero', fases: ['🌒 5 Feb — Creciente', '🌕 12 Feb — Llena', '🌗 20 Feb — Menguante', '🌑 27 Feb — Nueva'] },

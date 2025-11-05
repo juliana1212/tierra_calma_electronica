@@ -37,13 +37,10 @@ export const routes: Routes = [
       { path: 'mis-plantas', component: MisPlantasComponent },
       { path: 'registrar-plantas', component: RegistrarPlantasComponent },
       { path: 'monstera', component: MonsteraComponent },
-      { path: 'admin', component: AdminComponent } // ✅ Panel de administrador
+      { path: 'admin', component: AdminComponent },
+      { path: 'chatbot', component: ChatbotComponent }
     ]
   },
 
-  // === OTRAS RUTAS ===
-  { path: 'chatbot', component: ChatbotComponent },
-
-  // === RUTA POR DEFECTO ===
   { path: '**', redirectTo: '' }
 ];
