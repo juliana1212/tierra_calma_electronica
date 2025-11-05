@@ -307,17 +307,15 @@
   }
 }
 
-/* ===== Sección de fases lunares (minimalista y elegante) ===== */
 .fases-lunares {
   margin-top: 2rem;
   height: 650px;
   padding: 3rem 4rem;
-  background-color: #fcfbf8; /* tono marfil suave */
+  background-color: #fcfbf8;
   border-top: 1.5px solid #e5d3b3;
   text-align: center;
 }
 
-/* ===== Título ===== */
 .titulo-fases {
   font-family: 'STIX Two Text', serif;
   font-size: 2.8rem;
@@ -338,7 +336,6 @@
   text-align: center;
 }
 
-/* ===== Grid flexible ===== */
 .fases-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -346,7 +343,6 @@
   justify-items: center;
 }
 
-/* ===== Tarjeta ===== */
 .fase {
   background: #ffffff;
   border-radius: 20px;
@@ -361,7 +357,6 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* ===== Iconos redondos ===== */
 .icono {
   width: 55px;
   height: 55px;
@@ -376,7 +371,6 @@
 .fase-menguante { background: linear-gradient(to left, #93511c 50%, #ffffff 50%); }
 .fase-nueva { background-color: #93511c; }
 
-/* ===== Títulos de cada fase ===== */
 .fase h3 {
   color: #93511c;
   font-family: 'STIX Two Text', serif;
@@ -386,7 +380,6 @@
   font-weight: 500;
 }
 
-/* ===== Texto descriptivo ===== */
 .fase p {
   font-family: 'STIX Two Text', serif;
   font-size: 0.96rem;
@@ -419,7 +412,7 @@
 .caracteristicas {
   background-color: #efe4e4; 
   margin-top: -2rem;
-  padding: 5rem 3rem;
+  padding: 5rem 5rem;
   border-top-left-radius: 90px;
   border-top-right-radius: 90px;
   color: #2d4a2f;
