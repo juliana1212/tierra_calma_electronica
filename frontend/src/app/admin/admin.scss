@@ -6,7 +6,7 @@
   color: #2c3424;
 }
 
-/* ===== Títulos principales ===== */
+/*  Títulos principales  */
 .contenedor-admin h1 {
   text-align: center;
   color: #93511c;
@@ -20,7 +20,7 @@
   margin-bottom: 4rem;
 }
 
-/* ===== Subtítulos ===== */
+/*  Subtítulos  */
 .contenedor-admin h2 {
   font-weight: 400;
   color: rgba(147, 81, 28, 0.75);
@@ -31,7 +31,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ===== Tablas ===== */
+/*  Tablas  */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -70,12 +70,12 @@ tbody tr:hover {
   background: rgba(239, 219, 173, 0.25);
 }
 
-/* ===== Alternar filas ===== */
+/*  Alternar filas  */
 tbody tr:nth-child(even) {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-/* ===== Estado vacío o carga ===== */
+/*  Estado vacío o carga  */
 .cargando {
   text-align: center;
   color: #93511c;
@@ -96,7 +96,7 @@ tbody tr:nth-child(even) {
   }
 }
 
-/* ===== Scroll de tablas grandes ===== */
+/*  Scroll de tablas grandes  */
 section {
   overflow-x: auto;
   background: transparent;
@@ -104,7 +104,7 @@ section {
   padding: 10px 0;
 }
 
-/* ===== Ajustes visuales ===== */
+/*  Ajustes visuales  */
 table th:first-child,
 table td:first-child {
   border-left: none;
@@ -115,7 +115,7 @@ table td:last-child {
   border-right: none;
 }
 
-/* ===== Diseño responsive ===== */
+/*  Diseño responsive  */
 @media (max-width: 900px) {
   .contenedor-admin {
     padding: 40px 20px;

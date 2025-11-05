@@ -1,4 +1,4 @@
-// pkgCentralService.js
+// paquete para verificar condiciones desde oracle
 const oracledb = require("oracledb");
 const mqttService = require("./mqttService");
 
@@ -8,13 +8,12 @@ const dbConfig = {
   connectString: process.env.ORACLE_CONN,
 };
 
-// pkgCentralService.js
 async function verificarCondiciones(idPlantaUsuario) {
   let conn;
   try {
     conn = await oracledb.getConnection(dbConfig);
 
-    // Obtener la última lectura
+    // Obtenemos la última lectura
     const lectura = await conn.execute(
       `SELECT TEMPERATURA, HUMEDAD
          FROM TIERRA_EN_CALMA.LECTURA_SENSORES L
@@ -32,7 +31,7 @@ async function verificarCondiciones(idPlantaUsuario) {
 
     const { TEMPERATURA, HUMEDAD } = lectura.rows[0];
 
-    // Ejecutar el procedimiento y capturar el mensaje de salida
+    // Ejecutar el procedimiento de la bd y capturar el mensaje de salida
     const result = await conn.execute(
       `DECLARE 
          v_msg VARCHAR2(100);
@@ -56,10 +55,10 @@ async function verificarCondiciones(idPlantaUsuario) {
     );
 
     const mensaje = result.outBinds.out_msg;
-   // Si se activó el riego automático, publicar al tópico MQTT
+  
     if (mensaje.includes("Riego automático")) {
       console.log(`[PKG_CENTRAL] Activando riego físico via MQTT...`);
-      await mqttService.enviarComandoFisicoRiego(); // ← usamos la nueva función
+      await mqttService.enviarComandoFisicoRiego(); 
     }
     return {
       ok: true,
