@@ -22,7 +22,7 @@ export class App {
 
   enviarFormulario() {
     Swal.fire({
-      title: `¡Gracias, ${this.contacto.nombre}! 🌸`,
+      title: `¡Gracias, ${this.contacto.nombre}!`,
       text: 'Tu mensaje fue enviado correctamente. Pronto nos pondremos en contacto contigo.',
       icon: 'success',
       confirmButtonText: 'Aceptar',

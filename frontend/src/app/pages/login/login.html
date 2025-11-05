@@ -1,7 +1,7 @@
 <div class="container" [class.activate]="isContainerActive" [class.transitioning]="isTransitioning">
   <div class="transition-cover" *ngIf="isTransitioning"></div>
 
-  <!-- ========== LOGIN ========== -->
+  <!--  LOGIN  -->
   <div class="form-box login" [class.hidden]="isContainerActive">
     <form (submit)="onLoginSubmit($event)">
       <h1>Inicio de sesión</h1>
@@ -24,7 +24,7 @@
     </form>
   </div>
 
-  <!-- ========== REGISTRO ========== -->
+  <!--  REGISTRO  -->
   <div class="form-box register" [class.hidden]="!isContainerActive">
     <form (submit)="onRegisterSubmit($event)">
       <h1>Registro</h1>
@@ -63,7 +63,7 @@
     </form>
   </div>
 
-  <!-- ========== PANEL DESLIZANTE ========== -->
+  <!--  PANEL DESLIZANTE  -->
   <div class="toggle-box"></div>
 
   <div class="toggle-panel toggle-left">
@@ -79,7 +79,7 @@
   </div>
 </div>
 
-<!-- ========== MODAL RECUPERAR CONTRASEÑA ========== -->
+<!--  MODAL RECUPERAR CONTRASEÑA  -->
 <div class="modal-overlay" *ngIf="isForgotPasswordModalOpen">
   <div class="modal">
     <h2>Recuperar contraseña</h2>

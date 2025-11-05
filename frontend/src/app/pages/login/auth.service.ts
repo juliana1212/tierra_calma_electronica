@@ -14,28 +14,27 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  /** 🔹 Registro de usuario */
+  /* Registro de usuario */
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  /** 🔹 Inicio de sesión */
+  /* Inicio de sesión */
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
-  /** 🔹 Recuperar contraseña */
+  /* Recuperar contraseña */
   recuperarContrasena(correo: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/recuperar-contrasena`, { correo });
   }
 
   getMisPlantas(idUsuario: number): Observable<Planta[]> {
-    // Backend responde: res.json(result.rows)  ← un array
     return this.http.get<Planta[] | { rows: Planta[] }>(
       `${this.apiUrl}/mis-plantas`,
       { headers: { 'x-user-id': String(idUsuario) } }
     ).pipe(
-      map((r) => Array.isArray(r) ? r : r.rows) // tolera ambas formas
+      map((r) => Array.isArray(r) ? r : r.rows) 
     );
   }
 }
