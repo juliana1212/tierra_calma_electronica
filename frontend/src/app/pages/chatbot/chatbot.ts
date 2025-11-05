@@ -1,7 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderPrivadoComponent } from '../header-privado/header-privado';
-import { FormsModule } from '@angular/forms'; // ✅ Para usar [(ngModel)] en el chat
+import { FormsModule } from '@angular/forms'; 
+import { FAQS } from './faq'; 
+
 
 @Component({
   selector: 'app-chatbot',
@@ -13,7 +15,7 @@ import { FormsModule } from '@angular/forms'; // ✅ Para usar [(ngModel)] en el
 export class ChatbotComponent {
   @ViewChild('carrusel') carrusel!: ElementRef<HTMLDivElement>;
 
-  // ====== 🌕 Datos del carrusel de meses ======
+  //Datos del carrusel de meses
   meses = [
     { nombre: 'Enero', clase: 'enero', fases: ['🌒 6 Ene — Creciente', '🌕 13 Ene — Llena', '🌗 21 Ene — Menguante', '🌑 29 Ene — Nueva'] },
     { nombre: 'Febrero', clase: 'febrero', fases: ['🌒 5 Feb — Creciente', '🌕 12 Feb — Llena', '🌗 20 Feb — Menguante', '🌑 27 Feb — Nueva'] },
@@ -31,44 +33,69 @@ export class ChatbotComponent {
 
   moverCarrusel(direccion: 'izquierda' | 'derecha') {
     const scroll = this.carrusel.nativeElement;
-    const tarjetaAncho = 320; // ancho aproximado de una tarjeta + margen
+    const tarjetaAncho = 320; 
     const desplazamiento = direccion === 'derecha' ? tarjetaAncho * 1.2 : -tarjetaAncho * 1.2;
     scroll.scrollBy({ left: desplazamiento, behavior: 'smooth' });
   }
 
-  // ====== 💬 Lógica del chat flotante ======
+  // Lógica del chat flotante 
   chatAbierto = false;
   mensaje = '';
   mensajes: { autor: string, texto: string }[] = [];
 
+  categorias = FAQS;
+  categoriaSeleccionada: any = null;
+  preguntaSeleccionada: any = null;
+
   abrirChat() {
     this.chatAbierto = true;
-    // Agrega el mensaje de bienvenida solo la primera vez
     if (this.mensajes.length === 0) {
-      this.mensajes.push({
-        autor: 'bot',
-        texto: '🌷 ¡Hola! Soy tu asistente de jardinería. ¿Sobre qué planta o cuidado quieres saber hoy?'
-      });
+      this.mensajes.push({ autor: 'bot', texto: '🌷 ¡Hola! Soy tu asistente de jardinería.' });
+      this.mensajes.push({ autor: 'bot', texto: 'Selecciona una categoría para empezar:' });
     }
   }
 
   cerrarChat() {
     this.chatAbierto = false;
+    this.categoriaSeleccionada = null;
+    this.preguntaSeleccionada = null;
   }
 
-  enviarMensaje() {
-    const texto = this.mensaje.trim();
-    if (!texto) return;
+    seleccionarCategoria(cat: any) {
+    this.categoriaSeleccionada = cat;
+    this.mensajes.push({ autor: 'bot', texto: `Has seleccionado: ${cat.categoria}. Ahora elige una pregunta:` });
+  }
 
-    this.mensajes.push({ autor: 'usuario', texto });
-    this.mensaje = '';
+  seleccionarPregunta(pregunta: any) {
+    this.preguntaSeleccionada = pregunta;
+    this.mensajes.push({ autor: 'usuario', texto: pregunta.texto });
 
-    // Simula una respuesta suave del bot 🌿
     setTimeout(() => {
+      this.mensajes.push({ autor: 'bot', texto: pregunta.respuesta });
+
       this.mensajes.push({
         autor: 'bot',
-        texto: '🍃 Qué interesante. Estoy buscando la mejor respuesta para ti...'
+        texto: '¿Quieres volver al menú?',
       });
-    }, 900);
+    }, 600);
+  }
+
+  // volver al menú de preguntas
+  volverAPreguntas() {
+    this.preguntaSeleccionada = null;
+    this.mensajes.push({
+      autor: 'bot',
+      texto: `🌿 Has vuelto a la categoría "${this.categoriaSeleccionada.categoria}". Elige otra pregunta:`
+    });
+  }
+
+  //volver al menú principal de categorías
+  volverACategorias() {
+    this.categoriaSeleccionada = null;
+    this.preguntaSeleccionada = null;
+    this.mensajes.push({
+      autor: 'bot',
+      texto: '🌱 Has vuelto al menú principal. Elige una categoría:'
+    });
   }
 }
