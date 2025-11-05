@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule, FormsModule, HttpClientModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, FormsModule],
   templateUrl: './public-layout.html',
   styleUrls: ['./public-layout.scss']
 })

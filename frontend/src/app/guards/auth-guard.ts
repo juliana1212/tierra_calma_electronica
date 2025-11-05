@@ -10,10 +10,10 @@ export class AuthGuard {
   canActivate(): boolean {
     const user = localStorage.getItem('usuario');
     if (user) {
-      return true; // ✅ hay usuario logueado → deja entrar
+      return true; // si hay usuario logueado deja entrar
     } else {
       alert('Debes iniciar sesión primero');
-      this.router.navigate(['/login']); // 🔄 redirige a login
+      this.router.navigate(['/login']); // sino redirige a login
       return false;
     }
   }

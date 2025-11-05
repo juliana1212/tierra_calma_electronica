@@ -13,6 +13,6 @@ import { HeaderPrivadoComponent } from '../pages/header-privado/header-privado';
 })
 export class PrivateLayoutComponent {
   onSubmit() {
-    alert('📩 Tu mensaje fue enviado correctamente.');
+    alert('Tu mensaje fue enviado correctamente.');
   }
 }

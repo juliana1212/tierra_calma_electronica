@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Mea+Culpa&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap');
 
-/* ========================= */
-/* ======= HEADER ========= */
-/* ========================= */
+
+/* HEADER  */
+
 
 .header {
   background-color: #ffffff;
@@ -33,9 +33,9 @@
   justify-content: flex-end;
 }
 
-/* ========================= */
-/* ===== LOGO TEXTO ======= */
-/* ========================= */
+
+/*  LOGO TEXTO  */
+
 
 .logo-text {
   font-family: 'Mea Culpa', cursive;
@@ -57,9 +57,9 @@
   }
 }
 
-/* ========================= */
-/* ===== LINKS HEADER ===== */
-/* ========================= */
+
+/*  LINKS HEADER  */
+
 
 .nav-link {
   position: relative;
@@ -114,9 +114,9 @@ main {
   height: calc(100vh - 80px);
 }
 
-/* ========================= */
-/* ========= FOOTER ======== */
-/* ========================= */
+
+/*  FOOTER  */
+
 
 .footer {
   background: #fefdfb;
