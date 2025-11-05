@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 })
 export class LoginComponent implements OnInit {
   // Estado de paneles
-  isContainerActive = false;   // true => muestra registro
+  isContainerActive = false;   // true muestra registro
   isTransitioning = false;
   isForgotPasswordModalOpen = false;
 
@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
 
   private inicializarVista(abrirRegistro: boolean) {
     if (abrirRegistro) {
-      // Mostrar registro inmediatamente
+      // Mostrar registro 
       this.isContainerActive = true;
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -73,7 +73,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // Acciones UI
   showRegister(): void {
     this.isTransitioning = true;
     setTimeout(() => {
@@ -121,7 +120,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ========================= LOGIN =========================
+  //  LOGIN 
   onLoginSubmit(event: Event): void {
     event.preventDefault();
 
@@ -167,7 +166,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // ========================= REGISTRO =========================
+  //  REGISTRO 
   onRegisterSubmit(event: Event): void {
     event.preventDefault();
 

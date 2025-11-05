@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../login/auth.service';
 
 type Planta = {
-  ID_PLANTA_USUARIO?: number;   // ← único por planta del usuario
+  ID_PLANTA_USUARIO?: number;   // único por planta del usuario
   ID_PLANTA: number;
   NOMBRE_COMUN: string;
   NOMBRE_CIENTIFICO: string;
@@ -26,7 +26,6 @@ export class MisPlantasComponent implements OnInit {
   indiceActual = 0;
   plantas: Planta[] = [];
 
-  // paginación
   page = 1;
   pageSize = 6;
   Math = Math;
@@ -34,7 +33,7 @@ export class MisPlantasComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient                     // ← para /api/monitorear
+    private http: HttpClient                     // para /api/monitorear
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +67,7 @@ export class MisPlantasComponent implements OnInit {
     if (carrusel) carrusel.style.transform = 'translateX(0px)';
   }
 
-  // ----- Carrusel -----
+  //  Carrusel 
   siguiente(): void {
     const carrusel = this.carruselRef?.nativeElement;
     if (!carrusel) return;
@@ -101,7 +100,7 @@ export class MisPlantasComponent implements OnInit {
     }
   }
 
-  // ----- Monitorear: asegura sensor y navega -----
+  //  Monitorear: asegura sensor y navega 
   monitorear(p: Planta) {
     const idPlantaUsuario = Number(p?.ID_PLANTA_USUARIO);
     console.log('[Monitorear] planta:', p, 'ID_PLANTA_USUARIO=', p?.ID_PLANTA_USUARIO);
@@ -113,8 +112,6 @@ export class MisPlantasComponent implements OnInit {
 
     // 1) guarda en localStorage
     localStorage.setItem('planta_usuario_id', String(idPlantaUsuario));
-
-    // 2) lee de vuelta para asegurar
     const check = Number(localStorage.getItem('planta_usuario_id'));
     if (!Number.isInteger(check) || check !== idPlantaUsuario) {
       console.error('[Monitorear][ERROR] No se pudo persistir planta_usuario_id:', { idPlantaUsuario, check });
@@ -123,7 +120,7 @@ export class MisPlantasComponent implements OnInit {
     }
     console.log('[Monitorear] persistido planta_usuario_id=', check);
 
-    // 3) prepara backend (crea/selecciona sensor)
+    // 2) prepara backend (crea/selecciona sensor)
     this.http.post('http://localhost:3000/api/monitorear', {
       id_planta_usuario: idPlantaUsuario
     }).subscribe({
@@ -139,7 +136,7 @@ export class MisPlantasComponent implements OnInit {
     });
   }
 
-  // ----- Navegación individual por tipo -----
+  //  Navegación individual por tipo 
   irACeriman() { this.router.navigate(['/monstera']); }
   irADolar() { console.log('Ir a Dólar'); }
   irALenguaSuegra() { console.log('Ir a Lengua de Suegra'); }
@@ -158,7 +155,7 @@ export class MisPlantasComponent implements OnInit {
     console.log('Tipo no mapeado:', p);
   }
 
-  // ----- Mapeo dinámico de estilos y textos -----
+  //  Mapeo dinámico de estilos y textos 
   plantClass(p: Planta): string {
     const n = this.norm(p.NOMBRE_COMUN);
     if (n.includes('monstera') || n.includes('ceriman')) return 'ceriman-card';
@@ -187,7 +184,6 @@ export class MisPlantasComponent implements OnInit {
     return '';
   }
 
-  // util
   private norm(s: string): string {
     return (s || '')
       .toLowerCase()
@@ -200,7 +196,6 @@ export class MisPlantasComponent implements OnInit {
   }
 }
 
-/** JSON.parse seguro */
 function safeParse(v: string | null): any | null {
   try { return v ? JSON.parse(v) : null; } catch { return null; }
 }

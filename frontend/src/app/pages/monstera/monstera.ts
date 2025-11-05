@@ -53,13 +53,11 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute
   ) { }
 
-  // ===== lifecycle =====
   ngOnInit(): void {
-    // 1) query param tiene prioridad
     const qp = Number(this.route.snapshot.queryParamMap.get('pu'));
     if (Number.isInteger(qp)) {
       this.idPlantaUsuario = qp;
-      localStorage.setItem('planta_usuario_id', String(qp)); // sincroniza
+      localStorage.setItem('planta_usuario_id', String(qp)); 
     } else {
       // 2) fallback a localStorage
       this.idPlantaUsuario = this.leerPlantaUsuarioId();
@@ -81,14 +79,14 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.chart) this.chart.destroy();
   }
 
-  // ===== helpers =====
+  //  helpers 
   private leerPlantaUsuarioId(): number | null {
     const raw = localStorage.getItem('planta_usuario_id');
     const n = raw ? Number(raw) : NaN;
     return Number.isInteger(n) ? n : null;
   }
 
-  // ===== riego =====
+  //  riego 
   activarRiego(): void {
     this.mqttService.activarRiego().subscribe({
       next: () => {
@@ -128,7 +126,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.historialRiego.length > 10) this.historialRiego.pop();
   }
 
-  // ===== datos backend =====
+  //  datos backend 
   private cargarDatos(): void {
     this.mqttService.getUltimoDato().subscribe(res => {
       if (!res || !res.dato) return;
@@ -159,7 +157,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // ===== chart =====
+  //  chart 
   private ensureChart(): void {
     if (this.chart || !this.soilChartRef) return;
     const ctx = this.soilChartRef.nativeElement.getContext('2d');
@@ -214,7 +212,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // ===== cuidados =====
+  //  cuidados 
   guardarCuidado(): void {
     // lee/normaliza ID por si se perdió el contexto
     let idPU = this.idPlantaUsuario;
@@ -252,8 +250,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const body = {
       id_planta_usuario: idPU,
-      fecha: fechaISO,        // ← asegurado YYYY-MM-DD
-      tipo: tipoTrim,         // ← sin espacios
+      fecha: fechaISO,        
+      tipo: tipoTrim,         
       detalles: detalles?.trim() || null,
     };
 
