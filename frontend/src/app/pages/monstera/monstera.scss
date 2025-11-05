@@ -1,6 +1,6 @@
 .portada {
   display: flex;
-  height: 100vh;
+  height: 700px;
   position: relative;
   overflow: hidden;
 }
@@ -160,11 +160,11 @@
 
 .planta-derecha {
   position: absolute;
-  bottom: 0;
-  left: 20%;
+  bottom: 20px;
+  left: 35%;
   transform: translateX(50%);
-  width: 700px;
-  height: 700px;
+  width: 400px;
+  height: 400px;
   background-image: url('../../../assets/images/MonsteraSinFondo.png');
   background-size: contain;
   background-repeat: no-repeat;
