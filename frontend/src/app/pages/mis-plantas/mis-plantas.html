@@ -22,7 +22,9 @@
 
 <div>
   <div class="titulo-seccion">
-    <h1 class="titulo-principal">Mis<br><span class="Subtitle">Plantas</span></h1>
+    <h1 class="titulo-principal">
+      Mis<br><span class="Subtitle">Plantas</span>
+    </h1>
   </div>
 
   <!-- Grid dinámico -->
@@ -40,7 +42,7 @@
     </div>
   </div>
 
-  <!-- Paginación simple -->
+  <!-- Paginación -->
   <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin:16px 0 40px;">
     <button class="btn-registrar"
             (click)="page = Math.max(1, page-1)"
@@ -66,98 +68,97 @@
     </div>
 
     <!-- Carrusel -->
-    <div class="carrusel-container">
-      <div class="carrusel" #carrusel>
+    <div class="carrusel-wrapper">
+      <div class="carrusel-container">
+        <div class="carrusel" #carrusel>
 
-        <!-- Tarjeta 1 - Cerimán -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card Ceriman-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Cerimán</h3>
-              <p class="carrusel-descripcion">
-                Con sus hojas amplias y perforadas, invita a aceptar la imperfección como belleza y crecimiento.
-              </p>
+          <!-- Tarjeta 1 - Cerimán -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card Ceriman-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Cerimán</h3>
+                <p class="carrusel-descripcion">
+                  Con sus hojas amplias y perforadas, invita a aceptar la imperfección como belleza y crecimiento.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tarjeta 2 - Dólar -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card Dolar-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Dólar</h3>
-              <p class="carrusel-descripcion">
-                Representa la abundancia y la prosperidad. Recuerda que la constancia atrae buenos frutos.
-              </p>
+          <!-- Tarjeta 2 - Dólar -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card Dolar-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Dólar</h3>
+                <p class="carrusel-descripcion">
+                  Representa la abundancia y la prosperidad. Recuerda que la constancia atrae buenos frutos.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tarjeta 3 - Lengua de suegra -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card LenguaSuegra-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Lengua de suegra</h3>
-              <p class="carrusel-descripcion">
-                Fuerte y purificadora. Sobrevive en casi cualquier entorno, recordando que adaptarse también es crecer.
-              </p>
+          <!-- Tarjeta 3 - Lengua de suegra -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card LenguaSuegra-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Lengua de suegra</h3>
+                <p class="carrusel-descripcion">
+                  Fuerte y purificadora. Sobrevive en casi cualquier entorno, recordando que adaptarse también es crecer.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tarjeta 4 - Hoja de violín -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card HojaViolin-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Hoja de violín</h3>
-              <p class="carrusel-descripcion">
-                Con sus hojas grandes y elegantes, simboliza la armonía y la conexión entre el arte y la naturaleza.
-              </p>
+          <!-- Tarjeta 4 - Hoja de violín -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card HojaViolin-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Hoja de violín</h3>
+                <p class="carrusel-descripcion">
+                  Con sus hojas grandes y elegantes, simboliza la armonía y la conexión entre el arte y la naturaleza.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tarjeta 5 - Potus -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card Potus-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Potus</h3>
-              <p class="carrusel-descripcion">
-                Crece libremente siguiendo la luz, recordando que cada camino —aunque se enrede— puede florecer con paciencia.
-              </p>
+          <!-- Tarjeta 5 - Potus -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card Potus-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Potus</h3>
+                <p class="carrusel-descripcion">
+                  Crece libremente siguiendo la luz, recordando que cada camino —aunque se enrede— puede florecer con paciencia.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tarjeta 6 - Palma Areca -->
-        <div class="carrusel-item">
-          <div class="planta-carrusel-card PalmaAreca-card">
-            <div class="carrusel-overlay"></div>
-            <div class="carrusel-content">
-              <h3 class="carrusel-nombre">Palma Areca</h3>
-              <p class="carrusel-descripcion">
-                Es una planta ideal para meditar sobre el desapego, el fluir y la renovación. Perfecta para aligerar el alma.
-              </p>
+          <!-- Tarjeta 6 - Palma Areca -->
+          <div class="carrusel-item">
+            <div class="planta-carrusel-card PalmaAreca-card">
+              <div class="carrusel-overlay"></div>
+              <div class="carrusel-content">
+                <h3 class="carrusel-nombre">Palma Areca</h3>
+                <p class="carrusel-descripcion">
+                  Es una planta ideal para meditar sobre el desapego, el fluir y la renovación. Perfecta para aligerar el alma.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-      </div> <!-- /.carrusel -->
-    </div> <!-- /.carrusel-container -->
+        </div> <!-- /.carrusel -->
 
-    <!-- Flechas de navegación -->
-    <button class="carrusel-flecha flecha-izquierda" (click)="anterior()">
-      <i class='bx bx-chevron-left'></i>
-    </button>
-    <button class="carrusel-flecha flecha-derecha" (click)="siguiente()">
-      <i class='bx bx-chevron-right'></i>
-    </button>
+        <!-- Botones laterales -->
+        <button class="carrusel-btn izquierda" (click)="anterior()">❮</button>
+        <button class="carrusel-btn derecha" (click)="siguiente()">❯</button>
+      </div> <!-- /.carrusel-container -->
+    </div> <!-- /.carrusel-wrapper -->
 
+    <!-- Botón registrar -->
     <button class="btn-registrar" (click)="registrarNuevaPlanta()">
       <i class='bx bx-plus'></i>
       Registrar nueva planta
