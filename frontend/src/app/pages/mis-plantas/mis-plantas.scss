@@ -323,46 +323,54 @@
   color: #3a3a2a;
 }
 
-.carrusel-flecha {
+/* === Botones laterales del carrusel (estilo reutilizado) === */
+.carrusel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: #ffffffd9;
-  border: 1px solid #d8d8d8;
-  width: 40px;
-  height: 40px;
+  background-color: #e3c5ac;
+  border: none;
+  color: white;
+  font-size: 2rem;
   border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 3;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    background: #9b5a2a;
-    transform: translateY(-50%) scale(1.1);
-    
-    i {
-      color: white;
-    }
-  }
-
-  i {
-    font-size: 26px;
-    color: #2c3424;
-    transition: color 0.3s ease;
-  }
+  opacity: 0;
+  visibility: hidden;
 }
 
-.flecha-izquierda {
-    left: 20px;
+/* Hover */
+.carrusel-btn:hover {
+  background-color: #93511c;
+  transform: translateY(-50%) scale(1.1);
 }
 
-.flecha-derecha {
-    right: 20px;
+/* Posiciones */
+.izquierda {
+  left: 1rem;
 }
+
+.derecha {
+  right: 1rem;
+}
+
+/* Mostrar al pasar el mouse */
+.carrusel-wrapper:hover .carrusel-btn {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+
+
+
 
 .boton-registrar-container {
     text-align: center;
