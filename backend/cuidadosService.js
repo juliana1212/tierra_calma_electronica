@@ -5,7 +5,7 @@ const dbConfig = {
   connectString: process.env.ORACLE_CONN,
 };
 
-/** Obtiene el último ID_RIEGO asociado a la última lectura del sensor de la planta */
+/** Obtienemos el último ID_RIEGO asociado a la última lectura del sensor de la planta */
 async function getUltimoIdRiegoPorPlantaUsuario(conn, idPlantaUsuario) {
   // 1) Sensor de la planta
   const s = await conn.execute(
@@ -45,7 +45,6 @@ async function getUltimoIdRiegoPorPlantaUsuario(conn, idPlantaUsuario) {
   return r.rows.length ? r.rows[0].ID_RIEGO : null;
 }
 
-/** Inserta el cuidado */
 async function crearCuidado({ id_planta_usuario, fecha, tipo_cuidado, detalle }) {
   let conn;
   try {
@@ -64,9 +63,9 @@ async function crearCuidado({ id_planta_usuario, fecha, tipo_cuidado, detalle })
       `,
       {
         id_pu: id_planta_usuario,
-        id_riego: idRiego,                 // puede ser null
-        fecha,                              // '2025-10-08' desde el front
-        tipo_cuidado: tipo_cuidado,                 // ej. 'poda' | 'fertilización'
+        id_riego: idRiego,                
+        fecha,                              
+        tipo_cuidado: tipo_cuidado,                
         detalle: detalle || null,
         id_out: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       },
@@ -80,7 +79,7 @@ async function crearCuidado({ id_planta_usuario, fecha, tipo_cuidado, detalle })
       id_cuidado,
       id_planta_usuario,
       id_riego: idRiego,
-      fecha, // se guardó como DATE: 08/10/25 al mostrar
+      fecha, 
       rowsAffected: result.rowsAffected,
     });
 

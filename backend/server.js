@@ -16,14 +16,14 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// ======================= CONFIGURACIÓN ORACLE =======================
+//CONFIGURACIÓN ORACLE 
 const dbConfig = {
   user: process.env.ORACLE_USER,
   password: process.env.ORACLE_PASS,
   connectString: process.env.ORACLE_CONN
 };
 
-// ======================= TEST DE CONEXIÓN AL INICIAR =======================
+// TEST DE CONEXIÓN AL INICIAR 
 (async () => {
   console.log("Probando conexión a Oracle...");
   try {
@@ -38,7 +38,7 @@ const dbConfig = {
   }
 })();
 
-// ======================= REGISTRO DE USUARIOS =======================
+// REGISTRO DE USUARIOS 
 app.post("/api/register", async (req, res) => {
   const { id_usuario, nombre, apellido, telefono, correo_electronico, contrasena } = req.body;
   try {
@@ -67,7 +67,7 @@ app.post("/api/register", async (req, res) => {
     });
   }
 });
-// ======================= LOGIN =======================
+//  LOGIN 
 app.post("/api/login", async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
 
@@ -89,10 +89,10 @@ app.post("/api/login", async (req, res) => {
       const usuario = result.rows[0];
       const correo = (usuario.CORREO_ELECTRONICO || '').trim().toLowerCase();
 
-      // === DETECTAR ADMINISTRADOR ===
+      // DETECTAR ADMINISTRADOR 
       const role = correo === 'admin@tierraencalma.com' ? 'admin' : 'user';
 
-      console.log(`🟢 Login exitoso para ${correo} (rol: ${role})`);
+      console.log(`Login exitoso para ${correo} (rol: ${role})`);
 
       res.send({
         message: "Login exitoso",
