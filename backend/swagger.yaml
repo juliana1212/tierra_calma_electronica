@@ -5,7 +5,7 @@ info:
   description: Endpoints de usuarios y plantas
 
 servers:
-  - url: http://localhost:3001/api
+  - url: http://localhost:3000/api
 
 paths:
   /register:
@@ -147,3 +147,37 @@ paths:
                   value:
                     ok: false
                     error: "timeout"
+
+  /plantas:
+    get:
+      tags:
+        - Plantas
+      summary: Obtener lista de plantas disponibles
+      description: >
+        Retorna todas las plantas del banco de plantas ordenadas por nombre común.
+      responses:
+        "200":
+          description: Lista de plantas obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    ID_PLANTA:
+                      type: integer
+                      example: 1
+                    NOMBRE_COMUN:
+                      type: string
+                      example: "Monstera deliciosa"
+        "500":
+          description: Error al obtener la lista de plantas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error al obtener la lista de plantas"

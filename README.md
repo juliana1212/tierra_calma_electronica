@@ -121,14 +121,14 @@ cd backend
 npm install
 npm start
 
-La API queda disponible en http://localhost:3001.
+La API queda disponible en http://localhost:3000.
 
 Prueba rápida:
 
 bash
-curl http://localhost:3001/api-docs/ -> despliega la interfaz interactiva de Swagger donde se pueden probar todos los endpoints de forma gráfica
-curl http://localhost:3001/api/datos -> retorna el último dato recibido por el backend desde el broker MQTT
-curl http://localhost:3001/api/historial -> retorna un arreglo con todos los datos recibidos durante la ejecución del backend, útil para análisis o visualización de tendencias.
+curl http://localhost:3000/api-docs/ -> despliega la interfaz interactiva de Swagger donde se pueden probar todos los endpoints de forma gráfica
+curl http://localhost:3000/api/datos -> retorna el último dato recibido por el backend desde el broker MQTT
+curl http://localhost:3000/api/historial -> retorna un arreglo con todos los datos recibidos durante la ejecución del backend, útil para análisis o visualización de tendencias.
 
 ### 6.2 Frontend
 
@@ -149,7 +149,7 @@ La aplicación se abre en http://localhost:4200.
 2. Acceder a los servicios:
 
    * Frontend → http://localhost:4200
-   * Backend → http://localhost:3001
+   * Backend → http://localhost:3000
 
 3. Consultar logs para verificar estado:
 
