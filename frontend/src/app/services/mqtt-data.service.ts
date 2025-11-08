@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment.prod'; 
 
-@Injectable({
-  providedIn: 'root'})
-
+@Injectable({ providedIn: 'root' })
 export class MqttDataService {
-  private apiUrl = 'http://localhost:3001/api';
+  private readonly apiUrl = environment.apiUrl; 
 
   constructor(private http: HttpClient) {}
 

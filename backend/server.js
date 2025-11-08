@@ -291,7 +291,7 @@ app.post("/api/cuidados", async (req, res) => {
   try {
     const r = await cuidadosService.crearCuidado({
       id_planta_usuario: Number(id_planta_usuario),
-      fecha,                         
+      fecha,
       tipo_cuidado: tipo,
       detalle: detalles,
     });

@@ -3,31 +3,33 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod';  // directo a prod
 
 @Component({
   selector: 'app-public-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, CommonModule, FormsModule],
   templateUrl: './public-layout.html',
-  styleUrls: ['./public-layout.scss']
+  styleUrls: ['./public-layout.scss'],
 })
 export class PublicLayoutComponent {
   contacto = { nombre: '', correo: '', mensaje: '' };
+  private readonly apiUrl = environment.apiUrl; // base global desde environment.prod
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) { }
 
   enviarFormulario() {
-    const url = 'http://localhost:3001/api/contacto';
+    const url = `${this.apiUrl}/contacto`;
 
     this.http.post(url, this.contacto).subscribe({
-      next: (res: any) => {
+      next: () => {
         alert(`Gracias ${this.contacto.nombre}, tu mensaje fue enviado correctamente.`);
         this.contacto = { nombre: '', correo: '', mensaje: '' };
       },
       error: (err) => {
         console.error('Error al enviar el formulario:', err);
         alert('Hubo un problema al enviar tu mensaje. Intenta nuevamente.');
-      }
+      },
     });
   }
 

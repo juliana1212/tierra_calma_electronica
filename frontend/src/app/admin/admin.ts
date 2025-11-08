@@ -1,29 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.prod'; // directo a prod
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './admin.html',
-  styleUrls: ['./admin.scss']
+  styleUrls: ['./admin.scss'],
 })
 export class AdminComponent implements OnInit {
   vistas: any = {
     estado_plantas: [],
     historial_riegos: [],
     alertas_condiciones: [],
-    cuidados_programados: []
+    cuidados_programados: [],
   };
   cargando = true;
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = environment.apiUrl;
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:3001/api/admin/vistas').subscribe({
+    this.http.get(`${this.apiUrl}/admin/vistas`).subscribe({
       next: (data: any) => {
-        console.log('Respuesta recibida:', data); 
         this.vistas.estado_plantas = data.estado_plantas || [];
         this.vistas.historial_riegos = data.historial_riegos || [];
         this.vistas.alertas_condiciones = data.alertas_condiciones || [];
@@ -33,7 +35,7 @@ export class AdminComponent implements OnInit {
       error: (err) => {
         console.error('Error al obtener vistas:', err);
         this.cargando = false;
-      }
+      },
     });
   }
 }

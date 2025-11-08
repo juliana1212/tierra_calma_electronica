@@ -1,9 +1,18 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 import { MqttDataService } from '../../services/mqtt-data.service';
+import { environment } from '../../../environments/environment.prod';
+
 Chart.register(...registerables);
 
 interface RiegoHistorial {
@@ -17,9 +26,10 @@ interface RiegoHistorial {
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './monstera.html',
-  styleUrls: ['./monstera.scss']
+  styleUrls: ['./monstera.scss'],
 })
-export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MonsteraComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   // UI
   isConnected = false;
   realtimeData = 'Cargando...';
@@ -36,7 +46,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   sensorData = { temperatura: '---', humedadSuelo: '---' };
 
   // Chart
-  @ViewChild('soilChart', { static: false }) soilChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('soilChart', { static: false })
+  soilChartRef!: ElementRef<HTMLCanvasElement>;
   private chart?: Chart;
   private maxDataPoints = 20;
   private humidityData: number[] = [];
@@ -48,6 +59,9 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   // Planta activa
   private idPlantaUsuario: number | null = null;
 
+  // Base API globalizada
+  private readonly apiUrl = environment.apiUrl; // ej: https://backend/api
+
   constructor(
     private mqttService: MqttDataService,
     private route: ActivatedRoute
@@ -57,9 +71,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     const qp = Number(this.route.snapshot.queryParamMap.get('pu'));
     if (Number.isInteger(qp)) {
       this.idPlantaUsuario = qp;
-      localStorage.setItem('planta_usuario_id', String(qp)); 
+      localStorage.setItem('planta_usuario_id', String(qp));
     } else {
-      // 2) fallback a localStorage
       this.idPlantaUsuario = this.leerPlantaUsuarioId();
     }
 
@@ -72,21 +85,23 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cargarDatos();
   }
 
-  ngAfterViewInit(): void { this.ensureChart(); }
+  ngAfterViewInit(): void {
+    this.ensureChart();
+  }
 
   ngOnDestroy(): void {
     if (this.pollHandle) clearInterval(this.pollHandle);
     if (this.chart) this.chart.destroy();
   }
 
-  //  helpers 
+  // helpers
   private leerPlantaUsuarioId(): number | null {
     const raw = localStorage.getItem('planta_usuario_id');
     const n = raw ? Number(raw) : NaN;
     return Number.isInteger(n) ? n : null;
   }
 
-  //  riego 
+  // riego
   activarRiego(): void {
     this.mqttService.activarRiego().subscribe({
       next: () => {
@@ -96,52 +111,63 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
       error: (err) => {
         console.error('Error al activar el riego:', err);
         alert('Error al activar el riego');
-      }
-    });
-  }
-  verificarCondiciones(): void {
-    if (!this.idPlantaUsuario) return alert('Falta ID de planta');
-    fetch('http://localhost:3001/api/verificar-condiciones', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id_planta_usuario: this.idPlantaUsuario })
-    })
-    .then(r => r.json())
-    .then(result => {
-      alert(result.mensaje || 'Verificación completada');
-    })
-    .catch(err => {
-      console.error('[VERIFICAR_CONDICIONES] error', err);
-      alert('Error al verificar las condiciones');
+      },
     });
   }
 
+  verificarCondiciones(): void {
+    if (!this.idPlantaUsuario) {
+      alert('Falta ID de planta');
+      return;
+    }
+
+    fetch(`${this.apiUrl}/verificar-condiciones`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_planta_usuario: this.idPlantaUsuario }),
+    })
+      .then((r) => r.json())
+      .then((result) => {
+        alert(result.mensaje || 'Verificación completada');
+      })
+      .catch((err) => {
+        console.error('[VERIFICAR_CONDICIONES] error', err);
+        alert('Error al verificar las condiciones');
+      });
+  }
 
   private activarRiegoAutomatico(): void {
     this.agregarHistorial('automático', 'Riego automático ejecutado');
   }
 
   private agregarHistorial(tipo: 'manual' | 'automático', mensaje: string): void {
-    this.historialRiego.unshift({ tipo, mensaje, hora: new Date().toLocaleTimeString() });
+    this.historialRiego.unshift({
+      tipo,
+      mensaje,
+      hora: new Date().toLocaleTimeString(),
+    });
     if (this.historialRiego.length > 10) this.historialRiego.pop();
   }
 
-  //  datos backend 
+  // datos backend
   private cargarDatos(): void {
-    this.mqttService.getUltimoDato().subscribe(res => {
+    this.mqttService.getUltimoDato().subscribe((res) => {
       if (!res || !res.dato) return;
 
       this.realtimeData = res.dato;
       this.lastUpdate = `Última actualización: ${new Date().toLocaleTimeString()}`;
       this.isConnected = true;
 
-      // parseo: T:xx.x, H:yy.y, Suelo:zz.z%
-      const tempMatch = res.dato.match(/T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
-      const sueloMatch = res.dato.match(/Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?)/i);
+      const tempMatch = res.dato.match(
+        /T[:=]\s*([0-9]+(?:\.[0-9]+)?)/i
+      );
+      const sueloMatch = res.dato.match(
+        /Suelo[:=]\s*([0-9]+(?:\.[0-9]+)?)/i
+      );
 
       this.sensorData = {
         temperatura: tempMatch ? `${tempMatch[1]} °C` : '---',
-        humedadSuelo: sueloMatch ? `${sueloMatch[1]}%` : '---'
+        humedadSuelo: sueloMatch ? `${sueloMatch[1]}%` : '---',
       };
 
       if (tempMatch) this.pushPoint('temp', parseFloat(tempMatch[1]));
@@ -152,12 +178,12 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    this.mqttService.getHistorial().subscribe(res => {
+    this.mqttService.getHistorial().subscribe((res) => {
       if (res && res.historial) this.historial = res.historial;
     });
   }
 
-  //  chart 
+  // chart
   private ensureChart(): void {
     if (this.chart || !this.soilChartRef) return;
     const ctx = this.soilChartRef.nativeElement.getContext('2d');
@@ -175,7 +201,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
             backgroundColor: 'rgba(28, 28, 158, 0.2)',
             borderWidth: 2,
             fill: false,
-            tension: 0.4
+            tension: 0.4,
           },
           {
             label: 'Temperatura (°C)',
@@ -184,27 +210,34 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
             backgroundColor: 'rgba(116, 111, 102, 0.2)',
             borderWidth: 2,
             fill: false,
-            tension: 0.4
-          }
-        ]
+            tension: 0.4,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        scales: { y: { beginAtZero: true, max: 80 }, x: { display: false } }
-      }
+        scales: {
+          y: { beginAtZero: true, max: 80 },
+          x: { display: false },
+        },
+      },
     });
   }
 
   private pushPoint(type: 'humidity' | 'temp', value: number): void {
     if (type === 'humidity') {
       this.humidityData.push(value);
-      if (this.humidityData.length > this.maxDataPoints) this.humidityData.shift();
+      if (this.humidityData.length > this.maxDataPoints)
+        this.humidityData.shift();
     } else {
       this.tempData.push(value);
-      if (this.tempData.length > this.maxDataPoints) this.tempData.shift();
+      if (this.tempData.length > this.maxDataPoints)
+        this.tempData.shift();
     }
+
     this.ensureChart();
+
     if (this.chart) {
       this.chart.data.datasets[0].data = [...this.humidityData];
       this.chart.data.datasets[1].data = [...this.tempData];
@@ -212,9 +245,8 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  //  cuidados 
+  // cuidados
   guardarCuidado(): void {
-    // lee/normaliza ID por si se perdió el contexto
     let idPU = this.idPlantaUsuario;
     if (!Number.isInteger(idPU as any)) {
       const raw = localStorage.getItem('planta_usuario_id');
@@ -223,15 +255,15 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const { fecha, tipo_cuidado, detalles } = this.nuevoCuidado;
 
-    // normaliza fecha a YYYY-MM-DD
     const fechaISO =
       fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha)
         ? fecha
-        : (fecha ? new Date(fecha).toISOString().slice(0, 10) : '');
+        : fecha
+          ? new Date(fecha).toISOString().slice(0, 10)
+          : '';
 
     const tipoTrim = (tipo_cuidado || '').trim();
 
-    // validaciones front
     if (!Number.isInteger(idPU as any)) {
       alert('Falta id_planta_usuario');
       console.warn('[CUIDADO] id_planta_usuario inválido:', idPU);
@@ -250,14 +282,14 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const body = {
       id_planta_usuario: idPU,
-      fecha: fechaISO,        
-      tipo: tipoTrim,         
+      fecha: fechaISO,
+      tipo: tipoTrim,
       detalles: detalles?.trim() || null,
     };
 
     console.log('[CUIDADO] POST body verificado →', body);
 
-    fetch('http://localhost:3001/api/cuidados', {
+    fetch(`${this.apiUrl}/cuidados`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),

@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../login/auth.service';
+import { environment } from '../../../environments/environment.prod';
 
 type Planta = {
-  ID_PLANTA_USUARIO?: number;   // único por planta del usuario
+  ID_PLANTA_USUARIO?: number;  
   ID_PLANTA: number;
   NOMBRE_COMUN: string;
   NOMBRE_CIENTIFICO: string;
@@ -16,7 +17,7 @@ type Planta = {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './mis-plantas.html',
-  styleUrls: ['./mis-plantas.scss']
+  styleUrls: ['./mis-plantas.scss'],
 })
 export class MisPlantasComponent implements OnInit {
   @ViewChild('carrusel') carruselRef!: ElementRef<HTMLDivElement>;
@@ -30,11 +31,13 @@ export class MisPlantasComponent implements OnInit {
   pageSize = 6;
   Math = Math;
 
+  private readonly apiUrl = environment.apiUrl; 
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient                     // para /api/monitorear
-  ) { }
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     const u = safeParse(localStorage.getItem('usuario'));
@@ -51,13 +54,12 @@ export class MisPlantasComponent implements OnInit {
     this.authService.getMisPlantas(id).subscribe({
       next: (rows: Planta[]) => {
         this.plantas = Array.isArray(rows) ? rows : [];
-
         this.resetCarrusel();
         this.page = 1;
       },
       error: () => {
         alert('No fue posible cargar tus plantas.');
-      }
+      },
     });
   }
 
@@ -67,7 +69,7 @@ export class MisPlantasComponent implements OnInit {
     if (carrusel) carrusel.style.transform = 'translateX(0px)';
   }
 
-  //  Carrusel 
+  // Carrusel
   siguiente(): void {
     const carrusel = this.carruselRef?.nativeElement;
     if (!carrusel) return;
@@ -100,7 +102,7 @@ export class MisPlantasComponent implements OnInit {
     }
   }
 
-  //  Monitorear: asegura sensor y navega 
+  // Monitorear: asegura sensor y navega
   monitorear(p: Planta) {
     const idPlantaUsuario = Number(p?.ID_PLANTA_USUARIO);
     console.log('[Monitorear] planta:', p, 'ID_PLANTA_USUARIO=', p?.ID_PLANTA_USUARIO);
@@ -114,48 +116,69 @@ export class MisPlantasComponent implements OnInit {
     localStorage.setItem('planta_usuario_id', String(idPlantaUsuario));
     const check = Number(localStorage.getItem('planta_usuario_id'));
     if (!Number.isInteger(check) || check !== idPlantaUsuario) {
-      console.error('[Monitorear][ERROR] No se pudo persistir planta_usuario_id:', { idPlantaUsuario, check });
+      console.error('[Monitorear][ERROR] No se pudo persistir planta_usuario_id:', {
+        idPlantaUsuario,
+        check,
+      });
       alert('No se pudo preparar el monitoreo (persistencia).');
       return;
     }
     console.log('[Monitorear] persistido planta_usuario_id=', check);
 
-    // 2) prepara backend (crea/selecciona sensor)
-    this.http.post('http://localhost:3001/api/monitorear', {
-      id_planta_usuario: idPlantaUsuario
-    }).subscribe({
-      next: (r: any) => {
-        console.log('[Monitorear] backend OK, id_sensor=', r?.id_sensor);
-        // 4) navega con query param por si el localStorage falla en otra pestaña
-        this.router.navigate(['/monstera'], { queryParams: { pu: idPlantaUsuario } });
-      },
-      error: (e) => {
-        console.error('[Monitorear][ERROR] backend', e);
-        alert('No se pudo preparar el monitoreo.');
-      }
-    });
+    // 2) prepara backend (crea/selecciona sensor) usando URL global
+    this.http
+      .post(`${this.apiUrl}/monitorear`, {
+        id_planta_usuario: idPlantaUsuario,
+      })
+      .subscribe({
+        next: (r: any) => {
+          console.log('[Monitorear] backend OK, id_sensor=', r?.id_sensor);
+          // 3) navega con query param por si el localStorage falla en otra pestaña
+          this.router.navigate(['/monstera'], {
+            queryParams: { pu: idPlantaUsuario },
+          });
+        },
+        error: (e) => {
+          console.error('[Monitorear][ERROR] backend', e);
+          alert('No se pudo preparar el monitoreo.');
+        },
+      });
   }
 
-  //  Navegación individual por tipo 
-  irACeriman() { this.router.navigate(['/monstera']); }
-  irADolar() { console.log('Ir a Dólar'); }
-  irALenguaSuegra() { console.log('Ir a Lengua de Suegra'); }
-  irAHojaViolin() { console.log('Ir a Hoja de Violín'); }
-  irAPotus() { console.log('Ir a Potus'); }
-  irAPalmaAreca() { console.log('Ir a Palma Areca'); }
+  // Navegación individual por tipo
+  irACeriman() {
+    this.router.navigate(['/monstera']);
+  }
+  irADolar() {
+    console.log('Ir a Dólar');
+  }
+  irALenguaSuegra() {
+    console.log('Ir a Lengua de Suegra');
+  }
+  irAHojaViolin() {
+    console.log('Ir a Hoja de Violín');
+  }
+  irAPotus() {
+    console.log('Ir a Potus');
+  }
+  irAPalmaAreca() {
+    console.log('Ir a Palma Areca');
+  }
 
   irPlanta(p: Planta) {
     const n = this.norm(p.NOMBRE_COMUN);
     if (n.includes('monstera') || n.includes('ceriman')) return this.irACeriman();
     if (n.includes('dolar')) return this.irADolar();
-    if (n.includes('lengua de suegra') || n.includes('sansevieria')) return this.irALenguaSuegra();
-    if (n.includes('hoja de violin') || n.includes('ficus lyrata')) return this.irAHojaViolin();
+    if (n.includes('lengua de suegra') || n.includes('sansevieria'))
+      return this.irALenguaSuegra();
+    if (n.includes('hoja de violin') || n.includes('ficus lyrata'))
+      return this.irAHojaViolin();
     if (n.includes('potus') || n.includes('epipremnum')) return this.irAPotus();
     if (n.includes('palma areca') || n.includes('dypsis')) return this.irAPalmaAreca();
     console.log('Tipo no mapeado:', p);
   }
 
-  //  Mapeo dinámico de estilos y textos 
+  // Mapeo dinámico de estilos y textos
   plantClass(p: Planta): string {
     const n = this.norm(p.NOMBRE_COMUN);
     if (n.includes('monstera') || n.includes('ceriman')) return 'ceriman-card';
@@ -197,5 +220,9 @@ export class MisPlantasComponent implements OnInit {
 }
 
 function safeParse(v: string | null): any | null {
-  try { return v ? JSON.parse(v) : null; } catch { return null; }
+  try {
+    return v ? JSON.parse(v) : null;
+  } catch {
+    return null;
+  }
 }
