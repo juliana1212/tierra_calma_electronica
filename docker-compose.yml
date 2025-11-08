@@ -1,16 +1,61 @@
-services:
-  backend:
-    image: nataliaflorezg/tierra-backend:v9
-    container_name: tierra-backend
-    ports:
-      - "3001:3000"
-    env_file:
-      - ./backend/.env
+  version: '3.9'
 
-  frontend:
-    image: nataliaflorezg/tierra-frontend:v11
-    container_name: tierra-frontend
-    ports:
-      - "4200:80"
-    depends_on:
-      - backend
+  services:
+    oracle-db:
+      image: gvenzl/oracle-xe:21.3.0-slim
+      container_name: tierra-oracle
+      environment:
+        - ORACLE_PASSWORD=admin123
+        - APP_USER=TIERRA_EN_CALMA
+        - APP_USER_PASSWORD=Tierracalma
+      ports:
+        - "1522:1521"
+      volumes:
+        - oracle-data:/opt/oracle/oradata
+        - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      networks:
+        - tierra-net
+
+    mosquitto:
+      image: nataliaflorezg/tierra-mosquitto:v2
+      container_name: tierra-mosquitto
+      ports:
+        - "1883:1883"
+      volumes:
+        - ./mosquitto/config:/mosquitto/config
+        - ./mosquitto/data:/mosquitto/data
+        - ./mosquitto/log:/mosquitto/log
+      networks:
+        - tierra-net
+
+
+    backend:
+      build: ./backend
+      image: nataliaflorezg/tierra-backend:v11
+      container_name: tierra-backend
+      ports:
+        - "3001:3000"
+      env_file:
+        - ./backend/.env
+      depends_on:
+        - oracle-db
+        - mosquitto
+      networks:
+        - tierra-net
+
+    frontend:
+      build: ./frontend
+      image: nataliaflorezg/tierra-frontend:v14
+      container_name: tierra-frontend
+      ports:
+        - "4200:80"
+      depends_on:
+        - backend
+      networks:
+        - tierra-net
+
+  networks:
+    tierra-net:
+
+  volumes:
+    oracle-data:

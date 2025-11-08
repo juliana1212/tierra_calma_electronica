@@ -89,7 +89,7 @@ app.post("/api/login", async (req, res) => {
       const usuario = result.rows[0];
       const correo = (usuario.CORREO_ELECTRONICO || '').trim().toLowerCase();
 
-      // DETECTAR ADMINISTRADOR 
+      // DETECTAR ADMINISTRADOR (solo para las vistas de oracle)
       const role = correo === 'admin@tierraencalma.com' ? 'admin' : 'user';
 
       console.log(`Login exitoso para ${correo} (rol: ${role})`);
@@ -113,7 +113,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 
-// ======================= NUEVA RUTA: CONTACTO (CORREO) =======================
+// CONTACTO (CORREO) 
 app.post("/api/contacto", async (req, res) => {
   const { nombre, correo, mensaje } = req.body;
 
@@ -121,7 +121,7 @@ app.post("/api/contacto", async (req, res) => {
     return res.status(400).json({ error: "Faltan campos obligatorios" });
   }
 
-  // Configuración del transporte de correo (Gmail App Password)
+  // Configuración correo
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -154,7 +154,7 @@ app.post("/api/contacto", async (req, res) => {
 
 
 
-// ======================= CONFIGURACIÓN MQTT =======================
+// CONFIGURACIÓN MQTT 
 mqttService.initMQTT(process.env.MQTT_BROKER, {
   username: process.env.MQTT_USER,
   password: process.env.MQTT_PASS,
@@ -188,7 +188,7 @@ app.post('/api/monitorear', async (req, res) => {
   }
 });
 
-// ======================= PLANTAS =======================
+//  PLANTAS
 app.post("/api/regar", (req, res) => {
   try {
     client.publish("plantas/regar", "REGAR");
@@ -226,7 +226,7 @@ app.post("/api/registrar-planta", async (req, res) => {
   }
 });
 
-// ======================= OBTENER LISTA DE PLANTAS =======================
+//  OBTENER LISTA DE PLANTAS 
 app.get("/api/plantas", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
@@ -248,7 +248,7 @@ app.get("/api/plantas", async (req, res) => {
   }
 });
 
-// ======================= OBTENER PLANTAS DE UN USUARIO =======================
+// OBTENER PLANTAS DE UN USUARIO 
 app.get("/api/mis-plantas", async (req, res) => {
   const raw = req.header("x-user-id");
   const id_usuario = Number(raw);
@@ -281,7 +281,7 @@ app.get("/api/mis-plantas", async (req, res) => {
     if (connection) try { await connection.close(); } catch { }
   }
 });
-// ======================= CUIDADOS =======================
+// CUIDADOS 
 app.post("/api/cuidados", async (req, res) => {
   const { id_planta_usuario, fecha, tipo, detalles } = req.body;
   if (!id_planta_usuario || !fecha || !tipo) {
@@ -291,7 +291,7 @@ app.post("/api/cuidados", async (req, res) => {
   try {
     const r = await cuidadosService.crearCuidado({
       id_planta_usuario: Number(id_planta_usuario),
-      fecha,                         // 'YYYY-MM-DD' o ISO
+      fecha,                         
       tipo_cuidado: tipo,
       detalle: detalles,
     });
@@ -301,10 +301,10 @@ app.post("/api/cuidados", async (req, res) => {
     res.status(500).json({ error: "No se pudo registrar el cuidado" });
   }
 });
-// ======================= SWAGGER =======================
+//  SWAGGER
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// ======================= MANEJO GLOBAL DE ERRORES =======================
+// MANEJO GLOBAL DE ERRORES 
 process.on("unhandledRejection", (reason, promise) => {
   console.error("Rechazo de promesa no manejado:", reason);
 });
@@ -315,7 +315,7 @@ process.on("uncaughtException", (err) => {
 
 
 
-// ======================= RUTA PARA VISTAS DEL ADMIN =======================
+//  RUTA PARA VISTAS DEL ADMIN 
 app.get("/api/admin/vistas", async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
@@ -361,7 +361,6 @@ app.get("/api/admin/vistas", async (req, res) => {
 
     console.log("Vistas administrativas consultadas correctamente (limitadas a 10 registros).");
 
-    // Normalizar claves en mayúsculas
     const normalizar = (arr) =>
       arr.map((r) =>
         Object.fromEntries(Object.entries(r).map(([k, v]) => [k.toUpperCase(), v]))
@@ -380,7 +379,7 @@ app.get("/api/admin/vistas", async (req, res) => {
 });
 
 
-// ======================= VERIFICAR CONDICIONES =======================
+//  VERIFICAR CONDICIONES 
 app.post("/api/verificar-condiciones", async (req, res) => {
   const idPlantaUsuario = Number(req.body?.id_planta_usuario);
   if (!Number.isInteger(idPlantaUsuario)) {
@@ -404,7 +403,7 @@ app._router.stack.forEach(r => {
   }
 });
 
-// ======================= INICIO SERVIDOR =======================
+// INICIO SERVIDOR 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

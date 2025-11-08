@@ -2,12 +2,12 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient,  } from '@angular/common/http';
 
 @Component({
   selector: 'app-header-privado',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, FormsModule, HttpClientModule],
+  imports: [CommonModule, RouterLink, RouterOutlet, FormsModule],
   templateUrl: './header-privado.html',
   styleUrls: ['./header-privado.scss']
 })
@@ -33,7 +33,7 @@ export class HeaderPrivadoComponent {
       return;
     }
 
-    this.http.post('http://localhost:3000/api/contacto', this.contacto).subscribe({
+    this.http.post('http://localhost:3001/api/contacto', this.contacto).subscribe({
       next: () => {
         alert(`Gracias ${this.contacto.nombre}, tu mensaje fue enviado correctamente.`);
         this.contacto = { nombre: '', correo: '', mensaje: '' };

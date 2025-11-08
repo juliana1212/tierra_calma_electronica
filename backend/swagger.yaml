@@ -5,7 +5,7 @@ info:
   description: Endpoints de usuarios y plantas
 
 servers:
-  - url: http://localhost:3004/api
+  - url: http://localhost:3001/api
 
 paths:
   /register:

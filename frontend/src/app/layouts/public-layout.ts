@@ -17,7 +17,7 @@ export class PublicLayoutComponent {
   constructor(private router: Router, private http: HttpClient) {}
 
   enviarFormulario() {
-    const url = 'http://localhost:3000/api/contacto';
+    const url = 'http://localhost:3001/api/contacto';
 
     this.http.post(url, this.contacto).subscribe({
       next: (res: any) => {

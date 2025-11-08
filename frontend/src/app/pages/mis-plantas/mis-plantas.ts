@@ -121,7 +121,7 @@ export class MisPlantasComponent implements OnInit {
     console.log('[Monitorear] persistido planta_usuario_id=', check);
 
     // 2) prepara backend (crea/selecciona sensor)
-    this.http.post('http://localhost:3000/api/monitorear', {
+    this.http.post('http://localhost:3001/api/monitorear', {
       id_planta_usuario: idPlantaUsuario
     }).subscribe({
       next: (r: any) => {

@@ -21,7 +21,7 @@ export class AdminComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get('http://localhost:3000/api/admin/vistas').subscribe({
+    this.http.get('http://localhost:3001/api/admin/vistas').subscribe({
       next: (data: any) => {
         console.log('Respuesta recibida:', data); 
         this.vistas.estado_plantas = data.estado_plantas || [];

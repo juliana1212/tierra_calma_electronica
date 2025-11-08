@@ -101,7 +101,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   verificarCondiciones(): void {
     if (!this.idPlantaUsuario) return alert('Falta ID de planta');
-    fetch('http://localhost:3000/api/verificar-condiciones', {
+    fetch('http://localhost:3001/api/verificar-condiciones', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_planta_usuario: this.idPlantaUsuario })
@@ -257,7 +257,7 @@ export class MonsteraComponent implements OnInit, OnDestroy, AfterViewInit {
 
     console.log('[CUIDADO] POST body verificado →', body);
 
-    fetch('http://localhost:3000/api/cuidados', {
+    fetch('http://localhost:3001/api/cuidados', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
