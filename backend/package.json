@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
@@ -18,5 +18,8 @@
     "supertest": "^7.1.4",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }
