@@ -1,0 +1,11 @@
+FROM gvenzl/oracle-xe:21.3.0-slim
+
+# Password del usuario SYSTEM
+ENV ORACLE_PASSWORD=admin123
+
+# Opcional: que la imagen cree también el usuario APP automáticamente
+ENV APP_USER=TIERRA_EN_CALMA
+ENV APP_USER_PASSWORD=Tierracalma
+
+# Script de inicialización para primera vez
+COPY init.sql /docker-entrypoint-initdb.d/init.sql

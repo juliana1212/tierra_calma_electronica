@@ -19,7 +19,7 @@ export class HeaderPrivadoComponent {
 
   cerrarSesion() {
     localStorage.removeItem('usuario');
-    alert('👋 Hasta pronto, vuelve pronto a cuidar tus plantas.');
+    alert('Hasta pronto, vuelve pronto a cuidar tus plantas.');
     this.router.navigate(['/']);
   }
 }

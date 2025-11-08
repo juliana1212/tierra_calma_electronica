@@ -1,0 +1,8 @@
+FROM eclipse-mosquitto:2.0
+
+COPY ./mosquitto/config/mosquitto.conf /mosquitto/config/mosquitto.conf
+RUN mkdir -p /mosquitto/data /mosquitto/log
+
+EXPOSE 1883
+CMD ["mosquitto", "-c", "/mosquitto/config/mosquitto.conf"]
+
