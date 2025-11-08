@@ -43,3 +43,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Mosquitto runtime
+mosquitto/data/
+mosquitto/log/
+mosquitto/data/mosquitto.db
+mosquitto/log/mosquitto.log
