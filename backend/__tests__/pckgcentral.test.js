@@ -13,7 +13,7 @@ jest.mock("../services/mqttService", () => ({
 
 const oracledb = require("oracledb");
 const mqttService = require("../services/mqttService");
-const { verificarCondiciones } = require("../services/pkgCentralService");
+const { verificarCondiciones } = require("../services/pkgCentralService.js");
 
 describe("pkgcentralService.verificarCondiciones", () => {
     // Silenciar logs del servicio durante los tests
