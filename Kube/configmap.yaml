@@ -1,13 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tierra-config
 data:
-  BASE_URL: http://tierra-backend:3000
-  HOST: 0.0.0.0
-  MQTT_BROKER: tcp://localhost:1883
-  MQTT_PASS: admin123
-  MQTT_TOPIC: plantas/datos
-  MQTT_USER: admin
-ORACLE_CONN: tierra-oracle:1521/XE
-
-ORACLE_USER: TIERRA_EN_CALMA
-ORACLE_PASS: Tierracalma
-
+  BASE_URL: "http://tierra-backend:3000"
+  HOST: "0.0.0.0"
   PORT: "3000"
+  ORACLE_CONN: "tierra-oracle:1521/XE"
+  ORACLE_USER: "TIERRA_EN_CALMA"
+  ORACLE_PASS: "Tierracalma"
+  MQTT_BROKER: "tcp://tierra-mosquitto:1883"
+  MQTT_USER: "admin"
+  MQTT_PASS: "admin123"
+  MQTT_TOPIC: "plantas/datos"
