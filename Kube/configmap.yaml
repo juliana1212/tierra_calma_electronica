@@ -12,4 +12,6 @@ data:
   MQTT_BROKER: "tcp://tierra-mosquitto:1883"
   MQTT_USER: "admin"
   MQTT_PASS: "admin123"
+  MQTT_ENABLED: "false"
+
   MQTT_TOPIC: "plantas/datos"

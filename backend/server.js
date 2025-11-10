@@ -5,7 +5,6 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const { testConnection } = require('./config/db');
-const mqttService = require('./services/mqttService');
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 const app = express();
@@ -16,20 +15,14 @@ app.use(bodyParser.json());
 // Test conexión Oracle al inicio
 testConnection();
 
-// Inicializar MQTT con manejo de error silencioso
+// Inicializar MQTT (solo si existe el módulo)
+let mqttService;
 try {
-  mqttService.initMQTT(
-    process.env.MQTT_BROKER,
-    {
-      username: process.env.MQTT_USER,
-      password: process.env.MQTT_PASS,
-    },
-    process.env.MQTT_TOPIC
-  );
-} catch (error) {
-  console.warn("⚠️  MQTT no disponible, se continúa sin conexión al broker.");
+  mqttService = require("./services/mqttService");
+  console.log(" Módulo MQTT cargado correctamente.");
+} catch (err) {
+  console.warn(" Módulo MQTT no encontrado, se omitirá la funcionalidad MQTT.");
 }
-
 
 
 // Rutas API

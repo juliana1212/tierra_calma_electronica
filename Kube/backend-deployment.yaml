@@ -1,25 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: frontend
   template:
     metadata:
       labels:
-        app: backend
+        app: frontend
     spec:
       containers:
-        - name: backend
-          image: julianacasas28/tierra-backend:v20
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3000
-          envFrom:
-            - configMapRef:
-                name: tierra-config
-            - secretRef:
-                name: tierra-secret
+      - name: frontend
+        image: julianacasas28/tierra-frontend:latest   
+        imagePullPolicy: Always                       
+        ports:
+        - containerPort: 80
