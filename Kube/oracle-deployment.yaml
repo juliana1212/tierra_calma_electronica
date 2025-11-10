@@ -3,32 +3,26 @@ kind: Deployment
 metadata:
   name: oracle-db
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: oracle-db
+      app: oracle
+  replicas: 1
   template:
     metadata:
       labels:
-        app: oracle-db
+        app: oracle
     spec:
       containers:
         - name: oracle-db
-          image: nataliaflorezg/tierra-oracle:v2
+          image: gvenzl/oracle-xe:21-slim
           ports:
             - containerPort: 1521
           env:
             - name: ORACLE_PASSWORD
-              value: "admin123"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: oracle-db
-spec:
-  selector:
-    app: oracle-db
-  ports:
-    - port: 1521
-      targetPort: 1521
-  type: ClusterIP
+              value: Tierracalma
+            - name: ORACLE_PDB
+              value: XEPDB1
+            - name: ORACLE_CHARACTERSET
+              value: AL32UTF8
+            - name: ORACLE_DISABLE_ASYNCH_IO
+              value: "true"

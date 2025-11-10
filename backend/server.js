@@ -16,15 +16,21 @@ app.use(bodyParser.json());
 // Test conexión Oracle al inicio
 testConnection();
 
-// Inicializar MQTT
-mqttService.initMQTT(
-  process.env.MQTT_BROKER,
-  {
-    username: process.env.MQTT_USER,
-    password: process.env.MQTT_PASS,
-  },
-  process.env.MQTT_TOPIC
-);
+// Inicializar MQTT con manejo de error silencioso
+try {
+  mqttService.initMQTT(
+    process.env.MQTT_BROKER,
+    {
+      username: process.env.MQTT_USER,
+      password: process.env.MQTT_PASS,
+    },
+    process.env.MQTT_TOPIC
+  );
+} catch (error) {
+  console.warn("⚠️  MQTT no disponible, se continúa sin conexión al broker.");
+}
+
+
 
 // Rutas API
 app.use('/api', require('./routes/auth.routes'));
