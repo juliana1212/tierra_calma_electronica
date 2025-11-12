@@ -33,7 +33,7 @@ app.use('/api', require('./routes/mqtt.routes'));
 app.use('/api', require('./routes/plantas.routes'));
 app.use('/api', require('./routes/cuidados.routes'));
 app.use('/api', require('./routes/admin.routes'));
-app.use('/api', require('./routes/pkgCentral.routes'));
+app.use('/api', require('./pkgCentral.routes'));
 
 // Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

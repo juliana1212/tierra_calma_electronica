@@ -1,6 +1,6 @@
 // paquete para verificar condiciones desde oracle
 const oracledb = require("oracledb");
-const mqttService = require("../services/mqttService");
+const mqttService = require("./mqttService");
 
 const dbConfig = {
   user: process.env.ORACLE_USER,
