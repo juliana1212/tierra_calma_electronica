@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: nataliaflorezg/tierra-backend:v11
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: tierra-config
+            - secretRef:
+                name: tierra-secrets
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - |
+              echo "Creando enlace simbólico para pkgCentralService...";
+              mkdir -p /usr/src/app/services;
+              ln -sf /usr/src/app/backend/services/pkgCentralService.js /usr/src/app/services/pkgCentralService.js;
+              echo "Iniciando servidor Node...";
+              node server.js

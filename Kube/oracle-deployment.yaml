@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tierra-oracle
+  labels:
+    app: tierra-oracle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tierra-oracle
+  template:
+    metadata:
+      labels:
+        app: tierra-oracle
+    spec:
+      containers:
+        - name: oracle
+          image: gvenzl/oracle-xe
+          ports:
+            - containerPort: 1521
+          env:
+            - name: ORACLE_PASSWORD
+              value: Tierracalma
