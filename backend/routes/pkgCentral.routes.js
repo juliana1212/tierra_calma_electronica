@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const pkgCentralService = require('./pkgCentralService');
+const pkgCentralService = require('../services/pkgCentralService');
+
 
 router.post('/verificar-condiciones', async (req, res) => {
     const idPlantaUsuario = Number(req.body?.id_planta_usuario);
